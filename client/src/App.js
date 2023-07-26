@@ -1,8 +1,7 @@
 import "./App.css";
 
 function App() {
-  return <div>Jun Da Edited Here</div>;
-  <div>Thang</div>;
+  return <div>Jun Da Edited Here, Thang</div>;
 }
 
 export default App;
