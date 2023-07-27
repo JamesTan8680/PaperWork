@@ -1,0 +1,83 @@
+.navbar {
+  display: flex;
+  padding: 10px;
+  height: 4.5vh;
+  align-items: center;
+  justify-content: space-between;
+
+  .right-nav {
+    display: flex;
+    align-items: center;
+    gap: 27px;
+    //for the search button
+    .search {
+      display: flex;
+      align-content: center;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+      border-radius: 4px;
+      input {
+        width: 340px;
+        border: none;
+        border-radius: 0 4px 4px 0;
+      }
+      //style the input when focus
+      input:focus {
+        outline: none;
+      }
+    }
+    img {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+  }
+
+  //for the mid-nav
+
+  .mid-nav {
+    display: flex;
+    gap: 16px;
+    // style for a tag
+    a {
+      text-decoration: none;
+      color: white;
+    }
+    //style for the button inside of the mid-nav
+    button {
+      cursor: pointer;
+      color: white;
+      display: flex;
+      gap: 2px;
+      background-color: #4cc9cf;
+      border: none;
+      padding: 5px;
+      border-radius: 5px;
+
+      //style for image inside of the button
+      img {
+        width: 15px;
+        height: 15px;
+      }
+    }
+  }
+
+  .left-nav {
+    //for the icon
+    img {
+      widows: 24px;
+      height: 24px;
+    }
+
+    //for text and icon
+    .title {
+      display: flex;
+      gap: 5px;
+      font-weight: 500;
+
+      a {
+        text-decoration: none;
+        color: black;
+      }
+    }
+  }
+}

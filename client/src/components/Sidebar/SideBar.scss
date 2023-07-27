@@ -1,0 +1,137 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: inherit;
+  justify-content: space-between;
+
+  //for top section of the sidebar
+  .top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    gap: 25px;
+    //for the paperwork logo
+    .logo {
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+      height: 4.5vh;
+      width: 100%;
+      background-color: #5ccddf;
+    }
+
+    //for the avatar
+    .avatar {
+      display: flex;
+      width: 100%;
+      margin-left: 65px;
+      gap: 20px;
+      align-items: center;
+      //for the name and position
+      .avatar-desc {
+        display: flex;
+        flex-direction: column;
+        //for the name
+        .name {
+          font-size: 16px;
+          font-weight: 500;
+        }
+        //for the position
+        .desc {
+          font-size: 12px;
+          color: #999999;
+        }
+
+        //for the online status
+        .online {
+          display: flex;
+          align-content: center;
+          gap: 3px;
+
+          //for the online text
+          span {
+            color: #999999;
+          }
+        }
+      }
+    }
+  }
+
+  //for the mid section of the sidebar
+  .mid {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    padding-left: 30px;
+
+    //manage the whole function in sidebar
+    .items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      //for the function in sidebar
+      .item {
+        display: flex;
+        gap: 18px;
+        //for the icon of the function in the sidebar
+        img {
+          height: 24px;
+          width: 24px;
+          filter: invert(63%) sepia(3%) saturate(24%) hue-rotate(3deg)
+            brightness(96%) contrast(93%);
+        }
+        //for the text in the sidebar
+        span {
+          color: #999999;
+        }
+        //for the selected pages
+        .selected {
+          color: #5ccddf;
+        }
+        //for the icon
+        .selected-img {
+          filter: invert(83%) sepia(62%) saturate(3292%) hue-rotate(163deg)
+            brightness(91%) contrast(91%);
+        }
+      }
+      :hover {
+        cursor: pointer;
+        span {
+          color: #5ccddf;
+        }
+        img {
+          filter: invert(83%) sepia(62%) saturate(3292%) hue-rotate(163deg)
+            brightness(91%) contrast(91%);
+        }
+      }
+    }
+  }
+
+  //for the bottom part of the sidebar
+
+  .bottom {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #5ccddf;
+    padding-left: 30px;
+    cursor: pointer;
+    .setting {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      //image of setting
+      img {
+        width: 24px;
+        height: 24px;
+        filter: invert(100%) sepia(0%) saturate(0%) hue-rotate(340deg)
+          brightness(106%) contrast(101%);
+      }
+      //text of setting
+      span {
+        color: white;
+      }
+    }
+  }
+}

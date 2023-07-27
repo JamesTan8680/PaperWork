@@ -1,5 +1,50 @@
-//this is for note style
-.note
-{
+.note {
+  width: 562px;
+  height: 180px;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .note-title {
+    padding-left: 20px;
+    font-size: 25px;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+  .note-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: scroll;
+    padding: 5px;
+    .note-item {
+      cursor: pointer;
+      width: 90%;
+      padding: 0 10px;
+      display: flex;
+      margin-left: 10px;
+      margin-right: 10px;
+      justify-content: space-between;
+      align-items: center;
 
+      span {
+        width: 80%;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+        border-radius: 5px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+      }
+      .icons {
+        cursor: pointer;
+        display: flex;
+        gap: 10px;
+        img {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
 }

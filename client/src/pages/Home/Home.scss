@@ -1,0 +1,174 @@
+.home {
+  height: 92vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .top-container {
+      display: flex;
+      justify-content: space-between;
+      .doc {
+        cursor: pointer;
+        width: 340px;
+        height: 180px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        span {
+          padding-left: 20px;
+          font-size: 25px;
+          font-weight: 500;
+          color: black;
+          text-decoration: underline;
+        }
+
+        .detail {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          img {
+            width: 130px;
+            height: 130px;
+            object-fit: cover;
+          }
+          span {
+            font-size: 75px;
+            margin-right: 40px;
+            text-decoration: none;
+          }
+        }
+      }
+
+      .pop-doc {
+        width: 500px;
+        height: 180px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        border-radius: 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        .container-title {
+          align-self: flex-start;
+          padding-left: 20px;
+          font-size: 25px;
+          font-weight: 500;
+          text-decoration: underline;
+        }
+
+        .detail {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          img {
+            width: 94px;
+            height: 95px;
+            margin-left: 20px;
+          }
+
+          .doc-title {
+            font-size: 25px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 20px;
+          }
+        }
+
+        button {
+          cursor: pointer;
+          width: 200px;
+          padding: 10px;
+          border: none;
+          background-color: #4cc9cf;
+          border-radius: 5px;
+          color: white;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .mid {
+    width: 80vw;
+    height: 320px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    border-radius: 5px;
+    display: flex;
+    overflow: auto;
+
+    .mid-container {
+      display: flex;
+      align-items: center;
+    }
+    .card {
+      border-radius: 5px;
+      padding: 5px;
+      background-color: antiquewhite;
+      margin-left: 10px;
+      height: 200px;
+      width: 200px;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+      margin-right: 10px;
+      min-height: min-content;
+    }
+  }
+
+  .bottom {
+    width: 100%;
+    height: 250px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+
+    .bottom-left {
+      flex: 3;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+      border-radius: 5px;
+    }
+    .bottom-right {
+      flex: 2;
+      height: 250px;
+      border-radius: 5px;
+      box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    }
+  }
+}
+
+//this apply to every element include nested element and class
+a {
+  text-decoration: none;
+}
+.title {
+  font-weight: 500;
+  font-size: 25px;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 4px grey;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: grey;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.236);
+}
