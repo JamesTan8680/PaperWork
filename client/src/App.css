@@ -3,8 +3,8 @@
 
   .left {
     flex: 1;
-    height: 100vh;
-
+    height: 59rem;
+    width: 280px;
     box-shadow: 0.5px 5px 5px rgba(128, 128, 128, 0.382);
   }
 

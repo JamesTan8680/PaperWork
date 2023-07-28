@@ -1,8 +1,8 @@
 .sidebar {
   display: flex;
   flex-direction: column;
-  height: inherit;
-  justify-content: space-between;
+  height: 100%;
+  gap: 20px;
 
   //for top section of the sidebar
   .top {
@@ -11,7 +11,8 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    gap: 25px;
+    gap: 20px;
+    margin-bottom: 10px;
     //for the paperwork logo
     .logo {
       display: flex;
@@ -112,7 +113,6 @@
   //for the bottom part of the sidebar
 
   .bottom {
-    margin-bottom: 20px;
     padding: 10px;
     background-color: #5ccddf;
     padding-left: 30px;
@@ -120,7 +120,7 @@
     .setting {
       display: flex;
       align-items: center;
-      gap: 13px;
+      gap: 20px;
       //image of setting
       img {
         width: 24px;

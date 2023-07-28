@@ -37,16 +37,27 @@ function Home() {
       <div className="title">Note</div>
       <div className="mid">
         <div className="mid-container">
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
-          <div className="card">this is sth</div>
+          <div className="container">
+            <div className="card">this is sth</div>
+          </div>
+          <div className="container">
+            <div className="card">this is sth</div>
+          </div>
+          <div className="container">
+            <div className="card">this is sth</div>
+          </div>
+          <div className="container">
+            <div className="card">this is sth</div>
+          </div>
+          <div className="container">
+            <div className="card">this is sth</div>
+          </div>
+          <div className="container">
+            <div className="card">this is sth</div>
+          </div>
+          <div className="container">
+            <div className="card">this is sth</div>
+          </div>
         </div>
       </div>
       <div className="title">Recent Created Documents</div>

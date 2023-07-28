@@ -3,6 +3,24 @@ import Filter from "../../img/home/filter.svg";
 import "./RecentDoc.scss";
 import Doc from "../../img/home/doc.svg";
 function RecentDoc() {
+  const data = [
+    {
+      title: "NON-DISCLOSURE AGREEMENT",
+      version: "1.0",
+      date: "12/12/23",
+    },
+    {
+      title: "NON-DISCLOSURE AGREEMENT",
+      version: "1.0",
+      date: "12/12/23",
+    },
+    {
+      title: "NON-DISCLOSURE AGREEMENT",
+      version: "1.0",
+      date: "12/12/23",
+    },
+  ];
+
   return (
     <>
       <div className="top-doc">
@@ -15,36 +33,24 @@ function RecentDoc() {
           <span>DATE CREATED</span>
         </div>
       </div>
-      <div className="bottom-doc">
-        <div className="doc-container">
-          <div className="doc-title">
-            <img src={Doc} alt="" />
-            <span>NON-DISCLOSURE AGREEMENT</span>
+      {data.map((item) => {
+        return (
+          <div className="bottom-doc">
+            <div className="doc-container">
+              <div className="doc-title">
+                <img src={Doc} alt="" />
+                <span>{item.title}</span>
+              </div>
+              <div className="version-container">
+                <div className="version-item">
+                  <span className="version">{item.version}</span>
+                  <span className="date">{item.date}</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="doc-title">
-            <img src={Doc} alt="" />
-            <span>SECURITY POLICY</span>
-          </div>
-          <div className="doc-title">
-            <img src={Doc} alt="" />
-            <span>DRUG AND ALCOHOL CONTRACT</span>
-          </div>
-        </div>
-        <div className="version-container">
-          <div className="version-item">
-            <span className="version">1.0</span>
-            <span className="date">12/12/23</span>
-          </div>
-          <div className="version-item">
-            <span className="version">1.0</span>
-            <span className="date">12/12/23</span>
-          </div>
-          <div className="version-item">
-            <span className="version">1.0</span>
-            <span className="date">12/12/23</span>
-          </div>
-        </div>
-      </div>
+        );
+      })}
     </>
   );
 }
