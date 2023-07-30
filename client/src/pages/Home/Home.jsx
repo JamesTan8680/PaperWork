@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 import Note from "../../components/Note/Note";
 import RecentDoc from "../../components/RecentDoc/RecentDoc";
+import Calendar from "../../components/Calendar/Calendar";
 function Home() {
   return (
     <div className="home">
@@ -65,7 +66,9 @@ function Home() {
         <div className="bottom-left">
           <RecentDoc />
         </div>
-        <div className="bottom-right">calendar</div>
+        <div className="bottom-right">
+          <Calendar />
+        </div>
       </div>
     </div>
   );
