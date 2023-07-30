@@ -4,7 +4,8 @@
   margin: 10px 20px 0 20px;
 
   .doc-detail {
-    width: 320px;
+    width: auto;
+    height: 26px;
     display: flex;
     gap: 100px;
     font-size: 20px;
@@ -27,13 +28,14 @@
 .bottom-doc {
   display: flex;
   margin: 28px 20px 0 20px;
-  justify-content: space-between;
+  flex-direction: column;
   .doc-title {
     font-weight: 400;
   }
   .doc-container {
     display: flex;
-    flex-direction: column;
+    width: 100%;
+    justify-content: space-between;
     gap: 20px;
   }
 
@@ -49,6 +51,7 @@
       justify-content: space-between;
       .version {
         width: 50%;
+        margin-left: 25px;
       }
       .date {
         width: 50%;

@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar/Navbar";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import SideBar from "./components/Sidebar/SideBar";
 import "./App.css";
-import CreateDoc from "./pages/CreateDoc";
+import CreateDoc from "./pages/CreateDoc/CreateDoc";
 const Layout = () => {
   return (
     <div className="app">
