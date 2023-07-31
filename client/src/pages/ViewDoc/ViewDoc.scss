@@ -1,0 +1,32 @@
+.viewDoc {
+  height: 100%;
+  width: 100%;
+  box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+  border-radius: 5px;
+  //for the title
+  .header {
+    font-size: 20px;
+    font-weight: 500;
+    margin: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+  }
+
+  //for the container
+  .container {
+    margin: 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: calc(100% - 15px);
+    height: calc(100% - 50px);
+  }
+}

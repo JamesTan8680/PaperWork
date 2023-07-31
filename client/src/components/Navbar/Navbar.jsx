@@ -24,10 +24,12 @@ function Navbar() {
         <Link to="/createDoc">
           <button>+ Create Document</button>
         </Link>
-        <button>
-          <img src={View} alt="" />
-          View Doucment
-        </button>
+        <Link to="/viewDoc">
+          <button>
+            <img src={View} alt="" />
+            View Doucment
+          </button>
+        </Link>
       </div>
       <div className="right-nav">
         <div className="search">

@@ -1,0 +1,6 @@
+.breadCrumb::after {
+  content: " / ";
+}
+.breadCrumb:last-child::after {
+  content: "";
+}
