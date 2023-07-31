@@ -1,0 +1,126 @@
+.createDoc {
+  box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+  border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  .title {
+    margin: 10px 0px 0px 20px;
+  }
+
+  .container {
+    display: flex;
+
+    gap: 10px;
+    height: 50rem;
+    .left-createDoc {
+      height: 100%;
+      width: 20%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+
+      //for the list container
+      .list-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        width: 270px;
+        gap: 25px;
+        padding-right: 20px;
+        overflow-y: scroll;
+        margin-left: 20px;
+        .list-createDoc {
+          cursor: pointer;
+        }
+        .selected {
+          border-radius: 10px;
+          background-color: #e2e4e7;
+          padding: 10px;
+        }
+      }
+    }
+
+    //for the middle column
+    .mid-createDoc {
+      height: 100%;
+      width: 20%;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+
+      .list-container {
+        height: 100%;
+        overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+        align-items: center;
+        padding-right: 70px;
+        margin-left: 20px;
+        cursor: pointer;
+
+        .list-createDoc {
+          cursor: pointer;
+        }
+        .selected {
+          border-radius: 10px;
+          background-color: #e2e4e7;
+          padding: 10px;
+        }
+      }
+    }
+
+    //for right create-doc
+
+    .right-createDoc {
+      width: 63%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    //for the header of the column (left,mid,right)
+    .header-createDoc {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-weight: 500;
+      font-size: 18px;
+      padding: 10px 25px;
+      background-color: #f2f3f5;
+      border-radius: 15px;
+    }
+  }
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 4px grey;
+    border-radius: 5px;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: grey;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.236);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+}

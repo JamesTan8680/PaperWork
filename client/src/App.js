@@ -3,7 +3,9 @@ import Navbar from "./components/Navbar/Navbar";
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import SideBar from "./components/Sidebar/SideBar";
 import "./App.css";
-import CreateDoc from "./pages/CreateDoc";
+import CreateDoc from "./pages/CreateDoc/CreateDoc";
+import ViewDoc from "./pages/ViewDoc/ViewDoc";
+import BreadCrumbs from "./components/BreadCrumbs/BreadCrumbs";
 const Layout = () => {
   return (
     <div className="app">
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
       {
         path: "/createDoc",
         element: <CreateDoc />,
+      },
+      {
+        path: "/viewDoc",
+        element: <ViewDoc title="View Document" />,
+      },
+      {
+        path: "/viewDoc/:id",
+        element: <BreadCrumbs />,
       },
     ],
   },
