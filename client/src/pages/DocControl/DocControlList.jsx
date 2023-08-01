@@ -6,7 +6,6 @@ import partiesIcon from "../../img/docControl/partiesIcon.svg";
 import reviewIcon from "../../img/docControl/reviewIcon.svg";
 import sendIcon from "../../img/docControl/sendIcon.svg";
 import greysendIcon from "../../img/docControl/greysendIcon.svg";
-import dropdownIcon from "../../img/docControl/dropdown.svg";
 
 const DocControlList = ({ data, boldItemId }) => {
   return (
@@ -52,17 +51,12 @@ const DocControlList = ({ data, boldItemId }) => {
               <span className="item-name">{item.date_created}</span>
               <span className="item_modified">{item.date_modified}</span>
               <span className="issued_date">{item.issue_date}</span>
-              <span className="additional_info">
-                {[
-                  "Version 1.4",
-                  "Version 1.1",
-                  "Version 1.2",
-                  "Version 1.0",
-                ].includes(item.id) ||
-                ["Version 1.5", "Version 1.3"].includes(item.id) ? (
-                  <span className="ready_circle">Ready</span>
-                ) : null}
-              </span>
+              <div className="additional_info">
+                <div className="status">Approved!</div>
+                <div className="pro-bar">
+                  <div className="progress"></div>
+                </div>
+              </div>
 
               <div className="icons">
                 <span className="parties-icon">
