@@ -6,6 +6,7 @@ import "./App.css";
 import CreateDoc from "./pages/CreateDoc/CreateDoc";
 import ViewDoc from "./pages/ViewDoc/ViewDoc";
 import BreadCrumbs from "./components/BreadCrumbs/BreadCrumbs";
+import DocControl from "./pages/DocControl/DocControl";
 const Layout = () => {
   return (
     <div className="app">
@@ -40,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/viewDoc/:id",
-        element: <BreadCrumbs />,
+        element: <DocControl />,
       },
     ],
   },

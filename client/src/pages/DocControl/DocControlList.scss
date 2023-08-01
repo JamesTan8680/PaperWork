@@ -1,0 +1,166 @@
+.docControlHeader {
+  display: flex;
+  gap: -1rem;
+}
+
+.docControlHeader h3 {
+  margin-left: 250px;
+  margin: 20px -120px 30px 230px;
+}
+
+.documentTitle {
+  display: flex;
+  align-items: center;
+  width: 1370px;
+  padding: 15px;
+  margin-bottom: 10px;
+  height: 60px;
+  box-shadow: 0.3px 2px 3px 5px rgba(134, 133, 133, 0.188);
+
+  p {
+    margin: 0;
+  }
+
+  .docuementLatestVersion {
+    background-color: #4cc9cf;
+    border-radius: 15px;
+    color: white;
+    padding: 5px 40px 5px 30px;
+    margin-left: 12px;
+    margin-right: 45rem;
+    white-space: nowrap;
+  }
+
+  .otherdocument {
+    color: #4cc9cf;
+    font-size: large;
+    margin-left: 70px;
+  }
+
+  .dropdownicon {
+    width: 90px;
+    height: 60px;
+    margin-left: 10px;
+  }
+}
+
+.docControlList {
+  height: 42.5rem;
+  width: 1400px;
+  border-radius: 5px;
+  box-shadow: 0.3px 2px 3px 5px rgba(200, 200, 200, 0.188);
+
+  .table {
+    padding: 1px;
+
+    .documentTitle {
+      display: flex;
+    }
+
+    .table-row {
+      background-color: #ffffff;
+      padding: 20px;
+      box-shadow: 0.3px 2px 3px 5px rgba(134, 133, 133, 0.188);
+      margin-bottom: 10px;
+
+      .item-id {
+        color: #333;
+        margin-right: 100px;
+        font-weight: bold;
+
+        .editicon {
+          margin-left: 8px;
+          height: 18px;
+        }
+
+        .transediticon {
+          margin-left: 8px;
+          height: 18px;
+          opacity: 0;
+          user-drag: none;
+          -webkit-user-drag: none;
+          user-select: none;
+          -moz-user-select: none;
+          -webkit-user-select: none;
+          -ms-user-select: none;
+        }
+
+        .binicon {
+          width: 20px;
+          margin-left: 10px;
+          height: 18px;
+        }
+
+        &.bold-id {
+          font-weight: bold;
+        }
+      }
+
+      .item-name {
+        color: #555;
+        margin-right: 200px;
+      }
+
+      .item_modified {
+        margin-right: 180px;
+        color: #555;
+      }
+
+      .issued_date {
+        color: #555;
+        margin-right: 170px;
+      }
+
+      .additional_info {
+        margin-left: 2rem;
+        margin-right: 10rem;
+        padding: 20px 10px;
+        border-radius: 100%;
+        border: 2px solid #00dd73;
+      }
+
+      .partiesicon {
+        margin-left: -10px;
+        margin-right: 30px;
+        height: 28px;
+        width: 28px;
+        margin-bottom: -10px;
+      }
+
+      .transpartiesicon {
+        margin-left: -35px;
+        margin-right: 30px;
+        margin-bottom: -10px;
+        height: 28px;
+        width: 28px;
+        opacity: 0;
+        user-drag: none;
+        -webkit-user-drag: none;
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+
+      .reviewicon {
+        height: 28px;
+        width: 28px;
+        margin-bottom: -8px;
+      }
+
+      .sendicon {
+        margin-left: 20px;
+        height: 25px;
+        width: 25px;
+        margin-bottom: -5px;
+      }
+
+      .transsendicon {
+        margin-left: 20px;
+        height: 25px;
+        width: 25px;
+        margin-bottom: -5px;
+      }
+    }
+  }
+}
