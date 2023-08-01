@@ -6,6 +6,10 @@ import partiesIcon from "../../img/docControl/partiesIcon.svg";
 import reviewIcon from "../../img/docControl/reviewIcon.svg";
 import sendIcon from "../../img/docControl/sendIcon.svg";
 import greysendIcon from "../../img/docControl/greysendIcon.svg";
+<<<<<<< HEAD
+=======
+import lockIcon from "../../img/docControl/lockIcon.png";
+>>>>>>> Finish-the-DocControl
 
 const DocControlList = ({ data, boldItemId }) => {
   return (
@@ -29,24 +33,12 @@ const DocControlList = ({ data, boldItemId }) => {
           {data.map((item, index) => (
             <div key={index} className="table-row">
               <span className="item-id">
-                {item.id}
+                <div className="wrap-item-id">{item.id}</div>
 
-                {(item.id === "Version 1.5" || item.id === "Version 1.3") && (
-                  <img src={editIcon} alt="Edit Icon" className="editicon" />
-                )}
+                <img src={lockIcon} alt="Lock" className="lockicon" />
 
-                {(item.id === "Version 1.4" ||
-                  item.id === "Version 1.1" ||
-                  item.id === "Version 1.2" ||
-                  item.id === "Version 1.0") && (
-                  <img
-                    src={editIcon}
-                    alt="Edit Icon"
-                    className="transediticon"
-                  />
-                )}
-
-                <img src={binIcon} alt="Bin" className="binicon" />
+                {/* Do a if else statement here when itis pending! the img src will be editIcon instead of lockIcon */}
+                {/* Else the version will be lock, not able to edit */}
               </span>
               <span className="item-name">{item.date_created}</span>
               <span className="item_modified">{item.date_modified}</span>
