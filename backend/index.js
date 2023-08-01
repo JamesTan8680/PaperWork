@@ -10,26 +10,35 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "note",
+  database: "paperwork_project",
 });
-app.get("/", (req, res) => {
+
+function fetch(q, res){
+  const sql = q;
+    db.query(sql, (err, data) => {
+      if (err) return res.send(err);
+      return res.json(data);
+    });
+}
+
+app.get("/tables", (req, res) => {
   //write the query for the sql
-  const sql = "SELECT * FROM notes";
-  db.query(sql, (err, data) => {
-    if (err) return res.send(err);
-    return res.json(data);
+  fetch("SELECT table_name FROM information_schema.tables WHERE table_schema = 'paperwork_project';", res);
+});
+app.get("/select/:table/:cols", (req, res) => {
+  fetch("SELECT " + req.params["cols"] +" FROM " + req.params["table"], res);
+});
+
+  //check if the database is existed or not
+  db.connect(function (err) {
+    if (err) {
+      return console.error("error: " + err.message);
+    }
+  
+    console.log("Connected to the MySQL server.");
   });
-});
-
-//check if the database is existed or not
-db.connect(function (err) {
-  if (err) {
-    return console.error("error: " + err.message);
-  }
-
-  console.log("Connected to the MySQL server.");
-});
-//listen to the backend
-app.listen(8800, () => {
-  console.log("backend connected");
-});
+  //listen to the backend
+  app.listen(8800, () => {
+    console.log("backend connected");
+  });
+  
