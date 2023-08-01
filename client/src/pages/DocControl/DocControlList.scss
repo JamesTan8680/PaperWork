@@ -1,7 +1,7 @@
 .docControlHeader {
-  width: calc(100% - 416px);
+  width: calc(100% - 364px);
   display: flex;
-  margin-left: 416px;
+  margin-left: 364px;
   gap: 112px;
 }
 
@@ -22,20 +22,6 @@
   p {
     margin: 0;
   }
-
-  // .documentTitle {
-  //   display: flex;
-  //   align-items: center;
-  //   //   width: 1370px;
-  //   width: 100%;
-  //   padding: 15px;
-  //   margin-bottom: 10px;
-  //   height: 60px;
-  //   box-shadow: 0.3px 2px 3px 5px rgba(134, 133, 133, 0.188);
-
-  //   p {
-  //     margin: 0;
-  //   }
 
   .docuementLatestVersion {
     background-color: #4cc9cf;
@@ -86,6 +72,11 @@
         color: #333;
         margin-right: 100px;
         font-weight: bold;
+        gap: 20px;
+
+        .wrap-item-id {
+          width: 90px;
+        }
 
         .editicon {
           margin-left: 8px;
@@ -104,9 +95,8 @@
           -ms-user-select: none;
         }
 
-        .binicon {
+        .lockicon {
           width: 20px;
-          margin-left: 10px;
           height: 18px;
         }
 
