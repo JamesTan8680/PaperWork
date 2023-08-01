@@ -18,11 +18,13 @@ const DocControlList = ({ data, boldItemId }) => {
         <h3>APPROVE STATUS</h3>
       </div>
 
-      <div className="documentTitle">
-        <p>Non Disclosure Document</p>
-        <p className="docuementLatestVersion">Version 1.5</p>
-        <p className="otherdocument">Other Versions</p>
-        <img src={dropdownIcon} alt="DropDownIcon" className="dropdownicon" />
+      <div className="docControlWrapper">
+        <div className="documentTitle">
+          <p>Non Disclosure Document</p>
+          <p className="docuementLatestVersion">Version 1.5</p>
+          <p className="otherdocument">Other Versions</p>
+          <img src={dropdownIcon} alt="DropDownIcon" className="dropdownicon" />
+        </div>
       </div>
 
       <div className="docControlList">
