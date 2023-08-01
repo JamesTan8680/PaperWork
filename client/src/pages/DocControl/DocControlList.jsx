@@ -11,11 +11,10 @@ import dropdownIcon from "../../img/docControl/dropdown.svg";
 const DocControlList = ({ data, boldItemId }) => {
   return (
     <>
-      <div class="docControlHeader">
+      <div className="docControlHeader">
         <h3>DATA CREATED</h3>
         <h3>DATA MODIFIED</h3>
         <h3>ISSUE DATE</h3>
-        <h3>APPROVE STATUS</h3>
       </div>
 
       <div className="docControlWrapper">
@@ -23,7 +22,6 @@ const DocControlList = ({ data, boldItemId }) => {
           <p>Non Disclosure Document</p>
           <p className="docuementLatestVersion">Version 1.5</p>
           <p className="otherdocument">Other Versions</p>
-          <img src={dropdownIcon} alt="DropDownIcon" className="dropdownicon" />
         </div>
       </div>
 
@@ -65,55 +63,52 @@ const DocControlList = ({ data, boldItemId }) => {
                   <span className="ready_circle">Ready</span>
                 ) : null}
               </span>
-              <span className="parties-icon">
-                {(item.id === "Version 1.5" || item.id === "Version 1.3") && (
-                  <img
-                    src={partiesIcon}
-                    alt="Parties Icon"
-                    className="transpartiesicon"
-                  />
-                )}
-              </span>
 
-              <span className="parties-icon">
-                {(item.id === "Version 1.5" || item.id === "Version 1.3") && (
-                  <img
-                    src={partiesIcon}
-                    alt="Parties Icon"
-                    className="transpartiesicon"
-                  />
-                )}
+              <div className="icons">
+                <span className="parties-icon">
+                  {(item.id === "Version 1.5" || item.id === "Version 1.3") && (
+                    <img
+                      src={partiesIcon}
+                      alt="Parties Icon"
+                      className="transpartiesicon"
+                    />
+                  )}
 
-                {(item.id === "Version 1.4" ||
-                  item.id === "Version 1.1" ||
-                  item.id === "Version 1.2" ||
-                  item.id === "Version 1.0") && (
-                  <img
-                    src={partiesIcon}
-                    alt="Parties Icon "
-                    className="partiesicon"
-                  />
-                )}
-              </span>
+                  {(item.id === "Version 1.4" ||
+                    item.id === "Version 1.1" ||
+                    item.id === "Version 1.2" ||
+                    item.id === "Version 1.0") && (
+                    <img
+                      src={partiesIcon}
+                      alt="Parties Icon "
+                      className="partiesicon"
+                    />
+                  )}
+                </span>
 
-              <img src={reviewIcon} alt="Review Icon" className="reviewicon" />
+                <img
+                  src={reviewIcon}
+                  alt="Review Icon"
+                  className="reviewicon"
+                />
 
-              <span className="send-icon">
-                {(item.id === "Version 1.5" || item.id === "Version 1.3") && (
-                  <img
-                    src={greysendIcon}
-                    alt="Send Icon"
-                    className="transsendicon"
-                  />
-                )}
+                <span className="send-icon">
+                  {(item.id === "Version 1.5" || item.id === "Version 1.3") && (
+                    <img
+                      src={greysendIcon}
+                      alt="Send Icon"
+                      className="transsendicon"
+                    />
+                  )}
 
-                {(item.id === "Version 1.4" ||
-                  item.id === "Version 1.1" ||
-                  item.id === "Version 1.2" ||
-                  item.id === "Version 1.0") && (
-                  <img src={sendIcon} alt="Send Icon " className="sendicon" />
-                )}
-              </span>
+                  {(item.id === "Version 1.4" ||
+                    item.id === "Version 1.1" ||
+                    item.id === "Version 1.2" ||
+                    item.id === "Version 1.0") && (
+                    <img src={sendIcon} alt="Send Icon " className="sendicon" />
+                  )}
+                </span>
+              </div>
             </div>
           ))}
         </div>

@@ -2,7 +2,7 @@ import React from "react";
 import BreadCrumbs from "../../components/BreadCrumbs/BreadCrumbs";
 import { useParams } from "react-router-dom";
 import DocControlList from "./DocControlList";
-
+import "./DocControl.scss";
 function DocControl() {
   //   const param = useParams().id;
   //   console.log(param);
@@ -50,7 +50,7 @@ function DocControl() {
   return (
     <>
       <BreadCrumbs />
-      <div>
+      <div className="docControl">
         <DocControlList data={data} boldItemId="Version 1.5" />
       </div>
     </>
