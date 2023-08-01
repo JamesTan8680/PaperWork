@@ -6,10 +6,7 @@ import partiesIcon from "../../img/docControl/partiesIcon.svg";
 import reviewIcon from "../../img/docControl/reviewIcon.svg";
 import sendIcon from "../../img/docControl/sendIcon.svg";
 import greysendIcon from "../../img/docControl/greysendIcon.svg";
-<<<<<<< HEAD
-=======
 import lockIcon from "../../img/docControl/lockIcon.png";
->>>>>>> Finish-the-DocControl
 
 const DocControlList = ({ data, boldItemId }) => {
   return (
