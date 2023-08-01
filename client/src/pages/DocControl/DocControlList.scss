@@ -5,21 +5,40 @@
 
 .docControlHeader h3 {
   margin-left: 250px;
-  margin: 20px -120px 30px 230px;
+  margin: 20px -120px 10px 230px;
+}
+
+.docControlWrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .documentTitle {
   display: flex;
   align-items: center;
-  width: 1370px;
   padding: 15px;
   margin-bottom: 10px;
   height: 60px;
   box-shadow: 0.3px 2px 3px 5px rgba(134, 133, 133, 0.188);
+  // width: 100%;
 
   p {
     margin: 0;
   }
+
+  // .documentTitle {
+  //   display: flex;
+  //   align-items: center;
+  //   //   width: 1370px;
+  //   width: 100%;
+  //   padding: 15px;
+  //   margin-bottom: 10px;
+  //   height: 60px;
+  //   box-shadow: 0.3px 2px 3px 5px rgba(134, 133, 133, 0.188);
+
+  //   p {
+  //     margin: 0;
+  //   }
 
   .docuementLatestVersion {
     background-color: #4cc9cf;
@@ -46,7 +65,8 @@
 
 .docControlList {
   height: 42.5rem;
-  width: 1400px;
+  //   width: 1400px;
+  width: 100%;
   border-radius: 5px;
   box-shadow: 0.3px 2px 3px 5px rgba(200, 200, 200, 0.188);
 
