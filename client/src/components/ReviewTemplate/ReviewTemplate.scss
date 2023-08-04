@@ -52,3 +52,17 @@
 .content {
   font-size: 10px;
 }
+
+.cus-btn {
+  align-self: center;
+
+  .btn {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #5bccde;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+  }
+}

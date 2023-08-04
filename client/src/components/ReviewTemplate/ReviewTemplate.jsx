@@ -1,7 +1,7 @@
 import React from "react";
 import Review from "../../img/createDoc/review.svg";
 import "./ReviewTemplate.scss";
-
+import { Link } from "react-router-dom";
 function ReviewTemplate({ type }) {
   return (
     <>
@@ -131,7 +131,11 @@ function ReviewTemplate({ type }) {
                 <div className="content">Address:</div>
                 <div className="content">Date:</div>
               </div>
-              <button>CUSTOMISE</button>
+            </div>
+            <div className="cus-btn">
+              <Link to="/CustomiseDoc/:id">
+                <button className="btn">CUSTOMISE</button>
+              </Link>
             </div>
           </div>
         </>
