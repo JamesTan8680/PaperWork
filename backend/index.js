@@ -21,7 +21,18 @@ function fetch(q, res){
 
     });
 }
- 
+
+function select(table, args, res){
+  var q = "SELECT ";
+  if (args.columns) q += args.columns;
+  else q += "*";
+  q+= " FROM " + table;
+  if (args.where) q+= " WHERE " + args.where;
+  if (args.orderBy) q+= " ORDER BY " + args.orderBy;
+  console.log(q);
+  fetch(q,res);
+}
+
 // !!! Consider injection measures later (unless "[multipleStatements: false]" is enough??) !!!
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -33,42 +44,36 @@ function fetch(q, res){
 
 //https://stackoverflow.com/questions/20089582/how-to-get-a-url-parameter-in-express
 
-//get table (test queries)
-app.get("/select", (req, res) => {
-  if (req.query.col){
-    fetch("SELECT " + req.query.col + " FROM " + req.query.table,res);
-
-  }
-  else if (req.query.by){
-    fetch("SELECT * FROM " + req.query.table,res + "ORDER BY" + req.query.by,res);
-
-  }
-  else{
-    fetch("SELECT * FROM " + req.query.table,res);
-
-  }
+//get table
+// EXAMPLE
+//http://localhost:8800/select/document_template?where=type=%27nda%27
+//http://localhost:8800/select/document_template?columns=title,date_added&orderBy=parties_number%20desc
+app.get("/select/:table", (req, res) => {
+  select(req.params.table,req.query,res);
 });
+
 
 // //get table (test params)
 // app.get("/select/:tables", (req, res) => {
 //   fetch("SELECT * FROM " + req.params["table"], res);
 // });
 // app.get("/select/:table/:col", (req, res) => {
-//   fetch("SELECT " + req.params["cols"] +" FROM " + req.params["table"], res);
+//   fetch("SELECT " + req.params["col"] +" FROM " + req.params["table"], res);
 // });
 
 
 //count rows
 app.get("/count", (req, res) => {
-   fetch("SELECT COUNT(*) AS length FROM " + req.query.table, res);
+   select(req.params.table,{"columns":"COUNT(*) AS length"},res);
+
 });
 
 //most popular template
 app.get("/top/document", (req, res) => {
+  // get:    select id, title, count from documents joined with document templates, group by id, order by count, limit to 1 item
+  // result: most popular template name
   fetch("SELECT document_container.document_template_id, document_template.title, COUNT(*) AS count FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_container.document_template_id ORDER BY COUNT(*) DESC LIMIT 1", res);
 });
-//SELECT document_default_template.type, document_default_template.title, COUNT(*)
-
 
 
 
