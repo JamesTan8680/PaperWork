@@ -44,7 +44,7 @@ function select(table, args, res){
 
 //https://stackoverflow.com/questions/20089582/how-to-get-a-url-parameter-in-express
 
-//get table
+//get table (version 0.2)
 // EXAMPLE
 //http://localhost:8800/select/document_template?where=type=%27nda%27
 //http://localhost:8800/select/document_template?columns=title,date_added&orderBy=parties_number%20desc
@@ -75,9 +75,6 @@ app.get("/top/document", (req, res) => {
   fetch("SELECT document_container.document_template_id, document_template.title, COUNT(*) AS count FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_container.document_template_id ORDER BY COUNT(*) DESC LIMIT 1", res);
 });
 
-
-
-
   //check if the database is existed or not
   db.connect(function (err) {
     if (err) {
@@ -91,3 +88,4 @@ app.get("/top/document", (req, res) => {
     console.log("backend connected");
   });
   
+//
