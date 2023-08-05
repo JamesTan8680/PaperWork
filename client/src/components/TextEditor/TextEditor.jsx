@@ -1,29 +1,11 @@
 import React from "react";
 import JoditEditor from "jodit-react";
 import HTMLReactParser from "html-react-parser"; //convert HTML strings to React elements
-import { useState, useRef, useMemo } from "react";
+import { useState, useMemo } from "react";
 
-export default function TextEditor({
-  handleDragStart,
-  handleDragOver,
-  handleDrop,
-  content,
-  setContent,
-  editor,
-}) {
+export default function TextEditor({ editor, title, selected }) {
   function handleDragStart(event) {
     event.dataTransfer.setData("text/plain", event.target.textContent);
-  }
-
-  function handleDragOver(event) {
-    event.preventDefault();
-  }
-
-  function handleDrop(event) {
-    event.preventDefault();
-    const droppedItem = event.dataTransfer.getData("text/plain");
-    const newContent = content + droppedItem;
-    setContent(newContent);
   }
 
   //create the dummy data
@@ -43,35 +25,13 @@ export default function TextEditor({
   ];
 
   const [value, setValue] = useState("");
-  const values = "<p>NDA </p>";
-  const [email, setEmail] = useState("");
+  const values = title;
 
-  const OnChangeListener = (event) => {
-    setEmail(event.target.value);
-  };
   const config = useMemo(
     () => ({
       readonly: false,
 
-      buttons: [
-        "bold",
-        "italic",
-        "underline",
-        "|",
-        "ul",
-        "ol",
-        "|",
-        "align",
-        {
-          iconURL:
-            "https://img.icons8.com/fluency-systems-regular/48/null/single-line-text-input.png",
-          tooltip: "insert input",
-
-          exec: function (editor) {
-            editor.selection.insertHTML("______");
-          },
-        },
-      ],
+      buttons: ["bold", "italic", "underline", "|", "ul", "ol", "|", "align"],
       removeButtons: ["source", "about"],
       toolbarAdaptive: false,
     }),
@@ -85,21 +45,38 @@ export default function TextEditor({
   return (
     <>
       <div>
-        <h1>Drag and Drop</h1>
+        {selected === 3 ? (
+          <>
+            <h1>Drag and Drop</h1>
 
-        {Drag?.map((item) => {
-          return (
-            <div draggable={true} onDragStart={handleDragStart} key={item.id}>
-              {item.input}
-            </div>
-          );
-        })}
-
+            {Drag?.map((item) => {
+              return (
+                <div
+                  draggable={true}
+                  onDragStart={handleDragStart}
+                  key={item.id}>
+                  {item.input}
+                </div>
+              );
+            })}
+          </>
+        ) : (
+          <>
+            <h1>Please enter the Title of the Document</h1>
+          </>
+        )}
+      </div>
+      <div>
         <div className="this">
-          <JoditEditor ref={editor} value={values} onChange={onChangeHandler} />
+          <JoditEditor
+            ref={editor}
+            value={values}
+            onChange={onChangeHandler}
+            config={config}
+          />
         </div>
 
-        <div>{HTMLReactParser(value.split("<input/>").join(<input />))}</div>
+        {/* <div>{HTMLReactParser(value.split("<input/>").join(<input />))}</div> */}
       </div>
     </>
   );

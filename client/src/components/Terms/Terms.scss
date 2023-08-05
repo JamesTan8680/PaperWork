@@ -1,0 +1,14 @@
+.term {
+  width: 940px;
+  height: calc(100% - 52px);
+
+  .this {
+    .jodit-react-container {
+      width: 100%;
+      height: auto;
+      max-height: 600px;
+      overflow: auto;
+      background-color: black;
+    }
+  }
+}

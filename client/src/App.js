@@ -5,7 +5,6 @@ import SideBar from "./components/Sidebar/SideBar";
 import "./App.css";
 import CreateDoc from "./pages/CreateDoc/CreateDoc";
 import ViewDoc from "./pages/ViewDoc/ViewDoc";
-import BreadCrumbs from "./components/BreadCrumbs/BreadCrumbs";
 import DocControl from "./pages/DocControl/DocControl";
 import CustomizeDoc from "./pages/CustomizeDoc/CustomizeDoc";
 const Layout = () => {

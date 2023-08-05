@@ -1,7 +1,6 @@
 import React from "react";
 import "./DocControlList.scss";
-import binIcon from "../../img/docControl/deletebin.svg";
-import editIcon from "../../img/docControl/editIcon.svg";
+
 import partiesIcon from "../../img/docControl/partiesIcon.svg";
 import reviewIcon from "../../img/docControl/reviewIcon.svg";
 import sendIcon from "../../img/docControl/sendIcon.svg";
