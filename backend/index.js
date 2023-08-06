@@ -70,12 +70,23 @@ app.get("/select/viewDocument/documentTemplate", (req, res) => {
   select("document_template",req.query,res);
 });
 
+//get list of signatories of document
+//tempId: ID of the template type
+//docId: ID of the document
+app.get("/select/viewDocument/documentTemplate/:tempId/:docId", (req, res) => {
+  req.query.where = "document_template.type = '" + req.params.tempId + "' AND document_template.document_template_id = '" + req.params.docId + "'";
+  req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
+  select("document_container",req.query,res);
+});
+
 //get list of documents with template type
+//id: ID of the template type
 app.get("/select/viewDocument/documentTemplate/:id", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.id + "'"
  // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
   select("document_template",req.query,res);
 });
+
 
 //https://stackoverflow.com/questions/20089582/how-to-get-a-url-parameter-in-express
 //get table
