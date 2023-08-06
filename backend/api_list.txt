@@ -4,5 +4,7 @@ Homepage:
     /homepage/return_recent_created_documents
     /homepage/return_list_of_notes
 
-view_documents:
-    
+view_documents: (see code for additional args)
+    /viewDocument/documentTemplate
+    /viewDocument/documentTemplate/<tempId>
+    /viewDocument/documentTemplate/<tempId>/<docId>
