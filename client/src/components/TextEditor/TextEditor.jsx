@@ -1,6 +1,6 @@
 import React from "react";
 import JoditEditor from "jodit-react";
-import HTMLReactParser from "html-react-parser"; //convert HTML strings to React elements
+//import HTMLReactParser from "html-react-parser"; //convert HTML strings to React elements
 import { useState, useMemo } from "react";
 
 export default function TextEditor({ editor, title, selected }) {
