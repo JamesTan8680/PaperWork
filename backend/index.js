@@ -13,6 +13,9 @@ const db = mysql.createConnection({
   database: "paperwork_project",
 });
 
+//run a query
+//q: the query
+//res: the response object
 function fetch(q, res){
   const sql = q;
     db.query(sql, (err, data) => {
@@ -22,6 +25,14 @@ function fetch(q, res){
     });
 }
 
+//run a select query
+//table: table
+//args: the following arguments:
+//  columns: select...
+//  where: where...
+//  orderBy: order by... [...desc]
+//use either {} or a req.query retuning {} for no args
+//res: the response object
 function select(table, args, res){
   var q = "SELECT ";
   if (args.columns) q += args.columns;
@@ -52,6 +63,18 @@ app.get("/select/:table", (req, res) => {
   select(req.params.table,req.query,res);
 });
 
+//get document table
+app.get("/select/viewDocument", (req,res) =>{
+    select("document_container",req.query,res);
+}
+)
+//get document
+// id: the container id
+//http://localhost:8800/select/viewDocument/c
+app.get("/select/viewDocument/:id", (req,res) =>{
+    select("document_container",{"where":"document_container_id='"+req.params.id+"'"},res);
+}
+)
 
 // //get table (test params)
 // app.get("/select/:tables", (req, res) => {
@@ -63,15 +86,15 @@ app.get("/select/:table", (req, res) => {
 
 
 //count rows
-app.get("/count", (req, res) => {
+app.get("/info/count", (req, res) => {
    select(req.params.table,{"columns":"COUNT(*) AS length"},res);
 
 });
 
 //most popular template
-app.get("/top/document", (req, res) => {
+app.get("/info/mostPopularDoc", (req, res) => {
   // get:    select id, title, count from documents joined with document templates, group by id, order by count, limit to 1 item
-  // result: most popular template name
+  // result: most popular template info
   fetch("SELECT document_container.document_template_id, document_template.title, COUNT(*) AS count FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_container.document_template_id ORDER BY COUNT(*) DESC LIMIT 1", res);
 });
 
