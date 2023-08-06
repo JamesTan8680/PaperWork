@@ -11,6 +11,54 @@ const db = mysql.createConnection({
 
 const app = express(); 
 
+function fetch(q, res){
+  const sql = q;
+    db.query(sql, (err, data) => {
+        if (err) return res.send(err);
+        return res.json(data);
+
+    });
+}
+
+function select(table, args, res){
+  var q = "SELECT ";
+  if (args.columns) q += args.columns;
+  else q += "*";
+  q+= " FROM " + table;
+  if (args.other) q+= " " + args.other;
+  if (args.where) q+= " WHERE " + args.where;
+  if (args.orderBy) q+= " ORDER BY " + args.orderBy;
+  console.log(q);
+  fetch(q,res);
+}
+
+//get all documents by template
+app.get("/select/viewDocument/documentTemplate", (req, res) => {
+  req.query.columns = "document_template.document_template_id AS id, document_template.title, COUNT(*) AS count";
+  req.query.other = "INNER JOIN document_default_template ON document_default_template.type = document_template.type GROUP BY document_template.type";
+  select("document_template",req.query,res);
+});
+
+//get list of signatories of document
+//tempId: ID of the template type
+//docId: ID of the document
+app.get("/select/viewDocument/documentTemplate/:tempId/:docId", (req, res) => {
+  req.query.where = "document_template.type = '" + req.params.tempId + "' AND document_template.document_template_id = '" + req.params.docId + "'";
+  req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
+  select("document_container",req.query,res);
+});
+
+
+app.get("/select/viewDocument/documentTemplate/:id", (req, res) => {
+  req.query.where = "document_template.type = '" + req.params.id + "'"
+ // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
+  select("document_template",req.query,res);
+});
+
+
+//This line separate Jordan code and Simon code --------------------------------------------------------------------------------------------
+//Simon`s code
+
 app.get("/homepage/return_number_of_documents", (req, res) => {
   //write the query for the sql
   const sql = "SELECT count(*) AS 'total' FROM document_container";
