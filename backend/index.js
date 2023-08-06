@@ -31,6 +31,7 @@ function fetch(q, res){
 //  columns: select...
 //  where: where...
 //  orderBy: order by... [...desc]
+//  other: other information
 //use either {} or a req.query retuning {} for no args
 //res: the response object
 function select(table, args, res){
@@ -38,6 +39,7 @@ function select(table, args, res){
   if (args.columns) q += args.columns;
   else q += "*";
   q+= " FROM " + table;
+  if (args.other) q+= " " + args.other;
   if (args.where) q+= " WHERE " + args.where;
   if (args.orderBy) q+= " ORDER BY " + args.orderBy;
   console.log(q);
@@ -53,9 +55,30 @@ function select(table, args, res){
 //   fetch("SELECT table_name FROM information_schema.tables WHERE table_schema = 'paperwork_project';", res);
 // });
 
-//https://stackoverflow.com/questions/20089582/how-to-get-a-url-parameter-in-express
 
-//get table (version 0.2)
+
+//get document table
+app.get("/select/viewDocument", (req,res) =>{
+    select("document_container",req.query,res);
+}
+)
+
+//get all documents by template
+app.get("/select/viewDocument/documentTemplate", (req, res) => {
+  req.query.columns = "document_template.document_template_id AS id, document_template.title, COUNT(*) AS count";
+  req.query.other = "INNER JOIN document_default_template ON document_default_template.type = document_template.type GROUP BY document_template.type";
+  select("document_template",req.query,res);
+});
+
+//get list of documents with template type
+app.get("/select/viewDocument/documentTemplate/:id", (req, res) => {
+  req.query.where = "document_template.type = '" + req.params.id + "'"
+ // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
+  select("document_template",req.query,res);
+});
+
+//https://stackoverflow.com/questions/20089582/how-to-get-a-url-parameter-in-express
+//get table
 // EXAMPLE
 //http://localhost:8800/select/document_template?where=type=%27nda%27
 //http://localhost:8800/select/document_template?columns=title,date_added&orderBy=parties_number%20desc
@@ -63,18 +86,7 @@ app.get("/select/:table", (req, res) => {
   select(req.params.table,req.query,res);
 });
 
-//get document table
-app.get("/select/viewDocument", (req,res) =>{
-    select("document_container",req.query,res);
-}
-)
-//get document
-// id: the container id
-//http://localhost:8800/select/viewDocument/c
-app.get("/select/viewDocument/:id", (req,res) =>{
-    select("document_container",{"where":"document_container_id='"+req.params.id+"'"},res);
-}
-)
+
 
 // //get table (test params)
 // app.get("/select/:tables", (req, res) => {
@@ -85,18 +97,12 @@ app.get("/select/viewDocument/:id", (req,res) =>{
 // });
 
 
-//count rows
-app.get("/info/count", (req, res) => {
-   select(req.params.table,{"columns":"COUNT(*) AS length"},res);
-
-});
-
-//most popular template
-app.get("/info/mostPopularDoc", (req, res) => {
-  // get:    select id, title, count from documents joined with document templates, group by id, order by count, limit to 1 item
-  // result: most popular template info
-  fetch("SELECT document_container.document_template_id, document_template.title, COUNT(*) AS count FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_container.document_template_id ORDER BY COUNT(*) DESC LIMIT 1", res);
-});
+// //most popular template
+// app.get("/info/mostPopularDoc", (req, res) => {
+//   // get:    select id, title, count from documents joined with document templates, group by id, order by count, limit to 1 item
+//   // result: most popular template info
+//   fetch("SELECT document_container.document_template_id, document_template.title, COUNT(*) AS count FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_container.document_template_id ORDER BY COUNT(*) DESC LIMIT 1", res);
+// });
 
   //check if the database is existed or not
   db.connect(function (err) {
