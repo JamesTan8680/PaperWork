@@ -7,7 +7,6 @@ app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-<<<<<<< HEAD
   host: "database-2.co8ctu949l8t.us-east-1.rds.amazonaws.com",
   user: "admin",
   password: "Paperwork-123",
@@ -46,11 +45,13 @@ db.connect(function (err) {
   if (err) {
     return console.error("error: " + err.message);
   }
+)
 
 app.get("/tables", (req, res) => {
   //write the query for the sql
   fetch("SELECT table_name FROM information_schema.tables WHERE table_schema = 'paperwork_project';", res);
 });
+
 app.get("/select/:table/:cols", (req, res) => {
   fetch("SELECT " + req.params["cols"] +" FROM " + req.params["table"], res);
 });
