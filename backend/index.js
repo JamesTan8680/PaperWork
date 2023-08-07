@@ -59,7 +59,7 @@ app.get("/select/viewDocument/documentTemplate/:id", (req, res) => {
 //This line separate Jordan code and Simon code --------------------------------------------------------------------------------------------
 //Simon`s code
 
-app.get("/homepage/return_number_of_documents", (req, res) => {
+app.get("/homepage/documents/total", (req, res) => {
   //write the query for the sql
   const sql = "SELECT count(*) AS 'total' FROM document_container";
   db.query(sql, (err, data) => {
@@ -68,7 +68,7 @@ app.get("/homepage/return_number_of_documents", (req, res) => {
   });
 });
 
-app.get("/homepage/return_most_popular_document", (req, res) => {
+app.get("/homepage/documents/most-popular", (req, res) => {
   // Write the query for the SQL
   const sql = "SELECT document_template_id, COUNT(*) AS count FROM document_container GROUP BY document_template_id ORDER BY count DESC LIMIT 1";
   db.query(sql, (err, data) => {
@@ -77,7 +77,7 @@ app.get("/homepage/return_most_popular_document", (req, res) => {
   });
 });
 
-app.get("/homepage/return_recent_created_documents", (req, res) => {
+app.get("/homepage/documents/recently-created", (req, res) => {
   // Write the query for the SQL, using DATE_FORMAT to format the date
   const sql = "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
 
@@ -87,7 +87,7 @@ app.get("/homepage/return_recent_created_documents", (req, res) => {
   });
 });
 
-app.get("/homepage/return_list_of_notes", (req, res) => {
+app.get("/homepage/notes", (req, res) => {
   // Write the query for the SQL, using DATE_FORMAT to format the date
   const sql = "SELECT note_id, DATE_FORMAT(date_created, '%d/%m/%Y') AS date_created, person_created, header, content from notes where is_removed = '0'";
 

@@ -1,8 +1,8 @@
 Homepage:
-    /homepage/return_number_of_documents 
-    /homepage/return_most_popular_document
-    /homepage/return_recent_created_documents
-    /homepage/return_list_of_notes
+    /homepage/documents/total
+    /homepage/documents/most-popular
+    /homepage/documents/recently-created
+    /homepage/notes
 
 view_documents:
     
