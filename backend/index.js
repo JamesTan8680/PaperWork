@@ -27,6 +27,7 @@ function select(table, args, res){
   q+= " FROM " + table;
   if (args.other) q+= " " + args.other;
   if (args.where) q+= " WHERE " + args.where;
+  if (args.groupBy) q+= " GROUP BY " + args.groupBy;
   if (args.orderBy) q+= " ORDER BY " + args.orderBy;
   console.log(q);
   fetch(q,res);
@@ -42,14 +43,14 @@ app.get("/view-documents/templates", (req, res) => {
 //get list of signatories of document
 //tempId: ID of the template type
 //docId: ID of the document
-app.get("/view-documents/template/:tempId/:docId", (req, res) => {
+app.get("/view-documents/templates/:tempId/:docId", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.tempId + "' AND document_template.document_template_id = '" + req.params.docId + "'";
   req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
   select("document_container",req.query,res);
 });
 
 
-app.get("/view-documents/template/:id", (req, res) => {
+app.get("/view-documents/templates/:id", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.id + "'"
  // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
   select("document_template",req.query,res);
@@ -61,40 +62,31 @@ app.get("/view-documents/template/:id", (req, res) => {
 
 app.get("/homepage/documents/total", (req, res) => {
   //write the query for the sql
-  const sql = "SELECT count(*) AS 'total' FROM document_container";
-  db.query(sql, (err, data) => {
-    if (err) return res.send(err);
-    return res.json(data);
-  });
+  select("document_container",{"columns":"count(*) AS 'total'"},res);
 });
 
 app.get("/homepage/documents/most-popular", (req, res) => {
   // Write the query for the SQL
-  const sql = "SELECT document_template_id, COUNT(*) AS count FROM document_container GROUP BY document_template_id ORDER BY count DESC LIMIT 1";
-  db.query(sql, (err, data) => {
-    if (err) return res.send(err);
-    return res.json(data);
-  });
+ // const sql = "SELECT document_template_id, COUNT(*) AS count FROM document_container GROUP BY document_template_id ORDER BY count DESC LIMIT 1";
+
+  select("document_container",{"columns":"document_template_id, COUNT(*) AS count","orderBy":"count DESC","groupBy":"document_template_id","other":"LIMIT 1"},res);
+
 });
 
 app.get("/homepage/documents/recently-created", (req, res) => {
   // Write the query for the SQL, using DATE_FORMAT to format the date
-  const sql = "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
+  //const sql = "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
+  select("document_container",{"columns":"document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created"
+  ,"orderBy":"document_container.issue_date DESC","groupBy":"document_template_id","other":" INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id LIMIT 5"},res);
 
-  db.query(sql, (err, data) => {
-    if (err) return res.send(err);
-    return res.json(data);
-  });
+
 });
 
 app.get("/homepage/notes", (req, res) => {
   // Write the query for the SQL, using DATE_FORMAT to format the date
-  const sql = "SELECT note_id, DATE_FORMAT(date_created, '%d/%m/%Y') AS date_created, person_created, header, content from notes where is_removed = '0'";
+  //const sql = "SELECT note_id, DATE_FORMAT(date_created, '%d/%m/%Y') AS date_created, person_created, header, content from notes where is_removed = '0'";
+  select("notes",{"columns":"note_id, DATE_FORMAT(date_created, '%d/%m/%Y') AS date_created, person_created, header, content","where":"is_removed='0'"},res);
 
-  db.query(sql, (err, data) => {
-    if (err) return res.send(err);
-    return res.json(data);
-  });
 });
 
 //check if the database is existed or not
