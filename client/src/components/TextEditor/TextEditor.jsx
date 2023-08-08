@@ -3,7 +3,7 @@ import JoditEditor from "jodit-react";
 import HTMLReactParser from "html-react-parser"; //convert HTML strings to React elements
 import { useState, useMemo } from "react";
 
-export default function TextEditor({ editor, title, selected }) {
+export default function TextEditor({ editor, title, selected, setContent }) {
   function handleDragStart(event) {
     event.dataTransfer.setData("text/plain", event.target.textContent);
   }
@@ -24,7 +24,7 @@ export default function TextEditor({ editor, title, selected }) {
     },
   ];
 
-  const [value, setValue] = useState("");
+  //const [value, setValue] = useState("");
   const values = title;
 
   const config = useMemo(
@@ -38,8 +38,12 @@ export default function TextEditor({ editor, title, selected }) {
     []
   );
 
+  // const onChangeHandler = (event) => {
+  //   setValue(event);
+  // };
+
   const onChangeHandler = (event) => {
-    setValue(event);
+    setContent(event);
   };
 
   return (
@@ -54,7 +58,8 @@ export default function TextEditor({ editor, title, selected }) {
                 <div
                   draggable={true}
                   onDragStart={handleDragStart}
-                  key={item.id}>
+                  key={item.id}
+                >
                   {item.input}
                 </div>
               );
