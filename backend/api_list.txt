@@ -5,6 +5,6 @@ Homepage:
     /homepage/notes
 
 view_documents: (see code for additional args)
-    /viewDocument/documentTemplate
-    /viewDocument/documentTemplate/<tempId>
-    /viewDocument/documentTemplate/<tempId>/<docId>
+    /view-documents/templates
+    /view-documents/templates/{tempId}
+    /view-documents/templates/{tempId}/{docId}

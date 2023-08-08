@@ -33,7 +33,7 @@ function select(table, args, res){
 }
 
 //get all documents by template
-app.get("/viewDocument/documentTemplate", (req, res) => {
+app.get("/view-documents/templates", (req, res) => {
   req.query.columns = "document_template.document_template_id AS id, document_template.title, COUNT(*) AS count";
   req.query.other = "INNER JOIN document_default_template ON document_default_template.type = document_template.type GROUP BY document_template.type";
   select("document_template",req.query,res);
@@ -42,14 +42,14 @@ app.get("/viewDocument/documentTemplate", (req, res) => {
 //get list of signatories of document
 //tempId: ID of the template type
 //docId: ID of the document
-app.get("/viewDocument/documentTemplate/:tempId/:docId", (req, res) => {
+app.get("/view-documents/template/:tempId/:docId", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.tempId + "' AND document_template.document_template_id = '" + req.params.docId + "'";
   req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
   select("document_container",req.query,res);
 });
 
 
-app.get("/viewDocument/documentTemplate/:id", (req, res) => {
+app.get("/view-documents/template/:id", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.id + "'"
  // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
   select("document_template",req.query,res);
