@@ -9,7 +9,6 @@ const db = mysql.createConnection({
   database: "paperwork_project",
 });
 
-
 const app = express();
 
 // Use the middleware

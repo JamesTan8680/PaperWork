@@ -6,6 +6,9 @@ import Approval from "../../img/home/approval.svg";
 import { Link } from "react-router-dom";
 import Calendar from "../../components/Calendar/Calendar";
 import RecentDoc from "../../components/RecentDoc/RecentDoc";
+import Edit from "../../img/home/edit.svg";
+import Delete from "../../img/home/delete.svg";
+import Note from "../../components/Note/Note";
 
 const BASE_URL = "http://localhost:8800/homepage";
 
@@ -14,6 +17,7 @@ function Home() {
     totalDocs: 0,
     mostPopularDocs: [],
     notes: [],
+    recentDocs: [],
   });
   const [error, setError] = useState(null);
 
@@ -35,6 +39,7 @@ function Home() {
           totalDocs: totalDocsResponse.data[0].total,
           mostPopularDocs: mostPopularDocsResponse.data,
           notes: notesResponse.data,
+          recentDocs: recentDocsResponse.data,
         });
       } catch (err) {
         console.error("Error during data fetching:", err);
@@ -77,12 +82,20 @@ function Home() {
               <button>Create Document</button>
             </Link>
           </div>
-          {data.notes.map((note, index) => (
-            <div key={index}>
-              <h2>{note.header}</h2>
-              <p>{note.content}</p>
+          <div className="note">
+            <div className="note-title">Notes</div>
+            <div className="note-container">
+              {data.notes.map((note, index) => (
+                <div className="note-item" key={index}>
+                  <span>{note.header}</span>{" "}
+                  <div className="icons">
+                    <img src={Edit} alt="Edit Icon" />
+                    <img src={Delete} alt="Delete Icon" />
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
       <div className="title">Note</div>
@@ -111,12 +124,11 @@ function Home() {
           </div>
         </div>
       </div>
+
       <div className="title">Recent Created Documents</div>
       <div className="bottom">
         <div className="bottom-left">
-          <div className="bottom-left">
-            <RecentDoc />
-          </div>
+          <RecentDoc />
         </div>
         <div className="bottom-right">
           <Calendar />
