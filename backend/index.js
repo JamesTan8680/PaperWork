@@ -28,14 +28,13 @@ function select(table, args, res) {
   q += " FROM " + table;
   if (args.other) q += " " + args.other;
   if (args.where) q += " WHERE " + args.where;
-  if (args.groupBy) q += " GROUP BY " + args.groupBy;
   if (args.orderBy) q += " ORDER BY " + args.orderBy;
   console.log(q);
   fetch(q, res);
 }
 
 //get all documents by template
-app.get("/view-documents/templates", (req, res) => {
+app.get("/viewDocument/documentTemplate", (req, res) => {
   req.query.columns =
     "document_template.document_template_id AS id, document_template.title, COUNT(*) AS count";
   req.query.other =
@@ -46,7 +45,7 @@ app.get("/view-documents/templates", (req, res) => {
 //get list of signatories of document
 //tempId: ID of the template type
 //docId: ID of the document
-app.get("/view-documents/templates/:tempId/:docId", (req, res) => {
+app.get("/viewDocument/documentTemplate/:tempId/:docId", (req, res) => {
   req.query.where =
     "document_template.type = '" +
     req.params.tempId +
@@ -58,7 +57,7 @@ app.get("/view-documents/templates/:tempId/:docId", (req, res) => {
   select("document_container", req.query, res);
 });
 
-app.get("/view-documents/templates/:id", (req, res) => {
+app.get("/viewDocument/documentTemplate/:id", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.id + "'";
   // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
   select("document_template", req.query, res);
@@ -69,53 +68,86 @@ app.get("/view-documents/templates/:id", (req, res) => {
 
 app.get("/homepage/documents/total", (req, res) => {
   //write the query for the sql
-  select("document_container", { columns: "count(*) AS 'total'" }, res);
+  const sql = "SELECT count(*) AS 'total' FROM document_container";
+  db.query(sql, (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
 });
 
 app.get("/homepage/documents/most-popular", (req, res) => {
   // Write the query for the SQL
-  // const sql = "SELECT document_template_id, COUNT(*) AS count FROM document_container GROUP BY document_template_id ORDER BY count DESC LIMIT 1";
-
-  select(
-    "document_container",
-    {
-      columns: "document_template_id, COUNT(*) AS count",
-      orderBy: "count DESC",
-      groupBy: "document_template_id",
-      other: "LIMIT 1",
-    },
-    res
-  );
+  const sql =
+    "SELECT document_template_id, COUNT(*) AS count FROM document_container GROUP BY document_template_id ORDER BY count DESC LIMIT 1";
+  db.query(sql, (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
 });
 
 app.get("/homepage/documents/recently-created", (req, res) => {
-  // Write the query for the SQL, using DATE_FORMAT to format the date
-  //const sql = "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
-  select(
-    "document_container",
-    {
-      columns:
-        "document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created",
-      orderBy: "document_container.issue_date DESC",
-      groupBy: "document_template_id",
-      other:
-        " INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id LIMIT 5",
-    },
-    res
-  );
+  const sql =
+    "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
+
+  db.query(sql, (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
 });
 
 app.get("/homepage/notes", (req, res) => {
   // Write the query for the SQL, using DATE_FORMAT to format the date
-  //const sql = "SELECT note_id, DATE_FORMAT(date_created, '%d/%m/%Y') AS date_created, person_created, header, content from notes where is_removed = '0'";
-  select(
-    "notes",
-    {
-      columns:
-        "note_id, DATE_FORMAT(date_created, '%d/%m/%Y') AS date_created, person_created, header, content",
-      where: "is_removed='0'",
-    },
-    res
+  const sql =
+    "SELECT note_id, DATE_FORMAT(date_created, '%d/%m/%Y') AS date_created, person_created, header, content from notes where is_removed = '0'";
+
+  db.query(sql, (err, data) => {
+    if (err) return res.send(err);
+    return res.json(data);
+  });
+});
+
+//for update
+app.put("/homepage/notes/:note_id", (req, res) => {
+  const noteId = req.params.note_id;
+  const { header, content } = req.body;
+
+  const sql = "UPDATE notes SET header = ?, content = ? WHERE note_id = ?";
+
+  db.query(sql, [header, content, noteId], (err, result) => {
+    if (err) return res.send(err);
+    return res.json({ message: "Note updated successfully" });
+  });
+});
+
+//for delete
+app.delete("/homepage/notes/:note_id", (req, res) => {
+  const noteId = req.params.note_id;
+
+  const sql = "UPDATE notes SET is_removed = '1' WHERE note_id = ?";
+
+  db.query(sql, [noteId], (err, result) => {
+    if (err) return res.send(err);
+    return res.json({ message: "Note deleted successfully" });
+  });
+});
+
+//for insert
+app.post("/homepage/notes", (req, res) => {
+  const { date_created, person_created, header, content } = req.body;
+
+  const sql =
+    "INSERT INTO notes (date_created, person_created, header, content, is_removed) VALUES (?, ?, ?, ?, '0')";
+
+  db.query(
+    sql,
+    [date_created, person_created, header, content],
+    (err, result) => {
+      if (err) return res.send(err);
+      return res.json({
+        message: "Note inserted successfully",
+        note_id: result.insertId,
+      });
+    }
   );
 });
 
