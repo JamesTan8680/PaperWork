@@ -136,7 +136,7 @@ app.post("/homepage/notes", (req, res) => {
   const { date_created, person_created, header, content } = req.body;
 
   const sql =
-    "INSERT INTO notes (date_created, person_created, header, content, is_removed) VALUES (?, ?, ?, ?, '0')";
+    "INSERT INTO notes (date_created, person_created, header, contçent, is_removed) VALUES (?, ?, ?, ?, '0')";
 
   db.query(
     sql,
