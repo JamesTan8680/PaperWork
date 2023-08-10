@@ -2,25 +2,7 @@ import React from "react";
 import Filter from "../../img/home/filter.svg";
 import "./RecentDoc.scss";
 import Doc from "../../img/home/doc.svg";
-function RecentDoc() {
-  const data = [
-    {
-      title: "NON-DISCLOSURE AGREEMENT",
-      version: "1.0",
-      date: "12/12/23",
-    },
-    {
-      title: "NON-DISCLOSURE AGREEMENT",
-      version: "1.0",
-      date: "12/12/23",
-    },
-    {
-      title: "NON-DISCLOSURE AGREEMENT",
-      version: "1.0",
-      date: "12/12/23",
-    },
-  ];
-
+function RecentDoc({ docData }) {
   return (
     <>
       <div className="top-doc">
@@ -33,18 +15,21 @@ function RecentDoc() {
           <span>DATE CREATED</span>
         </div>
       </div>
-      {data.map((item) => {
+      {docData?.map((item) => {
         return (
           <div className="bottom-doc">
             <div className="doc-container">
               <div className="doc-title">
                 <img src={Doc} alt="" />
-                <span>{item.title}</span>
+                {/* <span>{item.title}</span> */}
+                <span>{item.document_template_id}</span>
               </div>
               <div className="version-container">
                 <div className="version-item">
+                  {/* <span className="version">{item.version}</span>*/}
                   <span className="version">{item.version}</span>
-                  <span className="date">{item.date}</span>
+                  {/* <span className="date">{item.date}</span> */}
+                  <span className="date">{item.date_created}</span>
                 </div>
               </div>
             </div>
