@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import RecentDoc from "../../components/RecentDoc/RecentDoc";
 import Calendar from "../../components/Calendar/Calendar";
 import Note from "../../components/Note/Note";
+
 const BASE_URL = "http://localhost:8800/homepage";
 
 function Home() {
@@ -17,70 +18,87 @@ function Home() {
     recentDocs: [],
   });
   const [error, setError] = useState(null);
-  //Create a use state for notes
-  const [notes, setNotes] = useState([]);
-  //Create a use state for recentDocs
-  const [recentDocs, setRecentDocs] = useState([]);
+  const [showAddNotePopup, setShowAddNotePopup] = useState(false);
 
-  //Fetch the notes data
-  useEffect(() => {
-    const fetchAllNotes = async () => {
-      try {
-        const res = await axios.get("http://localhost:8800/homepage/notes");
-        setNotes(res.data);
-      } catch (err) {
-        console.log(err);
+  const addNote = async (noteData) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/notes`, noteData);
+      if (response.data && response.data.message) {
+        setData((prevData) => ({
+          ...prevData,
+          notes: [
+            ...prevData.notes,
+            {
+              note_id: response.data.note_id,
+              ...noteData,
+            },
+          ],
+        }));
       }
-    };
+    } catch (err) {
+      console.error("Error adding note:", err);
+    }
+  };
 
-    const fetchData = async () => {
-      try {
-        const totalDocsResponse = await axios.get(
-          `${BASE_URL}/documents/total`
-        );
-        const mostPopularDocsResponse = await axios.get(
-          `${BASE_URL}/documents/most-popular`
-        );
-        const recentDocsResponse = await axios.get(
-          `${BASE_URL}/documents/recently-created`
-        );
-        const notesResponse = await axios.get(`${BASE_URL}/notes`);
+  const handleAddNote = (noteData) => {
+    addNote({
+      date_created: new Date().toISOString().slice(0, 10),
+      person_created: "YourUserName",
+      ...noteData,
+    });
+    setShowAddNotePopup(false);
+  };
 
-        setData({
-          totalDocs: totalDocsResponse.data[0].total,
-          mostPopularDocs: mostPopularDocsResponse.data,
-          notes: notesResponse.data,
-          recentDocs: recentDocsResponse.data,
-        });
-      } catch (err) {
-        console.error("Error during data fetching:", err);
-        setError("There was an error fetching the data. Please try again.");
-      }
-    };
-
-    const fetchRecentDocs = async () => {
-      try {
-        const res = await axios.get(
-          "http://localhost:8800/homepage/documents/recently-created"
-        );
-        setRecentDocs(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
+  const onUpdate = () => {
     fetchAllNotes();
+  };
 
+  const fetchAllNotes = async () => {
+    try {
+      const res = await axios.get(`${BASE_URL}/notes`);
+      setData((prevData) => ({ ...prevData, notes: res.data }));
+    } catch (err) {
+      console.error("Error fetching all notes:", err);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const [
+        totalDocsResponse,
+        mostPopularDocsResponse,
+        recentDocsResponse,
+        notesResponse,
+      ] = await Promise.all([
+        axios.get(`${BASE_URL}/documents/total`),
+        axios.get(`${BASE_URL}/documents/most-popular`),
+        axios.get(`${BASE_URL}/documents/recently-created`),
+        axios.get(`${BASE_URL}/notes`),
+      ]);
+      setData({
+        totalDocs: totalDocsResponse.data[0].total,
+        mostPopularDocs: mostPopularDocsResponse.data,
+        notes: notesResponse.data,
+        recentDocs: recentDocsResponse.data,
+      });
+    } catch (err) {
+      setError("There was an error fetching the data. Please try again.");
+      console.error("Error during data fetching:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllNotes();
     fetchData();
-
-    fetchRecentDocs();
   }, []);
 
   return (
     <div className="home">
+      {/* Top Section */}
       <div className="top">
         <div className="title">Document Summary</div>
         <div className="top-container">
+          {/* Document Summary Section */}
           <Link to="">
             <div className="doc">
               <span>Documents</span>
@@ -104,30 +122,61 @@ function Home() {
               <button>Create Document</button>
             </Link>
           </div>
-          {/* <div className="note">
-            <div className="note-title">Notes</div>
-            <div className="note-container">
-              {data.notes.map((note, index) => (
-                <div className="note-item" key={index}>
-                  <span>{note.header}</span>{" "}
-                  <div className="icons">
-                    <img src={Edit} alt="Edit Icon" />
-                    <img src={Delete} alt="Delete Icon" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div> */}
-
-          <Note data={data} />
+          <div className="note-section">
+            <div className="note-header"></div>
+            <Note data={data} onUpdate={onUpdate} />
+            <button
+              className="add-button"
+              onClick={() => setShowAddNotePopup(true)}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+            {showAddNotePopup && (
+              <div className="add-note-popup">
+                <h3>Add New Note</h3>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleAddNote({
+                      header: e.target.header.value,
+                      content: e.target.content.value,
+                    });
+                  }}
+                >
+                  <label>
+                    Header:
+                    <input type="text" name="header" required />
+                  </label>
+                  <label>
+                    Content:
+                    <textarea name="content" required></textarea>
+                  </label>
+                  <button type="submit">Add Note</button>
+                </form>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-      <div className="title">Note</div>
+
+      {/* Notes Display Section */}
+
       <div className="mid">
         <div className="mid-container">
-          {notes.map((note, index) => (
-            <div className="container">
-              <div className="card" key={index}>
+          {data.notes.map((note, index) => (
+            <div className="container" key={index}>
+              <div className="card">
                 <h2>{note.header}</h2>
                 <p>{note.content}</p>
               </div>
@@ -136,22 +185,19 @@ function Home() {
         </div>
       </div>
 
+      {/* Recent Documents Section */}
       <div className="title">Recent Created Documents</div>
-
       <div className="bottom">
         <div className="bottom-left">
-          <RecentDoc
-            // document_id={recentDoc.document_template_id}
-            // version={recentDoc.version}
-            // date_created={recentDoc.date_created}
-            docData={recentDocs}
-          />
+          <RecentDoc docData={data.recentDocs} />
         </div>
-
         <div className="bottom-right">
           <Calendar />
         </div>
       </div>
+
+      {/* Error Display */}
+      {error && <p className="error">{error}</p>}
     </div>
   );
 }
