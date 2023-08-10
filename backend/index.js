@@ -10,9 +10,8 @@ const db = mysql.createConnection({
 });
 
 const app = express();
-
-// Use the middleware
 app.use(cors());
+app.use(express.json());
 
 function fetch(q, res) {
   const sql = q;
@@ -35,7 +34,7 @@ function select(table, args, res) {
 }
 
 //get all documents by template
-app.get("/select/viewDocument/documentTemplate", (req, res) => {
+app.get("/viewDocument/documentTemplate", (req, res) => {
   req.query.columns =
     "document_template.document_template_id AS id, document_template.title, COUNT(*) AS count";
   req.query.other =
@@ -46,7 +45,7 @@ app.get("/select/viewDocument/documentTemplate", (req, res) => {
 //get list of signatories of document
 //tempId: ID of the template type
 //docId: ID of the document
-app.get("/select/viewDocument/documentTemplate/:tempId/:docId", (req, res) => {
+app.get("/viewDocument/documentTemplate/:tempId/:docId", (req, res) => {
   req.query.where =
     "document_template.type = '" +
     req.params.tempId +
@@ -58,7 +57,7 @@ app.get("/select/viewDocument/documentTemplate/:tempId/:docId", (req, res) => {
   select("document_container", req.query, res);
 });
 
-app.get("/select/viewDocument/documentTemplate/:id", (req, res) => {
+app.get("/viewDocument/documentTemplate/:id", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.id + "'";
   // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
   select("document_template", req.query, res);
@@ -87,9 +86,8 @@ app.get("/homepage/documents/most-popular", (req, res) => {
 });
 
 app.get("/homepage/documents/recently-created", (req, res) => {
-  // Write the query for the SQL, using DATE_FORMAT to format the date
   const sql =
-    "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
+    "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
 
   db.query(sql, (err, data) => {
     if (err) return res.send(err);
@@ -106,6 +104,51 @@ app.get("/homepage/notes", (req, res) => {
     if (err) return res.send(err);
     return res.json(data);
   });
+});
+
+//for update
+app.put("/homepage/notes/:note_id", (req, res) => {
+  const noteId = req.params.note_id;
+  const { header, content } = req.body;
+
+  const sql = "UPDATE notes SET header = ?, content = ? WHERE note_id = ?";
+
+  db.query(sql, [header, content, noteId], (err, result) => {
+    if (err) return res.send(err);
+    return res.json({ message: "Note updated successfully" });
+  });
+});
+
+//for delete
+app.delete("/homepage/notes/:note_id", (req, res) => {
+  const noteId = req.params.note_id;
+
+  const sql = "UPDATE notes SET is_removed = '1' WHERE note_id = ?";
+
+  db.query(sql, [noteId], (err, result) => {
+    if (err) return res.send(err);
+    return res.json({ message: "Note deleted successfully" });
+  });
+});
+
+//for insert
+app.post("/homepage/notes", (req, res) => {
+  const { date_created, person_created, header, content } = req.body;
+
+  const sql =
+    "INSERT INTO notes (date_created, person_created, header, content, is_removed) VALUES (?, ?, ?, ?, '0')";
+
+  db.query(
+    sql,
+    [date_created, person_created, header, content],
+    (err, result) => {
+      if (err) return res.send(err);
+      return res.json({
+        message: "Note inserted successfully",
+        note_id: result.insertId,
+      });
+    }
+  );
 });
 
 //check if the database is existed or not
