@@ -32,10 +32,7 @@ function Home() {
         console.log(err);
       }
     };
-    fetchAllNotes();
-  }, []);
 
-  useEffect(() => {
     const fetchData = async () => {
       try {
         const totalDocsResponse = await axios.get(
@@ -61,16 +58,6 @@ function Home() {
       }
     };
 
-    fetchData();
-  }, []);
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  // console.log(notes);
-
-  useEffect(() => {
     const fetchRecentDocs = async () => {
       try {
         const res = await axios.get(
@@ -81,9 +68,13 @@ function Home() {
         console.log(err);
       }
     };
+
+    fetchAllNotes();
+
+    fetchData();
+
     fetchRecentDocs();
   }, []);
-  console.log(recentDocs);
 
   return (
     <div className="home">
