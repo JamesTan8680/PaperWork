@@ -22,7 +22,7 @@ function RecentDoc({ docData }) {
               <div className="doc-title">
                 <img src={Doc} alt="" />
                 {/* <span>{item.title}</span> */}
-                <span>{item.document_template_id}</span>
+                <span>{item.title}</span>
               </div>
               <div className="version-container">
                 <div className="version-item">

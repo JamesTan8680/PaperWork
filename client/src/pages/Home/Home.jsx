@@ -120,7 +120,7 @@ function Home() {
               <img src={Approval} alt="Approval Icon" />
               {data.mostPopularDocs.map((doc, index) => (
                 <div key={index}>
-                  <span className="doc-title">{doc.document_template_id}</span>
+                  <span className="doc-title">{doc.title}</span>
                 </div>
               ))}
             </div>
@@ -133,15 +133,13 @@ function Home() {
             <Note data={data} onUpdate={onUpdate} />
             <button
               className="add-button"
-              onClick={() => setShowAddNotePopup(true)}
-            >
+              onClick={() => setShowAddNotePopup(true)}>
               <svg
                 width="24"
                 height="24"
                 viewBox="0 0 24 24"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+                xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"
                   fill="currentColor"
@@ -158,8 +156,7 @@ function Home() {
                       header: e.target.header.value,
                       content: e.target.content.value,
                     });
-                  }}
-                >
+                  }}>
                   <label>
                     Header:
                     <input type="text" name="header" required />
@@ -174,8 +171,7 @@ function Home() {
                     onClick={(e) => {
                       // Reset functionality: Clear the form fields
                       e.currentTarget.form.reset();
-                    }}
-                  >
+                    }}>
                     Reset
                   </button>
                   <button
@@ -183,8 +179,7 @@ function Home() {
                     onClick={() => {
                       // Close functionality: Hide the popup
                       setShowAddNotePopup(false);
-                    }}
-                  >
+                    }}>
                     Close
                   </button>
                 </form>
