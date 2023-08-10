@@ -1,15 +1,60 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./Home.scss";
 import Doc from "../../img/home/document.svg";
 import Approval from "../../img/home/approval.svg";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Note from "../../components/Note/Note";
+import Edit from "../../img/home/edit.svg";
+import Delete from "../../img/home/delete.svg";
+
+const BASE_URL = "http://localhost:8800/homepage";
+
 import RecentDoc from "../../components/RecentDoc/RecentDoc";
 import Calendar from "../../components/Calendar/Calendar";
-import axios from "axios";
 
+import Note from "../../components/Note/Note";
 function Home() {
+  const [data, setData] = useState({
+    totalDocs: 0,
+    mostPopularDocs: [],
+    notes: [],
+    recentDocs: [],
+  });
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const totalDocsResponse = await axios.get(
+          `${BASE_URL}/documents/total`
+        );
+        const mostPopularDocsResponse = await axios.get(
+          `${BASE_URL}/documents/most-popular`
+        );
+        const recentDocsResponse = await axios.get(
+          `${BASE_URL}/documents/recently-created`
+        );
+        const notesResponse = await axios.get(`${BASE_URL}/notes`);
+
+        setData({
+          totalDocs: totalDocsResponse.data[0].total,
+          mostPopularDocs: mostPopularDocsResponse.data,
+          notes: notesResponse.data,
+          recentDocs: recentDocsResponse.data,
+        });
+      } catch (err) {
+        console.error("Error during data fetching:", err);
+        setError("There was an error fetching the data. Please try again.");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   //Create a use state for notes
   const [notes, setNotes] = useState([]);
   //Create a use state for recentDocs
@@ -52,20 +97,38 @@ function Home() {
             <div className="doc">
               <span>Documents</span>
               <div className="detail">
-                <img src={Doc} alt="" />
-                <span>53</span>
+                <img src={Doc} alt="Document Icon" />
+                <span>{data.totalDocs}</span>
               </div>
             </div>
           </Link>
           <div className="pop-doc">
             <span className="container-title">Most Popular Documents</span>
             <div className="detail">
-              <img src={Approval} alt="" />
-              <span className="doc-title">Non-disclosure Agreement</span>
+              <img src={Approval} alt="Approval Icon" />
+              {data.mostPopularDocs.map((doc, index) => (
+                <div key={index}>
+                  <span className="doc-title">{doc.document_template_id}</span>
+                </div>
+              ))}
             </div>
             <Link to="/createDoc">
               <button>Create Document</button>
             </Link>
+          </div>
+          <div className="note">
+            <div className="note-title">Notes</div>
+            <div className="note-container">
+              {data.notes.map((note, index) => (
+                <div className="note-item" key={index}>
+                  <span>{note.header}</span>{" "}
+                  <div className="icons">
+                    <img src={Edit} alt="Edit Icon" />
+                    <img src={Delete} alt="Delete Icon" />
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <Note />
@@ -84,6 +147,7 @@ function Home() {
           ))}
         </div>
       </div>
+
       <div className="title">Recent Created Documents</div>
 
       <div className="bottom">

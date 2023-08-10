@@ -2,7 +2,10 @@ Homepage:
     /homepage/documents/total
     /homepage/documents/most-popular
     /homepage/documents/recently-created
-    /homepage/notes
+    /homepage/notes    (For Get and post)
+    /homepage/notes/:note_id    (For put and delete)
 
-view_documents:
-    
+view_documents: (see code for additional args)
+    /view-documents/templates
+    /view-documents/templates/{tempId}
+    /view-documents/templates/{tempId}/{docId}
