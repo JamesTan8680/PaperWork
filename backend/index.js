@@ -78,7 +78,7 @@ app.get("/homepage/documents/total", (req, res) => {
 app.get("/homepage/documents/most-popular", (req, res) => {
   // Write the query for the SQL
   const sql =
-    "SELECT document_template_id, COUNT(*) AS count FROM document_container GROUP BY document_template_id ORDER BY count DESC LIMIT 1";
+    "SELECT title, COUNT(*) AS count FROM document_template GROUP BY type ORDER BY count DESC LIMIT 1";
   db.query(sql, (err, data) => {
     if (err) return res.send(err);
     return res.json(data);
@@ -87,7 +87,7 @@ app.get("/homepage/documents/most-popular", (req, res) => {
 
 app.get("/homepage/documents/recently-created", (req, res) => {
   const sql =
-    "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
+    "SELECT title, version, DATE_FORMAT(created_date, '%d/%m/%Y') AS date_created FROM document_template ORDER BY created_date DESC LIMIT 5";
 
   db.query(sql, (err, data) => {
     if (err) return res.send(err);
@@ -136,7 +136,7 @@ app.post("/homepage/notes", (req, res) => {
   const { date_created, person_created, header, content } = req.body;
 
   const sql =
-    "INSERT INTO notes (date_created, person_created, header, contçent, is_removed) VALUES (?, ?, ?, ?, '0')";
+    "INSERT INTO notes (date_created, person_created, header, content, is_removed) VALUES (?, ?, ?, ?, '0')";
 
   db.query(
     sql,
