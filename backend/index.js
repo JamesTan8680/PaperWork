@@ -34,21 +34,6 @@ function select(table, args, res) {
   fetch(q, res);
 }
 
-//create a search string, automatically creating an OR statement for different columns to search
-//prefix: (optional else use "") the operator to put in front of the string WITH SPACES
-//search: the string to search for
-//inArgs: an array of column name strings to search in
-function generateSearchString(prefix, search, inArgs){
-  var s = prefix;
-  s += "(";
-  for (var i in inArgs){
-    s += inArgs[i] + " LIKE '%" + search + "%'";
-    if (i != inArgs.length - 1) s += " OR ";
-  }
-  s += ")";
-  return s;
-}
-
 //get all documents by template
 app.get("/view-document/document-template", (req, res) => {
   req.query.columns =
@@ -100,7 +85,7 @@ app.get("/homepage/documents/total", (req, res) => {
 app.get("/homepage/documents/most-popular", (req, res) => {
   // Write the query for the SQL
   const sql =
-    "SELECT document_template_id, COUNT(*) AS count FROM document_container GROUP BY document_template_id ORDER BY count DESC LIMIT 1";
+    "SELECT title, COUNT(*) AS count FROM document_template GROUP BY type ORDER BY count DESC LIMIT 1";
   db.query(sql, (err, data) => {
     if (err) return res.send(err);
     return res.json(data);
@@ -109,7 +94,7 @@ app.get("/homepage/documents/most-popular", (req, res) => {
 
 app.get("/homepage/documents/recently-created", (req, res) => {
   const sql =
-    "SELECT document_container.document_template_id, document_template.version, DATE_FORMAT(document_container.issue_date, '%d/%m/%Y') AS date_created FROM document_container INNER JOIN document_template ON document_container.document_template_id = document_template.document_template_id GROUP BY document_template_id ORDER BY document_container.issue_date DESC LIMIT 5";
+    "SELECT title, version, DATE_FORMAT(created_date, '%d/%m/%Y') AS date_created FROM document_template ORDER BY created_date DESC LIMIT 5";
 
   db.query(sql, (err, data) => {
     if (err) return res.send(err);

@@ -48,7 +48,13 @@ function Home() {
     });
     setShowAddNotePopup(false);
   };
+  const handleReset = (formElement) => {
+    formElement.reset();
+  };
 
+  const handleClose = () => {
+    setShowAddNotePopup(false);
+  };
   const onUpdate = () => {
     fetchAllNotes();
   };
@@ -163,6 +169,24 @@ function Home() {
                     <textarea name="content" required></textarea>
                   </label>
                   <button type="submit">Add Note</button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      // Reset functionality: Clear the form fields
+                      e.currentTarget.form.reset();
+                    }}
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Close functionality: Hide the popup
+                      setShowAddNotePopup(false);
+                    }}
+                  >
+                    Close
+                  </button>
                 </form>
               </div>
             )}
