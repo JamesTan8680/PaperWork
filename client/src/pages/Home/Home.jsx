@@ -4,15 +4,11 @@ import "./Home.scss";
 import Doc from "../../img/home/document.svg";
 import Approval from "../../img/home/approval.svg";
 import { Link } from "react-router-dom";
-import Edit from "../../img/home/edit.svg";
-import Delete from "../../img/home/delete.svg";
-
-const BASE_URL = "http://localhost:8800/homepage";
-
 import RecentDoc from "../../components/RecentDoc/RecentDoc";
 import Calendar from "../../components/Calendar/Calendar";
-
 import Note from "../../components/Note/Note";
+const BASE_URL = "http://localhost:8800/homepage";
+
 function Home() {
   const [data, setData] = useState({
     totalDocs: 0,
@@ -21,6 +17,23 @@ function Home() {
     recentDocs: [],
   });
   const [error, setError] = useState(null);
+  //Create a use state for notes
+  const [notes, setNotes] = useState([]);
+  //Create a use state for recentDocs
+  const [recentDocs, setRecentDocs] = useState([]);
+
+  //Fetch the notes data
+  useEffect(() => {
+    const fetchAllNotes = async () => {
+      try {
+        const res = await axios.get("http://localhost:8800/homepage/notes");
+        setNotes(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchAllNotes();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,23 +68,7 @@ function Home() {
     return <div>{error}</div>;
   }
 
-  //Create a use state for notes
-  const [notes, setNotes] = useState([]);
-  //Create a use state for recentDocs
-  const [recentDocs, setRecentDocs] = useState([]);
-  //Fetch the notes data
-  useEffect(() => {
-    const fetchAllNotes = async () => {
-      try {
-        const res = await axios.get("http://localhost:8800/homepage/notes");
-        setNotes(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchAllNotes();
-  }, []);
-  console.log(notes);
+  // console.log(notes);
 
   useEffect(() => {
     const fetchRecentDocs = async () => {
@@ -116,7 +113,7 @@ function Home() {
               <button>Create Document</button>
             </Link>
           </div>
-          <div className="note">
+          {/* <div className="note">
             <div className="note-title">Notes</div>
             <div className="note-container">
               {data.notes.map((note, index) => (
@@ -129,9 +126,9 @@ function Home() {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
-          <Note />
+          <Note data={data} />
         </div>
       </div>
       <div className="title">Note</div>
