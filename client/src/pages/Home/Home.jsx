@@ -142,7 +142,7 @@ function Home() {
 
       {/* Notes Display Section */}
 
-      <div>Note</div>
+      <div className="title">Note</div>
       <div className="mid">
         <div className="mid-container">
           {data.notes.map((note, index) => (

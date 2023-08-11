@@ -4,12 +4,15 @@ import "./Note.scss";
 import Edit from "../../img/home/edit.svg";
 import Delete from "../../img/home/delete.svg";
 import Plus from "../../img/home/plus.svg";
+import DeleteConfirmation from "./DeleteConfirmation";
 
 function Note({ data, onUpdate, setShowAddNotePopup }) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editNoteId, setEditNoteId] = useState(null);
   const [editHeader, setEditHeader] = useState("");
   const [editContent, setEditContent] = useState("");
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [noteToDeleteId, setNoteToDeleteId] = useState(null);
 
   const deleteNote = async (noteId) => {
     try {
@@ -23,6 +26,26 @@ function Note({ data, onUpdate, setShowAddNotePopup }) {
     } catch (err) {
       console.error("Error deleting note:", err);
     }
+  };
+
+  //This is delete click handler
+  const handleDeleteClick = (noteId) => {
+    setNoteToDeleteId(noteId);
+    setShowDeleteConfirmation(true);
+  };
+
+  //Confirm to delete a note
+  const handleDeleteConfirm = async () => {
+    if (noteToDeleteId !== null) {
+      await deleteNote(noteToDeleteId);
+      setShowDeleteConfirmation(false);
+    }
+  };
+
+  //Cancel to delete a note
+  const handleDeleteCancel = () => {
+    setNoteToDeleteId(null);
+    setShowDeleteConfirmation(false);
   };
 
   const handleEditClick = (note) => {
@@ -73,14 +96,25 @@ function Note({ data, onUpdate, setShowAddNotePopup }) {
                 alt="Edit Icon"
                 onClick={() => handleEditClick(note)}
               />
+
               <img
                 src={Delete}
                 alt="Delete Icon"
-                onClick={() => deleteNote(note.note_id)}
+                onClick={() => {
+                  handleDeleteClick(note.note_id);
+                }}
               />
             </div>
           </div>
         ))}
+
+        {/* Delete Modal */}
+        {showDeleteConfirmation && (
+          <DeleteConfirmation
+            onDeleteConfirm={handleDeleteConfirm}
+            onCancel={handleDeleteCancel}
+          />
+        )}
 
         {/* Edit Modal */}
 
