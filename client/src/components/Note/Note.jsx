@@ -3,8 +3,9 @@ import axios from "axios";
 import "./Note.scss";
 import Edit from "../../img/home/edit.svg";
 import Delete from "../../img/home/delete.svg";
+import Plus from "../../img/home/plus.svg";
 
-function Note({ data, onUpdate }) {
+function Note({ data, onUpdate, setShowAddNotePopup }) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editNoteId, setEditNoteId] = useState(null);
   const [editHeader, setEditHeader] = useState("");
@@ -53,7 +54,15 @@ function Note({ data, onUpdate }) {
 
   return (
     <div className="note">
-      <div className="note-title">Notes</div>
+      <div className="note-title">
+        Notes
+        <button
+          className="add-button"
+          onClick={() => setShowAddNotePopup(true)}
+        >
+          <img src={Plus} alt="" />
+        </button>
+      </div>
       <div className="note-container">
         {data?.notes.map((note, index) => (
           <div className="note-item" key={index}>
@@ -74,26 +83,29 @@ function Note({ data, onUpdate }) {
         ))}
 
         {/* Edit Modal */}
+
         {showEditModal && (
-          <div className="edit-modal">
-            <h3>Edit Note</h3>
-            <label>
-              Header:
-              <input
-                type="text"
-                value={editHeader}
-                onChange={(e) => setEditHeader(e.target.value)}
-              />
-            </label>
-            <label>
-              Content:
-              <textarea
-                value={editContent}
-                onChange={(e) => setEditContent(e.target.value)}
-              ></textarea>
-            </label>
-            <button onClick={handleSaveClick}>Save Changes</button>
-            <button onClick={handleCloseModal}>Cancel</button>
+          <div className="container">
+            <div className="edit-modal">
+              <h3>Edit Note</h3>
+              <label>
+                Title
+                <input
+                  type="text"
+                  value={editHeader}
+                  onChange={(e) => setEditHeader(e.target.value)}
+                />
+              </label>
+              <label>
+                Content
+                <textarea
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                ></textarea>
+              </label>
+              <button onClick={handleSaveClick}>Save Changes</button>
+              <button onClick={handleCloseModal}>Cancel</button>
+            </div>
           </div>
         )}
       </div>

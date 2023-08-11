@@ -28,7 +28,7 @@ function RecentDoc({ docData }) {
                 <div className="version-item">
                   {/* <span className="version">{item.version}</span>*/}
                   <span className="version">{item.version}</span>
-                  {/* <span className="date">{item.date}</span> */}
+                  {/* <span classNe="date">{item.date}</span> */}
                   <span className="date">{item.date_created}</span>
                 </div>
               </div>
