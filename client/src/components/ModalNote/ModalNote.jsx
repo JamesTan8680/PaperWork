@@ -16,8 +16,7 @@ function ModalNote({ showAddNotePopup, handleAddNote, setShowAddNotePopup }) {
           className="overlay"
           onClick={() => {
             setShowAddNotePopup(false);
-          }}
-        ></div>
+          }}></div>
         <div className="content">
           <h1>Add New Note</h1>
           <form
@@ -27,14 +26,13 @@ function ModalNote({ showAddNotePopup, handleAddNote, setShowAddNotePopup }) {
                 header: e.target.title.value,
                 content: e.target.content.value,
               });
-            }}
-          >
+            }}>
             <label>Title:</label>
             <input
               type="text"
               name="title"
               placeholder="Title of the note"
-              maxlength={35}
+              maxLength={35}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
@@ -62,8 +60,7 @@ function ModalNote({ showAddNotePopup, handleAddNote, setShowAddNotePopup }) {
               onClick={(e) => {
                 // Reset functionality: Clear the form fields
                 e.currentTarget.form.reset();
-              }}
-            >
+              }}>
               Reset
             </button>
 
@@ -75,8 +72,7 @@ function ModalNote({ showAddNotePopup, handleAddNote, setShowAddNotePopup }) {
                 className="close"
                 onClick={() => {
                   setShowAddNotePopup(false);
-                }}
-              >
+                }}>
                 Close
               </button>
             </div>

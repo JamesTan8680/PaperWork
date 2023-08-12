@@ -15,9 +15,9 @@ function RecentDoc({ docData }) {
           <span>DATE CREATED</span>
         </div>
       </div>
-      {docData?.map((item) => {
+      {docData?.map((item, index) => {
         return (
-          <div className="bottom-doc">
+          <div className="bottom-doc" key={index}>
             <div className="doc-container">
               <div className="doc-title">
                 <img src={Doc} alt="" />

@@ -20,7 +20,7 @@ function Home() {
   });
   const [error, setError] = useState(null);
   const [showAddNotePopup, setShowAddNotePopup] = useState(false);
-
+  const [selected, setSelected] = useState("");
   const addNote = async (noteData) => {
     try {
       const response = await axios.post(`${BASE_URL}/notes`, noteData);
@@ -40,7 +40,7 @@ function Home() {
       console.error("Error adding note:", err);
     }
   };
-
+  //handle the add note function of the note
   const handleAddNote = (noteData) => {
     addNote({
       date_created: new Date().toISOString().slice(0, 10),
@@ -49,7 +49,7 @@ function Home() {
     });
     setShowAddNotePopup(false);
   };
-
+  //handle on update function
   const onUpdate = () => {
     fetchAllNotes();
   };
@@ -129,6 +129,8 @@ function Home() {
               data={data}
               onUpdate={onUpdate}
               setShowAddNotePopup={setShowAddNotePopup}
+              setSelected={setSelected}
+              selected={selected}
             />
 
             <ModalNote
@@ -146,7 +148,11 @@ function Home() {
       <div className="mid">
         <div className="mid-container">
           {data.notes.map((note, index) => (
-            <div className="container" key={index}>
+            <div
+              className={`container ${
+                selected === note.note_id ? "selected" : ""
+              }`}
+              key={index}>
               <div className="card">
                 <h2>{note.header}</h2>
                 <p>{note.content}</p>

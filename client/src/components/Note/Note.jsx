@@ -6,7 +6,7 @@ import Delete from "../../img/home/delete.svg";
 import Plus from "../../img/home/plus.svg";
 import DeleteConfirmation from "./DeleteConfirmation";
 
-function Note({ data, onUpdate, setShowAddNotePopup }) {
+function Note({ data, onUpdate, setShowAddNotePopup, setSelected, selected }) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editNoteId, setEditNoteId] = useState(null);
   const [editHeader, setEditHeader] = useState("");
@@ -81,14 +81,20 @@ function Note({ data, onUpdate, setShowAddNotePopup }) {
         Notes
         <button
           className="add-button"
-          onClick={() => setShowAddNotePopup(true)}
-        >
+          onClick={() => setShowAddNotePopup(true)}>
           <img src={Plus} alt="" />
         </button>
       </div>
       <div className="note-container">
         {data?.notes.map((note, index) => (
-          <div className="note-item" key={index}>
+          <div
+            className="note-item"
+            key={index}
+            onClick={() => {
+              selected === note.note_id
+                ? setSelected("")
+                : setSelected(note.note_id);
+            }}>
             <span>{note.header}</span>
             <div className="icons">
               <img
@@ -134,8 +140,7 @@ function Note({ data, onUpdate, setShowAddNotePopup }) {
                 Content
                 <textarea
                   value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                ></textarea>
+                  onChange={(e) => setEditContent(e.target.value)}></textarea>
               </label>
               <button onClick={handleSaveClick}>Save Changes</button>
               <button onClick={handleCloseModal}>Cancel</button>
