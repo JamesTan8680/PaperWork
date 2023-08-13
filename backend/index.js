@@ -40,9 +40,12 @@ app.get("/view-document/document-template", (req, res) => {
     "document_template.document_template_id AS id, document_template.title, document_default_template.type, document_default_template.title AS type_name, COUNT(*) AS count";
   req.query.other =
     "INNER JOIN document_default_template ON document_default_template.type = document_template.type";
-  req.query.groupBy =
-    "document_template.type";
-  if (req.query.search) req.query.where = generateSearchString("", req.query.search, ["document_template.title","document_default_template.title"]);
+  req.query.groupBy = "document_template.type";
+  if (req.query.search)
+    req.query.where = generateSearchString("", req.query.search, [
+      "document_template.title",
+      "document_default_template.title",
+    ]);
   select("document_template", req.query, res);
 });
 
@@ -56,7 +59,12 @@ app.get("/view-document/document-template/:tempId/:docId", (req, res) => {
     "' AND document_template.document_template_id = '" +
     req.params.docId +
     "'";
-    if (req.query.search) req.query.where += generateSearchString(" AND ", req.query.search, ["document_template.title", "CONVERT(signed_date, CHAR)", "CONVERT(issue_date, CHAR)"]);
+  if (req.query.search)
+    req.query.where += generateSearchString(" AND ", req.query.search, [
+      "document_template.title",
+      "CONVERT(signed_date, CHAR)",
+      "CONVERT(issue_date, CHAR)",
+    ]);
 
   req.query.other =
     "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
@@ -67,7 +75,11 @@ app.get("/view-document/document-template/:tempId/:docId", (req, res) => {
 app.get("/view-document/document-template/:id", (req, res) => {
   req.query.where = "document_template.type = '" + req.params.id + "'";
   // req.query.other = "INNER JOIN document_template ON document_template.document_template_id = document_container.document_template_id";
-  if (req.query.search) req.query.where += generateSearchString(" AND ", req.query.search, ["document_template.title", "content"]);
+  if (req.query.search)
+    req.query.where += generateSearchString(" AND ", req.query.search, [
+      "document_template.title",
+      "content",
+    ]);
   select("document_template", req.query, res);
 });
 //This line separate Jordan code and Simon code --------------------------------------------------------------------------------------------
@@ -75,7 +87,7 @@ app.get("/view-document/document-template/:id", (req, res) => {
 
 app.get("/homepage/documents/total", (req, res) => {
   //write the query for the sql
-  const sql = "SELECT count(*) AS 'total' FROM document_container";
+  const sql = "SELECT count(*) AS 'total' FROM document_default_template";
   db.query(sql, (err, data) => {
     if (err) return res.send(err);
     return res.json(data);
