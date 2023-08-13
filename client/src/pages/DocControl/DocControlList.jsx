@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./DocControlList.scss";
 
 import partiesIcon from "../../img/docControl/partiesIcon.svg";
@@ -6,8 +6,12 @@ import reviewIcon from "../../img/docControl/reviewIcon.svg";
 import sendIcon from "../../img/docControl/sendIcon.svg";
 import greysendIcon from "../../img/docControl/greysendIcon.svg";
 import lockIcon from "../../img/docControl/lockIcon.png";
+import DocModal from "./DocModal/DocModal";
 
 const DocControlList = ({ data, boldItemId }) => {
+  //using this state to manage the state for the DocModal
+  const [show, setShow] = useState(false);
+
   return (
     <>
       <div className="docControlHeader">
@@ -87,12 +91,18 @@ const DocControlList = ({ data, boldItemId }) => {
                     item.id === "Version 1.1" ||
                     item.id === "Version 1.2" ||
                     item.id === "Version 1.0") && (
-                    <img src={sendIcon} alt="Send Icon " className="sendicon" />
+                    <img
+                      src={sendIcon}
+                      alt="Send Icon "
+                      className="sendicon"
+                      onClick={() => setShow((s) => !s)}
+                    />
                   )}
                 </span>
               </div>
             </div>
           ))}
+          <DocModal show={show} setShow={setShow} />
         </div>
       </div>
     </>
