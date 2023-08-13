@@ -29,7 +29,7 @@ export default function Calendar() {
         </div>
       </div>
 
-      <div>{today.month}</div>
+      {/* <div>{today.month}</div> */}
 
       {/* Right Side-Calendar */}
       <div className="calendar-wrapper">
