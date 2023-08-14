@@ -6,6 +6,7 @@ import ep_macros from "./macro.js";
 const viewdocument_ep_router = express.Router();
 viewdocument_ep_router.use(cors());
 viewdocument_ep_router.use(express.json());
+
 const macro = new ep_macros();
 const generateSearchString = macro.generate_search_string;
 const select = macro.select;

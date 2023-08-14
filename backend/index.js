@@ -17,6 +17,7 @@ app.use('/view-document',viewdocument_ep_router);
 
 app.use('/homepage',homepage_ep_router);
 
+
 //check if the database is existed or not
 db.connect(function (err) {
   if (err) {
