@@ -1,0 +1,11 @@
+Homepage:
+    /homepage/documents/total
+    /homepage/documents/most-popular
+    /homepage/documents/recently-created
+    /homepage/notes    (For Get and post)
+    /homepage/notes/:note_id    (For put and delete)
+
+view_documents: (see code for additional args)
+    /view-documents/templates[?search]
+    /view-documents/templates/{tempId}[?search]
+    /view-documents/templates/{tempId}/{docId}[?search]

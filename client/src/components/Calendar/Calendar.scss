@@ -1,6 +1,141 @@
+.calendar {
+  background-color: #7d98fa;
+  width: 220px;
+  color: white;
 
-//style for the calendar
-.calendar
-{
+  .calendar-date {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 
+    h2 {
+      font-size: xx-large;
+    }
+
+    .special {
+      font-size: xx-large;
+      margin-bottom: 20px; /* Add margin to create space between date and "Keep smiling" */
+      margin-top: -50px;
+    }
+
+    h3 {
+      font-size: 20px;
+      margin-top: -25px;
+    }
+
+    .smile-icon {
+      width: 30px;
+      height: 70px;
+      margin-top: -30px;
+    }
+  }
+}
+
+.calendar-wrapper {
+  display: flex;
+  gap: 10px;
+  width: 5%;
+  margin-right: 5%;
+  margin-top: 15%;
+  height: 10vh;
+  align-items: center;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+  }
+
+  .calendar-container {
+    width: 25rem;
+    margin-left: 15px;
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h1 {
+        user-select: none;
+        font-weight: 600;
+        font-size: 130%;
+      }
+
+      .calendar-controls {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+
+        .control-item {
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            transform: scale(1.05);
+          }
+        }
+      }
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .calendar-day-label {
+      text-align: center;
+      height: 0.3rem;
+      width: 3.5rem;
+      display: grid;
+      place-content: center;
+      color: #a0aec0;
+      user-select: none;
+
+      font-size: 1rem;
+    }
+
+    .dates-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+
+      .date-cell {
+        text-align: center;
+        height: 2rem;
+        width: 2.5rem;
+        display: grid;
+        place-content: center;
+        color: #4a5568;
+        font-size: 0.875rem;
+        font-weight: bold;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s;
+        border-radius: 50%;
+
+        &.current-month {
+          color: #1a202c;
+        }
+
+        &.today {
+          background-color: #f56565;
+          color: #fff;
+        }
+
+        &.selected-date {
+          background-color: #3889d4;
+          color: #fff;
+        }
+
+        &:hover {
+          background-color: #3889d4;
+          color: #fff;
+          border-radius: 100%;
+        }
+
+        &.not-in-current-month {
+          color: #b8babd;
+        }
+      }
+    }
+  }
 }
