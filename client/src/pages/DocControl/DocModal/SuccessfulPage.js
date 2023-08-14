@@ -8,7 +8,7 @@ function SuccessfulPage({ closeModal, open }) {
     <div>
       <div className="modal">
         <div className="overlay" onClick={closeModal}></div>
-        <div className="content">
+        <div className="content-doc">
           <div className="successful-message">
             <div>
               <img src={Check} alt="" />
