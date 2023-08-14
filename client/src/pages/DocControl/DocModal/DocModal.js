@@ -82,7 +82,7 @@ function DocModal({ show, setShow }) {
   return ReactDOM.createPortal(
     <div className="modal">
       <div className="overlay" onClick={closeModal}></div>
-      <div className="content">
+      <div className="content-doc">
         <div className="wrapper">
           <div className="header-popup">
             <div className="title">Send</div>
