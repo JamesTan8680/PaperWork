@@ -1,46 +1,15 @@
 import express from "express";
 import cors from "cors";
 import db from "./db.js";
+import ep_macros from "./macro.js";
+
 const viewdocument_ep_router = express.Router();
 viewdocument_ep_router.use(cors());
 viewdocument_ep_router.use(express.json());
-
-  export function fetch(q, res) {
-    const sql = q;
-    db.query(sql, (err, data) => {
-      if (err) return res.send(err);
-      return res.json(data);
-    });
-  }
-
-  //create a search string, automatically creating an OR statement for different columns to search
-//prefix: (optional else use "") the operator to put in front of the string WITH SPACES
-//search: the string to search for
-//inArgs: an array of column name strings to search in
-function generateSearchString(prefix, search, inArgs){
-    var s = prefix;
-    s += "(";
-    for (var i in inArgs){
-      s += inArgs[i] + " LIKE '%" + search + "%'";
-      if (i != inArgs.length - 1) s += " OR ";
-    }
-    s += ")";
-    return s;
-  }
-  
-  export function select(table, args, res) {
-    var q = "SELECT ";
-    if (args.columns) q += args.columns;
-    else q += "*";
-    q += " FROM " + table;
-    if (args.other) q += " " + args.other;
-    if (args.where) q += " WHERE " + args.where;
-    if (args.groupBy) q += " GROUP BY " + args.groupBy;
-    if (args.orderBy) q += " ORDER BY " + args.orderBy;
-    console.log(q);
-    fetch(q, res);
-  }
-  
+const macro = new ep_macros();
+const generateSearchString = macro.generate_search_string;
+const select = macro.select;
+const fetch = macro.query;
 
 //get all documents by template
 viewdocument_ep_router.get("/document-template", (req, res) => {

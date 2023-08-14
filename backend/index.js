@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql";
-import homepage_ep_router from "./homepage_eps.js";
-import viewdocument_ep_router from "./viewdocument_eps.js";
-import db from "./db.js";
+import homepage_ep_router from "./endpoints/homepage_eps.js";
+import viewdocument_ep_router from "./endpoints/viewdocument_eps.js";
+import db from "./endpoints/db.js";
 
 
 const app = express();
