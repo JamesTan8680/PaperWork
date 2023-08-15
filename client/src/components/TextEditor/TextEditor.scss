@@ -1,0 +1,24 @@
+.dragDropContainer {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+
+  img {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+.dragDropList {
+  height: 90px;
+  min-width: 200px;
+  max-width: 500px;
+  width: auto;
+  overflow: auto;
+}
+
+.input-list {
+  .input {
+    color: transparent;
+  }
+}
