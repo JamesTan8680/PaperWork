@@ -5,20 +5,19 @@ import { useState, useMemo } from "react";
 import addButton from "../../img/textEditor/add-circle.svg";
 import "./TextEditor.scss";
 import DragAndDrop from "./DragAndDrop";
+import InputLogo from "../../img/textEditor/input.svg";
 
 export default function TextEditor({ editor, title, selected, setContent }) {
   const [showAddInputPopup, setShowAddInputPopup] = useState(false);
 
   function handleDragStart(event) {
-    var idMatch = drag.findIndex((item) => item.id === id);
-
-    event.dataTransfer.setData("text/plain", drag[idMatch].input);
+    event.dataTransfer.setData("text/plain", event.target.textContent);
   }
 
   //create the state for the drag and drop
 
   const [drag, setDrag] = useState([]);
-  const [id, setId] = useState("");
+
   //const [value, setValue] = useState("");
   const values = title;
   //variable for the input field
@@ -41,12 +40,7 @@ export default function TextEditor({ editor, title, selected, setContent }) {
   const onChangeHandler = (event) => {
     setContent(event);
   };
-  //handle on mouse over
-  const handleOver = (id) => {
-    setId(id);
 
-    console.log(id);
-  };
   return (
     <>
       <div>
@@ -73,12 +67,11 @@ export default function TextEditor({ editor, title, selected, setContent }) {
                 return (
                   <div
                     className="input-list"
-                    onMouseOver={() => handleOver(item.id)}
                     draggable={true}
                     onDragStart={handleDragStart}
                     key={item.id}>
                     {/* {item.input} */}
-                    {item.name}
+                    {item.showInput}
                   </div>
                 );
               })}
@@ -95,10 +88,11 @@ export default function TextEditor({ editor, title, selected, setContent }) {
           <JoditEditor
             ref={editor}
             value={values}
-            onBlur={onChangeHandler}
+            onChange={onChangeHandler}
             config={config}
           />
         </div>
+        {HTMLReactParser(values)}
       </div>
     </>
   );

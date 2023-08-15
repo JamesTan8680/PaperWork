@@ -55,7 +55,8 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}>
+            }}
+          >
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -63,7 +64,8 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}>
+              }}
+            >
               <b>Parties</b>
               <span>Note: Put the Parties Name Here That Involve</span>
             </div>
@@ -71,7 +73,8 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}>
+              }}
+            >
               <b>Terms</b>
               <span>Note: Put the Document Terms Here That Involve</span>
             </div>
@@ -79,21 +82,20 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}>
+              }}
+            >
               <b>Signature Configuration</b>
             </div>
           </div>
         </div>
         <div className="right-customiseDoc">
           {selected === 1 ? (
-            <div className="this">
-              <TextEditor
-                editor={editor}
-                title={content}
-                selected={selected}
-                setContent={setDocContent}
-              />
-            </div>
+            <TextEditor
+              editor={editor}
+              title={content}
+              selected={selected}
+              setContent={setDocContent}
+            />
           ) : selected === 2 ? (
             <Parties />
           ) : selected === 3 ? (
@@ -116,7 +118,8 @@ export default function CustomizeDoc() {
                 } else {
                   handleAlert();
                 }
-              }}>
+              }}
+            >
               Cancel
             </button>
 
@@ -129,7 +132,8 @@ export default function CustomizeDoc() {
                 } else {
                   handleAlert();
                 }
-              }}>
+              }}
+            >
               Save
             </button>
           </div>
