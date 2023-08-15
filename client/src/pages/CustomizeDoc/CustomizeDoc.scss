@@ -126,3 +126,14 @@
     }
   }
 }
+.this {
+  width: 1000px;
+  height: calc(100% - 52px);
+  .jodit-react-container {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    overflow: auto;
+    background-color: black;
+  }
+}
