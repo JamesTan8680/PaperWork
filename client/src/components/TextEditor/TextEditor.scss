@@ -15,10 +15,42 @@
   max-width: 500px;
   width: auto;
   overflow: auto;
+
+  img {
+    width: 35px;
+    height: 35px;
+  }
 }
 
 .input-list {
   .input {
     color: transparent;
+  }
+}
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+
+  .removeButton {
+    vertical-align: middle;
+    margin-right: 5px;
+  }
+
+  .tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    top: 100%;
+    white-space: nowrap;
+    display: none;
+  }
+
+  &:hover .tooltip {
+    display: block;
   }
 }

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./DragAndDrop.scss";
 import uuid from "react-uuid";
 
-function DragAndDrop({ show, setShow, setDrag }) {
+function DragAndDrop({ show, setShow, setDrag, drag }) {
   //state for the input
   const [name, setName] = useState("");
   const [hint, setHint] = useState("");
@@ -16,13 +16,23 @@ function DragAndDrop({ show, setShow, setDrag }) {
 
   const saveModal = () => {
     if (name.length !== 0 && hint.length !== 0) {
-      const combine = `<input className='data' name='${name}' title='${hint}' >`;
-      setDrag((prev) => [...prev, { name: name, id: uuid(), input: combine }]);
+      // To check there is any element in array matches name
+      const checkDuplicate = drag.some((item) => item.name === name);
+
+      if (checkDuplicate) {
+        alert("Name already exists. Please enter a new Name!");
+      } else {
+        const combine = `<input className='data' name='${name}' title='${hint}' readonly>`;
+        setDrag((prev) => [
+          ...prev,
+          { name: name, id: uuid(), input: combine, hint: hint },
+        ]);
+      }
       setName("");
       setHint("");
       setShow(false);
     } else {
-      alert("please type something into the field!");
+      alert("Please type something into the field!");
       setShow(false);
     }
   };

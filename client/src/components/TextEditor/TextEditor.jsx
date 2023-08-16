@@ -3,8 +3,10 @@ import JoditEditor from "jodit-react";
 import HTMLReactParser from "html-react-parser"; //convert HTML strings to React elements
 import { useState, useMemo } from "react";
 import addButton from "../../img/textEditor/add-circle.svg";
+import removeButton from "../../img/textEditor/delete-circle.svg";
 import "./TextEditor.scss";
 import DragAndDrop from "./DragAndDrop";
+import Tooltip from "../Navbar/Tooltip";
 
 export default function TextEditor({ editor, title, selected, setContent }) {
   const [showAddInputPopup, setShowAddInputPopup] = useState(false);
@@ -34,10 +36,6 @@ export default function TextEditor({ editor, title, selected, setContent }) {
     []
   );
 
-  // const onChangeHandler = (event) => {
-  //   setValue(event);
-  // };
-
   const onChangeHandler = (event) => {
     setContent(event);
   };
@@ -47,6 +45,12 @@ export default function TextEditor({ editor, title, selected, setContent }) {
 
     console.log(id);
   };
+
+  const handleRemoveItem = (id) => {
+    const updatedDrag = drag.filter((item) => item.id !== id);
+    setDrag(updatedDrag);
+  };
+
   return (
     <>
       <div>
@@ -65,6 +69,7 @@ export default function TextEditor({ editor, title, selected, setContent }) {
                   show={showAddInputPopup}
                   setShow={setShowAddInputPopup}
                   setDrag={setDrag}
+                  drag={drag} //Pass the drag array for checking
                 />
               }
             </div>
@@ -76,9 +81,20 @@ export default function TextEditor({ editor, title, selected, setContent }) {
                     onMouseOver={() => handleOver(item.id)}
                     draggable={true}
                     onDragStart={handleDragStart}
-                    key={item.id}>
-                    {/* {item.input} */}
-                    {item.name}
+                    key={item.id}
+                  >
+                    <div className="tooltip-container">
+                      <img
+                        className="removeButton"
+                        src={removeButton}
+                        alt="RemoveButton Icon"
+                        onClick={() => {
+                          handleRemoveItem(item.id);
+                        }}
+                      />
+
+                      <Tooltip text={item.hint}>{item.name}</Tooltip>
+                    </div>
                   </div>
                 );
               })}
@@ -99,6 +115,8 @@ export default function TextEditor({ editor, title, selected, setContent }) {
             config={config}
           />
         </div>
+        {/* This is for testing and can be delete afterwards */}
+        {/* <div>{HTMLReactParser(values)}</div> */}
       </div>
     </>
   );
