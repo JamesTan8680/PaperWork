@@ -8,8 +8,17 @@ import Search from "../../img/navbar/search.svg";
 import View from "../../img/navbar/view.svg";
 import Menu from "../../img/navbar/menu.svg";
 import { Link } from "react-router-dom";
+import Tooltip from "./Tooltip";
 
 function Navbar() {
+  const tooltips = [
+    { icon: Faq, text: "Frequently Asked Question" },
+    { icon: Inbox, text: "Inbox Message" },
+    { icon: Chat, text: "Chat Message" },
+    { icon: Bell, text: "Notifications" },
+    { icon: Email, text: "Emails" },
+  ];
+
   return (
     <div className="navbar">
       <div className="left-nav">
@@ -36,11 +45,12 @@ function Navbar() {
           <img src={Search} alt="" />
           <input type="text" placeholder="search" />
         </div>
-        <img src={Faq} alt="" />
-        <img src={Inbox} alt="" />
-        <img src={Chat} alt="" />
-        <img src={Bell} alt="" />
-        <img src={Email} alt="" />
+
+        {tooltips.map((tooltip, index) => (
+          <Tooltip key={index} text={tooltip.text}>
+            <img src={tooltip.icon} alt="" />
+          </Tooltip>
+        ))}
       </div>
     </div>
   );
