@@ -26,10 +26,12 @@ export default function CustomizeDoc() {
   const editor = useRef(null);
   // const for managing the selected style
   const [selected, setSelected] = useState(1);
-
+  //this is the state for the title
   const [content, setDocContent] = useState(docTitle);
+  //this is the state for the term of the doc
   const [terms, setDocTerms] = useState(docTerms);
-
+  // this is the state for the input list
+  const [inputList, setInputList] = useState([]);
   // Function to handle saving the content
   const handleSave = () => {
     // Save the content can be save to backend
@@ -102,6 +104,8 @@ export default function CustomizeDoc() {
               terms={terms}
               selected={selected}
               setContent={setDocTerms}
+              inputList={inputList}
+              setInputList={setInputList}
             />
           ) : (
             selected === 4 && <SignatureConfig />

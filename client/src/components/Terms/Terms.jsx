@@ -1,7 +1,14 @@
 import React from "react";
 import TextEditor from "../../components/TextEditor/TextEditor";
 import "./Terms.scss";
-function Terms({ editor, selected, terms, setContent }) {
+function Terms({
+  editor,
+  selected,
+  terms,
+  setContent,
+  inputList,
+  setInputList,
+}) {
   return (
     <div className="term">
       <TextEditor
@@ -9,6 +16,8 @@ function Terms({ editor, selected, terms, setContent }) {
         title={terms}
         selected={selected}
         setContent={setContent}
+        setInputList={setInputList}
+        inputList={inputList}
       />
     </div>
   );

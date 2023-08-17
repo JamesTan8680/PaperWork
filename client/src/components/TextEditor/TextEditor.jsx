@@ -8,18 +8,24 @@ import "./TextEditor.scss";
 import DragAndDrop from "./DragAndDrop";
 import Tooltip from "../Navbar/Tooltip";
 
-export default function TextEditor({ editor, title, selected, setContent }) {
+export default function TextEditor({
+  editor,
+  title,
+  selected,
+  setContent,
+  inputList,
+  setInputList,
+}) {
   const [showAddInputPopup, setShowAddInputPopup] = useState(false);
 
   function handleDragStart(event) {
-    var idMatch = drag.findIndex((item) => item.id === id);
+    var idMatch = inputList.findIndex((item) => item.id === id);
 
-    event.dataTransfer.setData("text/plain", drag[idMatch].input);
+    event.dataTransfer.setData("text/plain", inputList[idMatch].input);
   }
 
   //create the state for the drag and drop
 
-  const [drag, setDrag] = useState([]);
   const [id, setId] = useState("");
   //const [value, setValue] = useState("");
   const values = title;
@@ -47,8 +53,8 @@ export default function TextEditor({ editor, title, selected, setContent }) {
   };
 
   const handleRemoveItem = (id) => {
-    const updatedDrag = drag.filter((item) => item.id !== id);
-    setDrag(updatedDrag);
+    const updatedDrag = inputList.filter((item) => item.id !== id);
+    setInputList(updatedDrag);
   };
 
   return (
@@ -68,21 +74,20 @@ export default function TextEditor({ editor, title, selected, setContent }) {
                 <DragAndDrop
                   show={showAddInputPopup}
                   setShow={setShowAddInputPopup}
-                  setDrag={setDrag}
-                  drag={drag} //Pass the drag array for checking
+                  setInputList={setInputList}
+                  inputList={inputList} //Pass the drag array for checking
                 />
               }
             </div>
             <div className="dragDropList">
-              {drag?.map((item) => {
+              {inputList?.map((item) => {
                 return (
                   <div
                     className="input-list"
                     onMouseOver={() => handleOver(item.id)}
                     draggable={true}
                     onDragStart={handleDragStart}
-                    key={item.id}
-                  >
+                    key={item.id}>
                     <div className="tooltip-container">
                       <img
                         className="removeButton"
@@ -106,7 +111,7 @@ export default function TextEditor({ editor, title, selected, setContent }) {
           </>
         )}
       </div>
-      <div>
+      <div className="editor">
         <div className="this">
           <JoditEditor
             ref={editor}
