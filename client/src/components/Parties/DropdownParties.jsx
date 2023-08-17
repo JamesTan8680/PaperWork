@@ -16,6 +16,10 @@ export default function DropdownParties({ selected, setSelected }) {
   ]);
   const options = ["JunDa", "Ching", "Thang"];
 
+  const availableOptions = options.filter((option) => {
+    return !data.some((item) => item.selectedOption === option);
+  });
+
   const handleAddButtonClick = () => {
     setShowAdditionalDropdown(!showAdditionalDropdown);
     const obj = { id: uuid(), selectedOption: "Select Parties Name" };
@@ -80,7 +84,7 @@ export default function DropdownParties({ selected, setSelected }) {
 
             {isActive && item.id === id && (
               <div className="dropdown-content">
-                {options.map((option) => (
+                {availableOptions.map((option) => (
                   <div
                     key={option}
                     onClick={(e) => handleOptionClick(option, item.id)}

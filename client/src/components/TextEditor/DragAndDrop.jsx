@@ -22,7 +22,7 @@ function DragAndDrop({ show, setShow, setDrag, drag }) {
       if (checkDuplicate) {
         alert("Name already exists. Please enter a new Name!");
       } else {
-        const combine = `<input className='data' name='${name}' title='${hint}' readonly>`;
+        const combine = `<input className='data' name='${name}' title='${hint}' placeholder="${hint}" readonly>`;
         setDrag((prev) => [
           ...prev,
           { name: name, id: uuid(), input: combine, hint: hint },
