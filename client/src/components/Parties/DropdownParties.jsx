@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./DropdownParties.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import uuid from "react-uuid";
@@ -15,6 +15,14 @@ export default function DropdownParties({ selected, setSelected }) {
     },
   ]);
   const options = ["JunDa", "Ching", "Thang"];
+
+  useEffect(() => {
+    const savedData = localStorage.getItem("items");
+    if (savedData) {
+      setData(JSON.parse(savedData));
+    }
+    localStorage.removeItem("items");
+  }, []);
 
   const availableOptions = options.filter((option) => {
     return !data.some((item) => item.selectedOption === option);
@@ -39,6 +47,9 @@ export default function DropdownParties({ selected, setSelected }) {
     setData(updatedData);
     setSelected(option);
     setIsActive(false);
+
+    // Update local storage with the updated data
+    localStorage.setItem("items", JSON.stringify(updatedData));
   };
 
   const handleRemoveButtonClick = (remove_id) => {
@@ -46,6 +57,9 @@ export default function DropdownParties({ selected, setSelected }) {
 
     const updatedData = data.filter((item) => item.id !== remove_id);
     setData(updatedData);
+
+    //Update local storage with updated data after removal
+    localStorage.setItem("items", JSON.stringify(updatedData));
 
     // If the removed dropdown's id matches the active dropdown's id, reset isActive and id state
     if (id === remove_id) {
