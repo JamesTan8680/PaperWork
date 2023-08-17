@@ -21,8 +21,18 @@ export default function DropdownParties({ selected, setSelected }) {
     if (savedData) {
       setData(JSON.parse(savedData));
     }
-    localStorage.removeItem("items");
-  }, []);
+
+    const removeLocalStorage = () => {
+      //remove the data of localStorage
+      localStorage.removeItem("items");
+    };
+    //saved  data before the user leaves the page
+    window.addEventListener("beforeunload", removeLocalStorage);
+
+    return () => {
+      window.removeEventListener("beforeunload", removeLocalStorage);
+    };
+  }, ["beforeunload"]);
 
   const availableOptions = options.filter((option) => {
     return !data.some((item) => item.selectedOption === option);
