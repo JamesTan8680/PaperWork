@@ -4,12 +4,15 @@ import "./CreateDoc.scss";
 import Temp from "../../img/createDoc/template.svg";
 import Ver from "../../img/createDoc/version.svg";
 import ReviewTemplate from "../../components/ReviewTemplate/ReviewTemplate";
-import RemoveAngleBrackets from "../../components/RemoveAngleBrackets/RemoveAngleBrackets";
+import parse from "html-react-parser";
 
+function extractTitleContent(title) {
+  const match = title.match(/<title>(.*?)<\/title>/);
+  return match ? match[1] : title;
+}
 function CreateDoc() {
-  //create the dummy data that will replace by the data in the database
   const [data, setData] = useState([]);
-  const [templateSelect, setTemplateSelect] = useState(null); // Initialize with null because data is initially empty
+  const [templateSelect, setTemplateSelect] = useState(null);
   const [template, setTemplate] = useState("default");
 
   useEffect(() => {
@@ -19,23 +22,30 @@ function CreateDoc() {
       .get(apiUrl)
       .then((response) => {
         setData(response.data);
-        console.log(data);
-        if (!templateSelect) {
-          // If templateSelect is not set, then set it to the first item's id
-          setTemplateSelect(response.data[0]?.id);
+        if (!templateSelect && response.data.length > 0) {
+          setTemplateSelect(response.data[0].id);
         }
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
-  }, [templateSelect]);
+  }, []);
 
-  // Define selectedTemplateData outside of useEffect
   const selectedTemplateData = data.find((item) => item.id === templateSelect);
 
-  // Handlers
+  // Combine title and term into one object
+  const combinedTemplateData = selectedTemplateData
+    ? {
+        title: selectedTemplateData.docTitle,
+        term: selectedTemplateData.template
+          ? selectedTemplateData.template.term
+          : "",
+      }
+    : null;
+
   const handleClickType = (type) => setTemplate(type);
   const handleSelectTemplate = (id) => setTemplateSelect(id);
+
   return (
     <div className="createDoc">
       <span className="title">Create Document Page</span>
@@ -56,7 +66,7 @@ function CreateDoc() {
                 onClick={() => handleSelectTemplate(item.id)}
                 key={item.id}
               >
-                <RemoveAngleBrackets input={item.docTitle} />
+                {extractTitleContent(item.docTitle)}
               </span>
             ))}
           </div>
@@ -77,13 +87,17 @@ function CreateDoc() {
               onClick={() => handleClickType("blank")}
               className={template === "blank" ? "selected" : ""}
             >
-              {" "}
               Blank Template
             </div>
           </div>
         </div>
         <div className="right-createDoc">
-          <ReviewTemplate type={template} templateData={selectedTemplateData} />
+          {combinedTemplateData && (
+            <ReviewTemplate
+              type={template}
+              templateData={combinedTemplateData}
+            />
+          )}
         </div>
       </div>
     </div>
