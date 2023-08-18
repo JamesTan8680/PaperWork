@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-<<<<<<< HEAD
 import "./Navbar.scss";
-=======
 import "../../components/TextEditor/TextEditor.scss";
->>>>>>> CustomizeDoc
 
 function Tooltip({ text, children }) {
   const [showTooltip, setShowTooltip] = useState(false);
