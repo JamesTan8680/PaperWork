@@ -48,8 +48,7 @@ export default function Calendar() {
                 className="control-item"
                 onClick={() => {
                   setToday(currentDate);
-                }}
-              >
+                }}>
                 Today
               </h1>
               <GrFormNext
@@ -85,8 +84,7 @@ export default function Calendar() {
                     )}
                     onClick={() => {
                       setSelectDate(date);
-                    }}
-                  >
+                    }}>
                     {date.date()}
                   </div>
                 );
