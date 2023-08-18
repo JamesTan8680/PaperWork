@@ -8,7 +8,6 @@
       "options": {
         "cwd": "${workspaceFolder}/backend"
       },
-      "runOptions": { "runOn": "folderOpen" }
     },
     // By Jordan Ferrazza
     {
@@ -19,7 +18,6 @@
         "cwd": "${workspaceFolder}/client"
       }
       ,
-      "runOptions": { "runOn": "folderOpen" }
     },
     // By Jordan Ferrazza
   ]
