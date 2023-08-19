@@ -1,64 +1,50 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./CreateDoc.scss";
 import Temp from "../../img/createDoc/template.svg";
 import Ver from "../../img/createDoc/version.svg";
-
 import ReviewTemplate from "../../components/ReviewTemplate/ReviewTemplate";
+import parse from "html-react-parser";
 
+function extractTitleContent(title) {
+  const match = title.match(/<title>(.*?)<\/title>/);
+  return match ? match[1] : title;
+}
 function CreateDoc() {
-  //create the dummy data that will replace by the data in the database
-  const data = [
-    {
-      id: "1",
-      docTitle: "NON-DISCLOSURE AGREEMENT  ",
-      template: {
-        type: "NDA (Defult Template)",
-        term: "This document is confidentail",
-      },
-      defaultTemplate: { type: "NDA (Defult Template)", term: "" },
-    },
-    {
-      id: "2",
-      docTitle: "Security policy",
-      template: {
-        type: "SP (Defult Template",
-        term: "This document is confidentail",
-      },
-      defaultTemplate: { type: "SP (Defult Template)", term: "" },
-    },
-    {
-      id: "3",
-      docTitle: "Healt Agreement",
-      template: {
-        type: "HA (Defult Template",
-        term: "This document is confidentail",
-      },
-      defaultTemplate: { type: "HA (Defult Template)", term: "" },
-    },
-    {
-      id: "4",
-      docTitle: "Work hour Agreement",
-      template: {
-        type: "WH (Defult Template",
-        term: "This document is confidentail",
-      },
-      defaultTemplate: { type: "WH (Defult Template)", term: "" },
-    },
-  ];
-  //handle the select
-  const [templateSelect, setTemplateSelect] = useState();
-
-  //state to manage the data for the template
+  const [data, setData] = useState([]);
+  const [templateSelect, setTemplateSelect] = useState(null);
   const [template, setTemplate] = useState("default");
 
-  //handle the click to change the template type
-  const handleClickType = (type, id) => {
-    setTemplate(type);
-  };
-  //handle select for the template
-  const handleSelectTemplate = (id) => {
-    setTemplateSelect(id);
-  };
+  useEffect(() => {
+    const apiUrl = "http://localhost:8800/create-document/default-templates";
+
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        setData(response.data);
+        if (!templateSelect && response.data.length > 0) {
+          setTemplateSelect(response.data[0].id);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+      });
+  }, []);
+
+  const selectedTemplateData = data.find((item) => item.id === templateSelect);
+
+  // Combine title and term into one object
+  const combinedTemplateData = selectedTemplateData
+    ? {
+        title: selectedTemplateData.docTitle,
+        term: selectedTemplateData.template
+          ? selectedTemplateData.template.term
+          : "",
+      }
+    : null;
+
+  const handleClickType = (type) => setTemplate(type);
+  const handleSelectTemplate = (id) => setTemplateSelect(id);
 
   return (
     <div className="createDoc">
@@ -70,20 +56,19 @@ function CreateDoc() {
             Template Type
           </div>
           <div className="list-container">
-            {data.map((item) => {
-              return (
-                <span
-                  className={
-                    templateSelect === item.id
-                      ? "list-createDoc selected"
-                      : "list-createDoc"
-                  }
-                  onClick={() => handleSelectTemplate(item.id)}
-                  key={item.id}>
-                  {item.docTitle}
-                </span>
-              );
-            })}
+            {data.map((item) => (
+              <span
+                className={
+                  templateSelect === item.id
+                    ? "list-createDoc selected"
+                    : "list-createDoc"
+                }
+                onClick={() => handleSelectTemplate(item.id)}
+                key={item.id}
+              >
+                {extractTitleContent(item.docTitle)}
+              </span>
+            ))}
           </div>
         </div>
         <div className="mid-createDoc">
@@ -94,19 +79,25 @@ function CreateDoc() {
           <div className="list-container">
             <div
               onClick={() => handleClickType("default")}
-              className={template === "default" ? "selected" : ""}>
+              className={template === "default" ? "selected" : ""}
+            >
               Default Template
             </div>
             <div
               onClick={() => handleClickType("blank")}
-              className={template === "blank" ? "selected" : ""}>
-              {" "}
+              className={template === "blank" ? "selected" : ""}
+            >
               Blank Template
             </div>
           </div>
         </div>
         <div className="right-createDoc">
-          <ReviewTemplate type={template} />
+          {combinedTemplateData && (
+            <ReviewTemplate
+              type={template}
+              templateData={combinedTemplateData}
+            />
+          )}
         </div>
       </div>
     </div>
