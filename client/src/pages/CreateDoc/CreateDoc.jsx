@@ -4,7 +4,6 @@ import "./CreateDoc.scss";
 import Temp from "../../img/createDoc/template.svg";
 import Ver from "../../img/createDoc/version.svg";
 import ReviewTemplate from "../../components/ReviewTemplate/ReviewTemplate";
-import parse from "html-react-parser";
 
 function extractTitleContent(title) {
   const match = title.match(/<title>(.*?)<\/title>/);
@@ -29,7 +28,7 @@ function CreateDoc() {
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
-  }, []);
+  }, [templateSelect]);
 
   const selectedTemplateData = data.find((item) => item.id === templateSelect);
 
@@ -64,8 +63,7 @@ function CreateDoc() {
                     : "list-createDoc"
                 }
                 onClick={() => handleSelectTemplate(item.id)}
-                key={item.id}
-              >
+                key={item.id}>
                 {extractTitleContent(item.docTitle)}
               </span>
             ))}
@@ -79,14 +77,12 @@ function CreateDoc() {
           <div className="list-container">
             <div
               onClick={() => handleClickType("default")}
-              className={template === "default" ? "selected" : ""}
-            >
+              className={template === "default" ? "selected" : ""}>
               Default Template
             </div>
             <div
               onClick={() => handleClickType("blank")}
-              className={template === "blank" ? "selected" : ""}
-            >
+              className={template === "blank" ? "selected" : ""}>
               Blank Template
             </div>
           </div>

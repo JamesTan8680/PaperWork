@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Parties.scss";
 import Dropdown from "./DropdownParties";
 function Parties() {

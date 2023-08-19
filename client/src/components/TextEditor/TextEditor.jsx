@@ -1,6 +1,6 @@
 import React from "react";
 import JoditEditor from "jodit-react";
-import HTMLReactParser from "html-react-parser"; //convert HTML strings to React elements
+//import HTMLReactParser from "html-react-parser"; //convert HTML strings to React elements
 import { useState, useMemo } from "react";
 import addButton from "../../img/textEditor/add-circle.svg";
 import removeButton from "../../img/textEditor/delete-circle.svg";

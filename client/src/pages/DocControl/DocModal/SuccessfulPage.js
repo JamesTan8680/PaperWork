@@ -1,7 +1,6 @@
 import React from "react";
 import Check from "../../../img/docControl/check.svg";
 import "./SuccessfulPage.scss";
-import { Link } from "react-router-dom";
 function SuccessfulPage({ closeModal, open }) {
   if (!open) return null;
   return (

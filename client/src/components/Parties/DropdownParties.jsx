@@ -32,7 +32,7 @@ export default function DropdownParties({ selected, setSelected }) {
     return () => {
       window.removeEventListener("beforeunload", removeLocalStorage);
     };
-  }, ["beforeunload"]);
+  }, []);
 
   const availableOptions = options.filter((option) => {
     return !data.some((item) => item.selectedOption === option);
@@ -86,13 +86,11 @@ export default function DropdownParties({ selected, setSelected }) {
             <div className="dropdown-container">
               <div
                 className="dropdown-btn"
-                onClick={(e) => handleDropdownButtonClick(item.id)}
-              >
+                onClick={(e) => handleDropdownButtonClick(item.id)}>
                 {item.selectedOption}
                 <span
                   className="fas fa-caret-down dropdown-icon"
-                  aria-hidden="true"
-                ></span>
+                  aria-hidden="true"></span>
               </div>
 
               <button className="add" onClick={handleAddButtonClick}>
@@ -100,8 +98,7 @@ export default function DropdownParties({ selected, setSelected }) {
               </button>
               <button
                 className="remove"
-                onClick={() => handleRemoveButtonClick(item.id)}
-              >
+                onClick={() => handleRemoveButtonClick(item.id)}>
                 Remove
               </button>
             </div>
@@ -112,8 +109,7 @@ export default function DropdownParties({ selected, setSelected }) {
                   <div
                     key={option}
                     onClick={(e) => handleOptionClick(option, item.id)}
-                    className="dropdown-item"
-                  >
+                    className="dropdown-item">
                     {option}
                   </div>
                 ))}

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Review from "../../img/createDoc/review.svg";
 import "./ReviewTemplate.scss";
-import axios from "axios";
+//import axios from "axios";
 import parse from "html-react-parser";
+import { Link } from "react-router-dom";
 function ReviewTemplate({ type, templateData }) {
-  const [data, setData] = useState(null);
+  //const [data, setData] = useState(null);
   if (!templateData || !templateData.title || !templateData.term) {
     return <div>Loading...</div>; // or return null if you don't want to show anything
   }
@@ -12,7 +13,7 @@ function ReviewTemplate({ type, templateData }) {
     typeof templateData?.term === "string"
       ? parse(templateData?.term)
       : templateData?.term;
-  console.log("Template Data Title:", templateData.title);
+  //console.log("Template Data Title:", templateData.title);
   const titleMatch = templateData.title.match(/<title>(.*?)<\/title>/);
   const extractedTitle = titleMatch ? titleMatch[1] : templateData.title;
 
@@ -28,17 +29,21 @@ function ReviewTemplate({ type, templateData }) {
             <div className="preview-title">{extractedTitle}</div>
             <div className="body-container">
               <div className="preview-party">Party</div>
+              <div className="party-content">
+                This is the place where you can select the parties involve in
+                your document
+              </div>
               <div className="preview-content">
                 <span>Content</span>
                 <div className="content">{documentTerm}</div>
               </div>
               <div className="preview-signature">Signature and date</div>
-              <button>CUSTOMISE</button>
-            </div>
-            <div className="cus-btn">
-              <Link to="/CustomiseDoc/:id">
-                <button className="btn">CUSTOMISE</button>
-              </Link>
+
+              <div className="cus-btn">
+                <Link to="/CustomiseDoc/:id">
+                  <button className="btn">CUSTOMISE</button>
+                </Link>
+              </div>
             </div>
           </div>
         </>
