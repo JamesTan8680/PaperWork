@@ -1,0 +1,17 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block; //Ensure tooltip container takes  only as much space as its content
+
+  .tooltip {
+    position: absolute;
+    top: 200%;
+    left: 50%;
+    transform: translate(10px, -50%); //Adjust spacing tooltip and container
+    background-color: #4cc9cf;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+}

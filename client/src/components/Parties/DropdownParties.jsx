@@ -2,11 +2,21 @@ import React, { useState, useEffect } from "react";
 import "./DropdownParties.scss";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import uuid from "react-uuid";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import TooltipDropdownParties from "./TooltipDropdownParties";
 
 export default function DropdownParties({ selected, setSelected }) {
   const [isActive, setIsActive] = useState(false);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
   const [id, setId] = useState(null); // Declare the id use state and initialize it NULL
+
+  const tooltipMessages = {
+    JunDa: "Name: JunDa\nCompany: H&M\nEmail: junda8680@gmail.com",
+    Ching: "Name: Ching\nCompany: Md\nEmail: ching@gmail.com",
+    Thang: "Name: Thang\nCompany: ABC Pty Ltd Company\nEmail: thang@abc.com",
+  };
+
   const [data, setData] = useState([
     {
       id: uuid(),
@@ -86,11 +96,13 @@ export default function DropdownParties({ selected, setSelected }) {
             <div className="dropdown-container">
               <div
                 className="dropdown-btn"
-                onClick={(e) => handleDropdownButtonClick(item.id)}>
+                onClick={(e) => handleDropdownButtonClick(item.id)}
+              >
                 {item.selectedOption}
                 <span
                   className="fas fa-caret-down dropdown-icon"
-                  aria-hidden="true"></span>
+                  aria-hidden="true"
+                ></span>
               </div>
 
               <button className="add" onClick={handleAddButtonClick}>
@@ -98,7 +110,8 @@ export default function DropdownParties({ selected, setSelected }) {
               </button>
               <button
                 className="remove"
-                onClick={() => handleRemoveButtonClick(item.id)}>
+                onClick={() => handleRemoveButtonClick(item.id)}
+              >
                 Remove
               </button>
             </div>
@@ -106,12 +119,21 @@ export default function DropdownParties({ selected, setSelected }) {
             {isActive && item.id === id && (
               <div className="dropdown-content">
                 {availableOptions.map((option) => (
-                  <div
+                  <TooltipDropdownParties
+                    text={tooltipMessages[option]}
                     key={option}
-                    onClick={(e) => handleOptionClick(option, item.id)}
-                    className="dropdown-item">
-                    {option}
-                  </div>
+                  >
+                    <div
+                      onClick={(e) => handleOptionClick(option, item.id)}
+                      className="dropdown-item"
+                    >
+                      {option}
+                      <FontAwesomeIcon
+                        icon={faQuestionCircle}
+                        style={{ color: "#4CC9CF", marginLeft: "1em" }}
+                      />
+                    </div>
+                  </TooltipDropdownParties>
                 ))}
               </div>
             )}

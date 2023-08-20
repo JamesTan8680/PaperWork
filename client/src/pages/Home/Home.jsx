@@ -147,12 +147,13 @@ function Home() {
       <div className="title">Note</div>
       <div className="mid">
         <div className="mid-container">
-          {data.notes.map((note, index) => (
+          {data?.notes.map((note, index) => (
             <div
               className={`container ${
                 selected === note.note_id ? "selected" : ""
               }`}
-              key={index}>
+              key={index}
+            >
               <div className="card">
                 <h2>{note.header}</h2>
                 <p>{note.content}</p>

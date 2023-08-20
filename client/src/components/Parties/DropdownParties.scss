@@ -6,6 +6,8 @@
   overflow: auto;
 
   .dropdown-content {
+    display: flex;
+    flex-direction: column;
     top: 60px;
     margin-left: 20px;
     padding: 20px;
@@ -41,10 +43,14 @@
     }
   }
 
-  .dropdown-item {
-    padding: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
+  .drop {
+    display: flex;
+    flex-direction: column;
+    .dropdown-item {
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
   }
   .add {
     font-weight: bold;
