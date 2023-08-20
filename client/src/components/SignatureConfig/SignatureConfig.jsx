@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SignatureConfig.scss";
 function SignatureConfig() {
   //create the dummy data for the signature
@@ -36,8 +36,14 @@ function SignatureConfig() {
       name: "Signature",
     },
   ];
-
   const [selectedSubCats, setSelectedSubCats] = useState([]);
+  const [savedItem, setSaveItem] = useState([]);
+  useEffect(() => {
+    if (localStorage.getItem("subCat") !== null) {
+      setSaveItem(JSON.parse(localStorage.getItem("subCat")));
+    }
+  }, []);
+
   const handleChange = (e) => {
     const value = e.target.value;
     const isChecked = e.target.checked;
@@ -45,10 +51,34 @@ function SignatureConfig() {
     //setSelectedSubCats(isChecked && ((prev) => ({ ...prev, value })))
     //array can use the ...selectedSubCats, but not for object. object
     //need to use the previos state since it will override the value
+
     setSelectedSubCats(
       isChecked
         ? [...selectedSubCats, value]
         : selectedSubCats.filter((item) => item !== value)
+    );
+
+    setSaveItem(
+      isChecked
+        ? [...savedItem, value]
+        : savedItem.filter((item) => item !== value)
+    );
+  };
+
+  //function to handle on blur
+  const handleBlur = (e) => {
+    localStorage.setItem("subCat", JSON.stringify(savedItem));
+    //localStorage.setItem("subCat", JSON.stringify(selectedSubCats));
+  };
+
+  //handle click
+  const handleClick = (e) => {
+    const value = e.target.value;
+    const isChecked = e.target.checked;
+    setSaveItem(
+      isChecked
+        ? [...savedItem, value]
+        : savedItem.filter((item) => item !== value)
     );
   };
   return (
@@ -59,6 +89,7 @@ function SignatureConfig() {
           {data?.map((item) => {
             return (
               <div className="inputItem" key={item.id}>
+                {console.log(item.name)}
                 <input
                   type="checkbox"
                   disabled={
@@ -75,11 +106,13 @@ function SignatureConfig() {
                     item.id === 8 ||
                     item.id === 6
                       ? true
-                      : false
+                      : savedItem?.find((items) => items === item.name)
                   }
                   id={item.id}
                   value={item.name}
                   onChange={handleChange}
+                  onBlur={handleBlur}
+                  onClick={handleClick}
                 />
                 <label htmlFor={item.id}>{item.name}</label>
               </div>
@@ -87,8 +120,7 @@ function SignatureConfig() {
           })}
         </div>
       </div>
-
-      {selectedSubCats}
+      {savedItem}
     </div>
   );
 }
