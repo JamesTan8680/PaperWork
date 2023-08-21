@@ -11,7 +11,8 @@ import DocModal from "./DocModal/DocModal";
 const DocControlList = ({ data, boldItemId }) => {
   //using this state to manage the state for the DocModal
   const [show, setShow] = useState(false);
-
+  //state for the title of the document
+  const [title, setTitle] = useState("Non-disclosure Agreement");
   return (
     <>
       <div className="docControlHeader">
@@ -102,7 +103,7 @@ const DocControlList = ({ data, boldItemId }) => {
               </div>
             </div>
           ))}
-          <DocModal show={show} setShow={setShow} />
+          <DocModal show={show} setShow={setShow} title={title} />
         </div>
       </div>
     </>

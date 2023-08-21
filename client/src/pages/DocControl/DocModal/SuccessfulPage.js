@@ -1,7 +1,9 @@
 import React from "react";
 import Check from "../../../img/docControl/check.svg";
 import "./SuccessfulPage.scss";
-function SuccessfulPage({ closeModal, open }) {
+import Cross from "../../../img/docControl/crossRed.svg";
+
+function SuccessfulPage({ closeModal, open, result }) {
   if (!open) return null;
   return (
     <div>
@@ -10,9 +12,17 @@ function SuccessfulPage({ closeModal, open }) {
         <div className="content-doc">
           <div className="successful-message">
             <div>
-              <img src={Check} alt="" />
+              {result === "yes" ? (
+                <img src={Check} alt="" />
+              ) : (
+                <img className="cross" src={Cross} alt="" />
+              )}
             </div>
-            <span>Document have already sent to recipient!</span>
+            {result === "yes" ? (
+              <span>Document have already sent to recipient!</span>
+            ) : (
+              <span>Something went wrong, Please Contact support!</span>
+            )}
           </div>
         </div>
       </div>

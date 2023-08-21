@@ -5,8 +5,9 @@ import { useState } from "react";
 import Cross from "../../../img/docControl/cross.svg";
 import uuid from "react-uuid";
 import SuccessfulePage from "./SuccessfulPage";
+import emailjs from "@emailjs/browser";
 
-function DocModal({ show, setShow }) {
+function DocModal({ show, setShow, title }) {
   //manage the state for the send button
   const [open, setOpen] = useState(false);
   //save the email that user type inside the input
@@ -17,9 +18,12 @@ function DocModal({ show, setShow }) {
   const [error, setError] = useState("");
   //handle state of the id that user has been selected from the email list
   const [selectedIds, setSelectedIds] = useState([]);
+  //handle the state for the emial js if something went wrong
+  const [result, setResult] = useState("yes");
   //handle Close Modal event to close the portal
   const closeModal = () => {
     setShow(false);
+    setElements([]);
   };
 
   //handle the change event of the input for the email
@@ -31,7 +35,7 @@ function DocModal({ show, setShow }) {
   const handleAdd = () => {
     if (email !== "") {
       if (email.includes("@")) {
-        if (elements.find((e) => e.name === email)) {
+        if (elements?.find((e) => e.name === email)) {
           setError("Please enter the different email!");
         } else {
           setError("");
@@ -69,13 +73,41 @@ function DocModal({ show, setShow }) {
   const handleClose = () => {
     closeModal();
     setOpen((s) => !s);
+    setElements([]);
   };
   //handle on send
   const onSend = () => {
     if (elements.length === 0) {
       setError("Please add the email addres to the list!");
     } else {
-      setOpen((s) => !s);
+      var emailsArray = elements.map((item) => item.name);
+      console.log(emailsArray);
+      var templateParams = {
+        docName: title,
+        message:
+          "Please kindly check and approve or deny the document that was created by the Paperwork Team.",
+        email: emailsArray,
+      };
+      //email js api request method
+      emailjs
+        .send(
+          "service_7d8l9ff",
+          "template_25x692y",
+          templateParams,
+          "VBzIorHlAAspUrEhL"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+            setOpen((s) => !s);
+            setResult("yes");
+          },
+          (error) => {
+            console.log(error.text);
+            setResult("no");
+            setOpen((s) => !s);
+          }
+        );
     }
   };
   if (!show) return null;
@@ -103,7 +135,7 @@ function DocModal({ show, setShow }) {
 
           <h5>Recipient List:</h5>
           <div className="container">
-            {elements.map((element) => (
+            {elements?.map((element) => (
               <span
                 key={element.id}
                 onClick={() => handleElementClick(element.id)}
@@ -125,7 +157,11 @@ function DocModal({ show, setShow }) {
             <button className="send-btn" onClick={onSend}>
               Send
             </button>
-            <SuccessfulePage closeModal={handleClose} open={open} />
+            <SuccessfulePage
+              closeModal={handleClose}
+              open={open}
+              result={result}
+            />
             <button className="cancel-btn" onClick={closeModal}>
               Cancel
             </button>

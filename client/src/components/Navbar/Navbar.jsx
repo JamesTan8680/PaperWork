@@ -36,7 +36,7 @@ function Navbar() {
         <Link to="/viewDoc">
           <button>
             <img src={View} alt="" />
-            View Doucment
+            View Document
           </button>
         </Link>
       </div>
