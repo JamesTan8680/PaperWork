@@ -8,18 +8,22 @@ customise_document_ep_router.use(cors());
 customise_document_ep_router .use(express.json());
 const macros = new ep_macros();
 
+//no need this route, the data is sent through props from create_document
 customise_document_ep_router.get("/:id", (req, res) => {
   macros.select("document_template", {where:"document_template_id='"+req.params.id+"'"}, res);
 })
 
+//no need id, just return all the parties from parties
 customise_document_ep_router.get("/:id/parties", (req, res) => {
   macros.select("document_parties", {where:"document_template_id='"+req.params.id+"'"}, res);
 })
 
+//no need this route, just need post method
 customise_document_ep_router.get("/:id/configuration", (req, res) => {
   macros.select("configuration", {where:"document_template_id='"+req.params.id+"'"}, res);
 })
 
+//the :id in param is redundant if u have it in the body
 customise_document_ep_router.post("/:id/parties", (req, res) => {
   const { document_template_id, parties_id, parties_approval } = req.body;
 
@@ -39,6 +43,7 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
   );
 });
 
+//the :id in param is redundant if u have it in the body, besides, there are 8 fields in the frontend, u need to add more field in the database if neccessary
 customise_document_ep_router.post("/:id/configuration", (req, res) => {
   const {document_template_id, email, address, student_id, age, title} = req.body;
 
@@ -58,5 +63,44 @@ customise_document_ep_router.post("/:id/configuration", (req, res) => {
   );
 });
 
+
+customise_document_ep_router.post("/template", (req, res) => {
+  const { type, title, content, parties_number, created_date } = req.body;
+
+  // Query to get the latest version with the given type
+  const getLatestVersion =
+    "SELECT version FROM document_template WHERE type = ? ORDER BY version DESC LIMIT 1";
+
+  db.query(getLatestVersion, [type], (latest_version_err, latest_version_result) => {
+    if (latest_version_err) {
+      return res.status(500).json({ error: "An error occurred while querying for the latest version." });
+    }
+
+    let newNumber = 1; // Initialize the newNumber to 1 as default
+    if (latest_version_result.length > 0) {
+      const latest_version = latest_version_result[0].version;
+      newNumber = latest_version + 1; // Increment the latest version to get the new number
+    }
+
+    // Create the new template ID
+    const document_template_id = `${type}_${newNumber}`;
+
+    // Insert the new template
+    const insertQuery =
+    "INSERT INTO document_template (document_template_id, type, title, content, parties_number, created_date, version) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+    db.query(
+      insertQuery,
+      [document_template_id, type, title, content, parties_number, created_date, newNumber],
+      (insert_err, insert_result) => {
+        if (insert_err) {
+          return res.status(500).json({ error: "An error occurred while inserting the template." });
+        }
+        
+        return res.json({ message: "Template inserted successfully", document_template_id }); // Return the new ID
+      }
+    );
+  });
+});
 
 export default customise_document_ep_router;

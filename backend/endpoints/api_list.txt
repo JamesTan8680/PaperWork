@@ -13,4 +13,5 @@ view_documents: (see code for additional args)
 create_documents: 
     /create-documents/default-templates
 
-/text
+customise_documents:
+    customise-document/template
