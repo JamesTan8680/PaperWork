@@ -32,6 +32,8 @@ export default function CustomizeDoc() {
   const [terms, setDocTerms] = useState(docTerms);
   // this is the state for the input list
   const [inputList, setInputList] = useState([]);
+  //state that saving for the signature config
+  const [savedItem, setSaveItem] = useState([]);
   // Function to handle saving the content
   const handleSave = () => {
     // Save the content can be save to backend
@@ -40,7 +42,7 @@ export default function CustomizeDoc() {
 
   //handle alert
   const handleAlert = () => {
-    alert("hi");
+    alert(savedItem);
   };
 
   return (
@@ -109,7 +111,12 @@ export default function CustomizeDoc() {
               setInputList={setInputList}
             />
           ) : (
-            selected === 4 && <SignatureConfig />
+            selected === 4 && (
+              <SignatureConfig
+                savedItem={savedItem}
+                setSaveItem={setSaveItem}
+              />
+            )
           )}
           <div className="btn">
             {/* <button className="cancel">Cancel</button> */}
