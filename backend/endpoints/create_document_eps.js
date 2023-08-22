@@ -3,12 +3,12 @@ import cors from "cors";
 import db from "./db.js";
 import ep_macros from "./macro.js";
 
-const createdocument_ep_router = express.Router();
-createdocument_ep_router.use(cors());
-createdocument_ep_router.use(express.json());
+const create_document_ep_router = express.Router();
+create_document_ep_router.use(cors());
+create_document_ep_router.use(express.json());
 const macros = new ep_macros();
 
-createdocument_ep_router.get("/default-templates", (req, res) => {
+create_document_ep_router.get("/default-templates", (req, res) => {
   const query =
     "SELECT type, title, content FROM document_default_template";
 
@@ -44,7 +44,7 @@ createdocument_ep_router.get("/default-templates", (req, res) => {
 });
 
 //this route is not needed
-createdocument_ep_router.get("/variables/:type", (req, res) => {
+create_document_ep_router.get("/variables/:type", (req, res) => {
   const type = req.params.type;
   const query =
     "SELECT id, var_name, var_hint FROM document_default_template_variables WHERE type = ?";
@@ -59,7 +59,7 @@ createdocument_ep_router.get("/variables/:type", (req, res) => {
 });
 
 //this route is not needed
-createdocument_ep_router.post("/variables", (req, res) => {
+create_document_ep_router.post("/variables", (req, res) => {
   const { type, var_name, var_hint } = req.body;
 
   const query =
@@ -75,7 +75,7 @@ createdocument_ep_router.post("/variables", (req, res) => {
 });
 
 //this route is not needed
-createdocument_ep_router.delete("/variables/:id", (req, res) => {
+create_document_ep_router.delete("/variables/:id", (req, res) => {
   const varId = req.params.id;
 
   const query = "DELETE FROM document_default_template_variables WHERE id = ?";
@@ -93,4 +93,4 @@ createdocument_ep_router.delete("/variables/:id", (req, res) => {
   });
 });
 
-export default createdocument_ep_router;
+export default create_document_ep_router;

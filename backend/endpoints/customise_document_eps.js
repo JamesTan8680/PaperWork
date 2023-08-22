@@ -9,56 +9,60 @@ customise_document_ep_router .use(express.json());
 const macros = new ep_macros();
 
 //no need this route, the data is sent through props from create_document
-customise_document_ep_router.get("/:id", (req, res) => {
-  macros.select("document_template", {where:"document_template_id='"+req.params.id+"'"}, res);
-})
+// customise_document_ep_router.get("/:id", (req, res) => {
+//   macros.select("document_template", {where:"document_template_id='"+req.params.id+"'"}, res);
+// })
 
 //no need id, just return all the parties from parties
-customise_document_ep_router.get("/:id/parties", (req, res) => {
-  macros.select("document_parties", {where:"document_template_id='"+req.params.id+"'"}, res);
-})
+//--> It is temporarily in a different file as it has nothing to do with the template
+// customise_document_ep_router.get("/:id/parties", (req, res) => {
+//   macros.select("document_parties", {where:"document_template_id='"+req.params.id+"'"}, res);
+// })
 
 //no need this route, just need post method
-customise_document_ep_router.get("/:id/configuration", (req, res) => {
-  macros.select("configuration", {where:"document_template_id='"+req.params.id+"'"}, res);
-})
+// customise_document_ep_router.get("/:id/configuration", (req, res) => {
+//   macros.select("configuration", {where:"document_template_id='"+req.params.id+"'"}, res);
+// })
 
 //the :id in param is redundant if u have it in the body
+//--> Done
 customise_document_ep_router.post("/:id/parties", (req, res) => {
-  const { document_template_id, parties_id, parties_approval } = req.body;
+  const { parties_id, parties_approval } = req.body;
 
   const sql =
     "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?, ?, '0')";
 
   db.query(
     sql,
-    [document_template_id, parties_id, parties_approval],
+    [req.params.id, parties_id, parties_approval],
     (err, result) => {
       if (err) return res.send(err);
       return res.json({
         message: "Document parties appended successfully",
         insert_id: result.insertId,
-      }); 
+      });
     }
   );
 });
 
 //the :id in param is redundant if u have it in the body, besides, there are 8 fields in the frontend, u need to add more field in the database if neccessary
+// --> Done. The extra fields are meant to be redundant as they are mandatory!
+
 customise_document_ep_router.post("/:id/configuration", (req, res) => {
-  const {document_template_id, email, address, student_id, age, title} = req.body;
+  const { email, address, student_id, age, title } = req.body;
 
   const sql =
     "INSERT INTO configuration (document_template_id, email, address, student_id, age, title) VALUES (?, ?, ?, ?, ?, ?)";
 
   db.query(
     sql,
-    [document_template_id, email, address, student_id, age, title],
+    [req.params.id, email, address, student_id, age, title],
     (err, result) => {
       if (err) return res.send(err);
       return res.json({
         message: "Document configuration appended successfully",
         insert_id: result.insertId,
-      }); 
+      });
     }
   );
 });
@@ -87,7 +91,7 @@ customise_document_ep_router.post("/template", (req, res) => {
 
     // Insert the new template
     const insertQuery =
-    "INSERT INTO document_template (document_template_id, type, title, content, parties_number, created_date, version) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      "INSERT INTO document_template (document_template_id, type, title, content, parties_number, created_date, version) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     db.query(
       insertQuery,
@@ -96,11 +100,11 @@ customise_document_ep_router.post("/template", (req, res) => {
         if (insert_err) {
           return res.status(500).json({ error: "An error occurred while inserting the template." });
         }
-        
+
         return res.json({ message: "Template inserted successfully", document_template_id }); // Return the new ID
       }
-    );
-  });
-});
+    ); // end of second query
+  }); // end of first query
+}); // end of event
 
 export default customise_document_ep_router;
