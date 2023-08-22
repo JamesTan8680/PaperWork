@@ -1,15 +1,23 @@
 Homepage:
-    /homepage/documents/total
-    /homepage/documents/most-popular
-    /homepage/documents/recently-created
-    /homepage/notes    (For Get and post)
-    /homepage/notes/:note_id    (For put and delete)
+    GET /homepage/documents/total
+    GET /homepage/documents/most-popular
+    GET /homepage/documents/recently-created
+    GET /homepage/notes
+    PST /homepage/notes
+    PST /homepage/notes/:note_id
+    DEL /homepage/notes/:note_id
 
-view_documents: (see code for additional args)
-    /view-documents/templates[?search]
-    /view-documents/templates/{tempId}[?search]
-    /view-documents/templates/{tempId}/{docId}[?search]
+view_documents:
+    GET /view-documents/templates[?search]
+    GET /view-documents/templates/{tempId}[?search]
+    GET /view-documents/templates/{tempId}/{docId}[?search]
 
 create_documents: 
-    /create-documents/default-templates
+    GET /create-documents/default-templates
 
+customise_documents:
+    PST customise-document/{tempId}/parties
+    PST customise-document/{tempId}/configuration
+    PST customise-document/template
+
+    GET /parties
