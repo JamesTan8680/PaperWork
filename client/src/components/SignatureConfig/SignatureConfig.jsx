@@ -71,7 +71,7 @@ function SignatureConfig({ savedItem, setSaveItem }) {
 
   //function to handle on blur
   const handleBlur = (e) => {
-    localStorage.setItem("subCat", JSON.stringify(savedItem));
+    // localStorage.setItem("subCat", JSON.stringify(savedItem));
     //localStorage.setItem("subCat", JSON.stringify(selectedSubCats));
   };
 

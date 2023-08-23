@@ -1,5 +1,5 @@
 import React from "react";
-import "./CustomizeDoc.scss";
+import "./EditDoc.scss";
 import Doc from "../../img/home/doc.svg";
 import { useState, useRef } from "react";
 import TextEditor from "../../components/TextEditor/TextEditor";
@@ -7,8 +7,10 @@ import Parties from "../../components/Parties/Parties";
 import Terms from "../../components/Terms/Terms";
 import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
 import { renderToString } from "react-dom/server";
+import Back from "../../img/editDoc/back.svg";
+import { Link } from "react-router-dom";
 
-export default function CustomizeDoc() {
+export default function EditDoc() {
   const docTitle = "Non-Disclosure Agreement";
   const docTerms = renderToString(
     //this is only temporarily, will change accordingly
@@ -22,8 +24,6 @@ export default function CustomizeDoc() {
       </div>
     </React.Fragment>
   );
-
-  //using the useEffect here
 
   const editor = useRef(null);
   // const for managing the selected style
@@ -49,10 +49,20 @@ export default function CustomizeDoc() {
 
   return (
     <div className="customiseDoc">
-      <div className="top-customiseDoc">
-        <div className="headerDoc">
-          <img src={Doc} alt="DocIcon" />
-          <span>Template view</span>
+      <div className="top-editDoc">
+        <Link to="/viewDoc/:id">
+          <div className="back-btn">
+            <img src={Back} alt="" />
+            <span>
+              <b>Back</b>
+            </span>
+          </div>
+        </Link>
+        <div className="headerEditDoc">
+          <div className="header-container">
+            <img src={Doc} alt="DocIcon" />
+            <span className="template-edit">Template view</span>
+          </div>
         </div>
       </div>
 
