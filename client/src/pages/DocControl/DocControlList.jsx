@@ -8,6 +8,7 @@ import greysendIcon from "../../img/docControl/greysendIcon.svg";
 import lockIcon from "../../img/docControl/lockIcon.png";
 import editIcon from "../../img/home/editIcon2.svg";
 import DocModal from "./DocModal/DocModal";
+import GroupViewModal from "../../components/GroupViewModal/GroupViewModal";
 
 const DocControlList = ({ data }) => {
   // Initialize progress property for each item in the data
@@ -18,9 +19,10 @@ const DocControlList = ({ data }) => {
 
   //Using this state to manage the state for the DocModal
   const [show, setShow] = useState(false);
-
+  //put the amount of the parties for the progressing bar
   const totalParties = 5; //Assume Total Parties is 5
-
+  // state to manage THE groupviewModal to open or close
+  const [viewOpen, setViewOpen] = useState(false);
   // Set the state to hold the data with the progress property
   const [dataWithProgress, setDataWithProgress] = useState(updatedData);
 
@@ -86,8 +88,7 @@ const DocControlList = ({ data }) => {
                     className="progress"
                     style={{
                       width: `${(item.progress / totalParties) * 100}%`,
-                    }}
-                  ></div>
+                    }}></div>
                 </div>
               </div>
 
@@ -124,6 +125,9 @@ const DocControlList = ({ data }) => {
                       src={partiesIcon}
                       alt="Parties Icon "
                       className="partiesicon"
+                      onClick={() => {
+                        setViewOpen((prev) => !prev);
+                      }}
                     />
                   )}
                 </span>
@@ -174,6 +178,7 @@ const DocControlList = ({ data }) => {
             </div>
           ))}
           <DocModal show={show} setShow={setShow} />
+          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} />
         </div>
       </div>
     </>
