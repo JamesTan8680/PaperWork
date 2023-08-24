@@ -49,10 +49,10 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
 // --> Done. The extra fields are meant to be redundant as they are mandatory!
 
 customise_document_ep_router.post("/:id/configuration", (req, res) => {
-  const { email, address, student_id, age, title } = req.body;
+  const { address, student_id, age, title } = req.body;
 
   const sql =
-    "INSERT INTO configuration (document_template_id, email, address, student_id, age, title) VALUES (?, ?, ?, ?, ?, ?)";
+    "INSERT INTO configuration (document_template_id, address, student_id, age, title) VALUES (?, ?, ?, ?, ?, ?)";
 
   db.query(
     sql,
