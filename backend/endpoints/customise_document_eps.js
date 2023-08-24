@@ -52,11 +52,11 @@ customise_document_ep_router.post("/:id/configuration", (req, res) => {
   const { address, student_id, age, title } = req.body;
 
   const sql =
-    "INSERT INTO configuration (document_template_id, address, student_id, age, title) VALUES (?, ?, ?, ?, ?, ?)";
+    "INSERT INTO configuration (document_template_id, address, student_id, age, title) VALUES (?, ?, ?, ?, ?)";
 
   db.query(
     sql,
-    [req.params.id, email, address, student_id, age, title],
+    [req.params.id, address, student_id, age, title],
     (err, result) => {
       if (err) return res.send(err);
       return res.json({
