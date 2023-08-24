@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./SignatureConfig.scss";
-function SignatureConfig() {
+function SignatureConfig({ savedItem, setSaveItem }) {
   //create the dummy data for the signature
   const data = [
     {
@@ -35,14 +35,18 @@ function SignatureConfig() {
       id: 8,
       name: "Signature",
     },
+    {
+      id: 9,
+      name: "Email",
+    },
   ];
   const [selectedSubCats, setSelectedSubCats] = useState([]);
-  const [savedItem, setSaveItem] = useState([]);
-  useEffect(() => {
-    if (localStorage.getItem("subCat") !== null) {
-      setSaveItem(JSON.parse(localStorage.getItem("subCat")));
-    }
-  }, []);
+
+  // useEffect(() => {
+  //   if (localStorage.getItem("subCat") !== null) {
+  //     setSaveItem(JSON.parse(localStorage.getItem("subCat")));
+  //   }
+  // }, []);
 
   const handleChange = (e) => {
     const value = e.target.value;
@@ -67,7 +71,7 @@ function SignatureConfig() {
 
   //function to handle on blur
   const handleBlur = (e) => {
-    localStorage.setItem("subCat", JSON.stringify(savedItem));
+    // localStorage.setItem("subCat", JSON.stringify(savedItem));
     //localStorage.setItem("subCat", JSON.stringify(selectedSubCats));
   };
 

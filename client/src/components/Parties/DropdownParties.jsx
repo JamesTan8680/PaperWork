@@ -27,14 +27,14 @@ export default function DropdownParties({ selected, setSelected }) {
   const options = ["JunDa", "Ching", "Thang"];
 
   useEffect(() => {
-    const savedData = localStorage.getItem("items");
+    const savedData = localStorage.getItem("EditItems");
     if (savedData) {
       setData(JSON.parse(savedData));
     }
 
     const removeLocalStorage = () => {
       //remove the data of localStorage
-      localStorage.removeItem("items");
+      localStorage.removeItem("EditItems");
     };
     //saved  data before the user leaves the page
     window.addEventListener("beforeunload", removeLocalStorage);
@@ -69,7 +69,7 @@ export default function DropdownParties({ selected, setSelected }) {
     setIsActive(false);
 
     // Update local storage with the updated data
-    localStorage.setItem("items", JSON.stringify(updatedData));
+    localStorage.setItem("EditItems", JSON.stringify(updatedData));
   };
 
   const handleRemoveButtonClick = (remove_id) => {
@@ -79,7 +79,7 @@ export default function DropdownParties({ selected, setSelected }) {
     setData(updatedData);
 
     //Update local storage with updated data after removal
-    localStorage.setItem("items", JSON.stringify(updatedData));
+    localStorage.setItem("EditItems", JSON.stringify(updatedData));
 
     // If the removed dropdown's id matches the active dropdown's id, reset isActive and id state
     if (id === remove_id) {
@@ -96,13 +96,11 @@ export default function DropdownParties({ selected, setSelected }) {
             <div className="dropdown-container">
               <div
                 className="dropdown-btn"
-                onClick={(e) => handleDropdownButtonClick(item.id)}
-              >
+                onClick={(e) => handleDropdownButtonClick(item.id)}>
                 {item.selectedOption}
                 <span
                   className="fas fa-caret-down dropdown-icon"
-                  aria-hidden="true"
-                ></span>
+                  aria-hidden="true"></span>
               </div>
 
               <button className="add" onClick={handleAddButtonClick}>
@@ -110,8 +108,7 @@ export default function DropdownParties({ selected, setSelected }) {
               </button>
               <button
                 className="remove"
-                onClick={() => handleRemoveButtonClick(item.id)}
-              >
+                onClick={() => handleRemoveButtonClick(item.id)}>
                 Remove
               </button>
             </div>
@@ -121,12 +118,10 @@ export default function DropdownParties({ selected, setSelected }) {
                 {availableOptions.map((option) => (
                   <TooltipDropdownParties
                     text={tooltipMessages[option]}
-                    key={option}
-                  >
+                    key={option}>
                     <div
                       onClick={(e) => handleOptionClick(option, item.id)}
-                      className="dropdown-item"
-                    >
+                      className="dropdown-item">
                       {option}
                       <FontAwesomeIcon
                         icon={faQuestionCircle}

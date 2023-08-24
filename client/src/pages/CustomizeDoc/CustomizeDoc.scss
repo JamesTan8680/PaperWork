@@ -45,7 +45,7 @@
       flex-direction: column;
       flex: 1;
       border-radius: 10px;
-      margin-left: 20px;
+      margin: 0px 0px 10px 10px;
       box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
       width: auto;
       //justify-content: space-around;
@@ -97,7 +97,7 @@
       flex-direction: column;
       width: calc(100% - 20px);
       // margin-right: 20px;
-      margin-right: 0px;
+      margin: 0px 0px 10px 0px;
       border-radius: 10px;
 
       box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
