@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         element: <DocControl />,
       },
       {
-        path: "/CustomiseDoc/:id",
+        path: "/CustomizeDoc/:id",
         element: <CustomizeDoc />,
       },
       {

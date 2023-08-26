@@ -8,10 +8,24 @@ import Terms from "../../components/Terms/Terms";
 import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
 import { renderToString } from "react-dom/server";
 import SuccessfulPage from "./SuccessfulPage";
-import { Link } from "react-router-dom";
-
+import DropdownParties from "../../components/Parties/DropdownParties";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 export default function CustomizeDoc() {
-  const docTitle = "Non-Disclosure Agreement";
+  let { id } = useParams();
+  let location = useLocation();
+  const docTitleFromState = location.state && location.state.docTitle;
+  console.log(docTitleFromState); // This should print the passed title or undefined if not present.
+
+  console.log("testID", id);
+  const docTitle = location.state?.docTitle;
+  console.log("testTitle", docTitle);
   const docTerms = renderToString(
     //this is only temporarily, will change accordingly
     <React.Fragment>
@@ -24,8 +38,7 @@ export default function CustomizeDoc() {
       </div>
     </React.Fragment>
   );
-
-  //using the useEffect here
+  const [selectedParty, setSelectedParty] = useState("");
 
   const editor = useRef(null);
   // const for managing the selected style
@@ -98,7 +111,7 @@ export default function CustomizeDoc() {
               }}
             >
               <b>Parties</b>
-              <span>Note: Put the Parties Name Here That Involve</span>
+              {selectedParty}
             </div>
             <div
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
@@ -107,6 +120,7 @@ export default function CustomizeDoc() {
               }}
             >
               <b>Terms</b>
+
               <span>Note: Put the Document Terms Here That Involve</span>
             </div>
             <div
@@ -130,7 +144,7 @@ export default function CustomizeDoc() {
               />
             </div>
           ) : selected === 2 ? (
-            <Parties />
+            <Parties selectedParty={selectedParty} />
           ) : selected === 3 ? (
             <Terms
               editor={editor}

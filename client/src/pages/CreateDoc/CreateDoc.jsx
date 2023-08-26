@@ -39,6 +39,9 @@ function CreateDoc() {
         term: selectedTemplateData.template
           ? selectedTemplateData.template.term
           : "",
+        type: selectedTemplateData.template
+          ? selectedTemplateData.template.type
+          : "",
       }
     : null;
 

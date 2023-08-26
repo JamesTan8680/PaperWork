@@ -4,7 +4,7 @@ import "./ReviewTemplate.scss";
 //import axios from "axios";
 import parse from "html-react-parser";
 import { Link } from "react-router-dom";
-function ReviewTemplate({ type, templateData }) {
+function ReviewTemplate({ type, templateData, template }) {
   //const [data, setData] = useState(null);
   if (!templateData || !templateData.title || !templateData.term) {
     return <div>Loading...</div>; // or return null if you don't want to show anything
@@ -16,6 +16,7 @@ function ReviewTemplate({ type, templateData }) {
   //console.log("Template Data Title:", templateData.title);
   const titleMatch = templateData.title.match(/<title>(.*?)<\/title>/);
   const extractedTitle = titleMatch ? titleMatch[1] : templateData.title;
+  console.log("extractedTitle in ReviewTemplate:", extractedTitle);
 
   return (
     <>
@@ -40,7 +41,12 @@ function ReviewTemplate({ type, templateData }) {
               <div className="preview-signature">Signature and date</div>
 
               <div className="cus-btn">
-                <Link to="/CustomiseDoc/:id">
+                <Link
+                  to={{
+                    pathname: `/CustomizeDoc/${templateData?.type}`,
+                    state: { docTitle: extractedTitle },
+                  }}
+                >
                   <button className="btn">CUSTOMISE</button>
                 </Link>
               </div>
@@ -63,7 +69,14 @@ function ReviewTemplate({ type, templateData }) {
               <div className="preview-signature">
                 <span>Signature and date</span>
               </div>
-              <button>CUSTOMISE</button>
+              <Link
+                to={{
+                  pathname: `/CustomizeDoc/${templateData?.type}`,
+                  state: { docTitle: extractedTitle },
+                }}
+              >
+                <button className="btn">CUSTOMISE</button>
+              </Link>
             </div>
           </div>
         </>

@@ -6,7 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import TooltipDropdownParties from "./TooltipDropdownParties";
 import axios from "axios";
-export default function DropdownParties({ selected, setSelected }) {
+import onPartySelect from "../../pages/CustomizeDoc/CustomizeDoc";
+export default function DropdownParties({ selected, setSelected, onSelect }) {
   const [isActive, setIsActive] = useState(false);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
   const [id, setId] = useState(null); // Declare the id use state and initialize it NULL
@@ -73,6 +74,8 @@ export default function DropdownParties({ selected, setSelected }) {
 
     // Update local storage with the updated data
     localStorage.setItem("EditItems", JSON.stringify(updatedData));
+    setSelected(option);
+    onSelect(option);
   };
 
   const handleRemoveButtonClick = (remove_id) => {
