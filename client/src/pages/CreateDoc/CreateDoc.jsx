@@ -63,7 +63,8 @@ function CreateDoc() {
                     : "list-createDoc"
                 }
                 onClick={() => handleSelectTemplate(item.id)}
-                key={item.id}>
+                key={item.id}
+              >
                 {extractTitleContent(item.docTitle)}
               </span>
             ))}
@@ -77,12 +78,14 @@ function CreateDoc() {
           <div className="list-container">
             <div
               onClick={() => handleClickType("default")}
-              className={template === "default" ? "selected" : ""}>
+              className={template === "default" ? "selected" : ""}
+            >
               Default Template
             </div>
             <div
               onClick={() => handleClickType("blank")}
-              className={template === "blank" ? "selected" : ""}>
+              className={template === "blank" ? "selected" : ""}
+            >
               Blank Template
             </div>
           </div>

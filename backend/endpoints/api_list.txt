@@ -13,7 +13,7 @@ view_documents:
     GET /view-documents/templates/{tempId}/{docId}[?search]
 
 create_documents: 
-    GET /create-documents/default-templates
+    GET /create-document/default-templates
 
 customise_documents:
     PST customise-document/{tempId}/parties
