@@ -20,7 +20,7 @@ import {
 
 export default function CustomizeDoc() {
   let { id } = useParams();
-  const [docTitle, setDocTitle] = useState("NDA"); // default value
+  const [docTitle, setDocTitle] = useState(""); // default value
 
   const [data, setData] = useState([]);
   const [templateSelect, setTemplateSelect] = useState(null);
@@ -43,6 +43,7 @@ export default function CustomizeDoc() {
           const rawDocTitle = item.docTitle;
           const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, ""); // remove <title> and </title>
           setDocTitle(cleanedTitle);
+          setDocContent(cleanedTitle);
         }
       })
       .catch((error) => {
@@ -107,7 +108,6 @@ export default function CustomizeDoc() {
       anchor.click();
     }
   };
-
   return (
     <div className="customiseDoc">
       <div className="top-customiseDoc">
