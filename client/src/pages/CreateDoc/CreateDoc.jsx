@@ -31,7 +31,6 @@ function CreateDoc() {
   }, [templateSelect]);
 
   const selectedTemplateData = data.find((item) => item.id === templateSelect);
-
   // Combine title and term into one object
   const combinedTemplateData = selectedTemplateData
     ? {

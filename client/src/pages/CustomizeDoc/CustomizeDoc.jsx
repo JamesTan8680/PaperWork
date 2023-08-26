@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./CustomizeDoc.scss";
 import Doc from "../../img/home/doc.svg";
-import { useState, useRef } from "react";
 import TextEditor from "../../components/TextEditor/TextEditor";
 import Parties from "../../components/Parties/Parties";
 import Terms from "../../components/Terms/Terms";
@@ -9,6 +8,7 @@ import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
 import { renderToString } from "react-dom/server";
 import SuccessfulPage from "./SuccessfulPage";
 import DropdownParties from "../../components/Parties/DropdownParties";
+import axios from "axios";
 import {
   BrowserRouter as Router,
   Switch,
@@ -17,15 +17,39 @@ import {
   useParams,
   useLocation,
 } from "react-router-dom";
+
 export default function CustomizeDoc() {
   let { id } = useParams();
-  let location = useLocation();
-  const docTitleFromState = location.state && location.state.docTitle;
-  console.log(docTitleFromState); // This should print the passed title or undefined if not present.
+  const [docTitle, setDocTitle] = useState("NDA"); // default value
 
-  console.log("testID", id);
-  const docTitle = location.state?.docTitle;
-  console.log("testTitle", docTitle);
+  const [data, setData] = useState([]);
+  const [templateSelect, setTemplateSelect] = useState(null);
+  const [matchedItem, setMatchedItem] = useState(null);
+
+  useEffect(() => {
+    const apiUrl = "http://localhost:8800/create-document/default-templates";
+
+    axios
+      .get(apiUrl)
+      .then((response) => {
+        setData(response.data);
+        if (!templateSelect && response.data.length > 0) {
+          setTemplateSelect(response.data[0].id);
+        }
+
+        const item = response.data.find((item) => item.template.type === id);
+        if (item) {
+          setMatchedItem(item);
+          const rawDocTitle = item.docTitle;
+          const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, ""); // remove <title> and </title>
+          setDocTitle(cleanedTitle);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+      });
+  }, [templateSelect, id]);
+
   const docTerms = renderToString(
     //this is only temporarily, will change accordingly
     <React.Fragment>
