@@ -7,7 +7,13 @@ import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import TooltipDropdownParties from "./TooltipDropdownParties";
 import axios from "axios";
 import onPartySelect from "../../pages/CustomizeDoc/CustomizeDoc";
-export default function DropdownParties({ selected, setSelected, onSelect }) {
+export default function DropdownParties({
+  selected,
+  setSelected,
+  onSelect,
+  selectedParties,
+  setSelectedParties,
+}) {
   const [isActive, setIsActive] = useState(false);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
   const [id, setId] = useState(null); // Declare the id use state and initialize it NULL
@@ -80,6 +86,13 @@ export default function DropdownParties({ selected, setSelected, onSelect }) {
     localStorage.setItem("items", JSON.stringify(updatedData));
     setSelected(option);
     onSelect(option);
+    setSelectedParties((prevParties) => {
+      // Check if the party is already added to avoid duplicates
+      if (!prevParties.includes(option)) {
+        return [...prevParties, option];
+      }
+      return prevParties;
+    });
   };
 
   const handleRemoveButtonClick = (remove_id) => {
@@ -96,6 +109,12 @@ export default function DropdownParties({ selected, setSelected, onSelect }) {
       setIsActive(false);
       setId(null);
     }
+    const partyToRemove = data.find(
+      (item) => item.id === remove_id
+    )?.selectedOption;
+    setSelectedParties((prevParties) =>
+      prevParties.filter((party) => party !== partyToRemove)
+    );
   };
 
   return (
