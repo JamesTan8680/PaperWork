@@ -11,12 +11,12 @@ export default function DropdownParties({ selected, setSelected, onSelect }) {
   const [isActive, setIsActive] = useState(false);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
   const [id, setId] = useState(null); // Declare the id use state and initialize it NULL
-
-  const tooltipMessages = {
-    JunDa: "Name: JunDa\nCompany: H&M\nEmail: junda8680@gmail.com",
-    Ching: "Name: Ching\nCompany: Md\nEmail: ching@gmail.com",
-    Thang: "Name: Thang\nCompany: ABC Pty Ltd Company\nEmail: thang@abc.com",
-  };
+  // Dummy Data
+  // const tooltipMessages = {
+  //   JunDa: "Name: JunDa\nCompany: H&M\nEmail: junda8680@gmail.com",
+  //   Ching: "Name: Ching\nCompany: Md\nEmail: ching@gmail.com",
+  //   Thang: "Name: Thang\nCompany: ABC Pty Ltd Company\nEmail: thang@abc.com",
+  // };
   const [partiesData, setPartiesData] = useState([]);
 
   const [data, setData] = useState([
@@ -37,9 +37,13 @@ export default function DropdownParties({ selected, setSelected, onSelect }) {
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+    const savedData = localStorage.getItem("items");
+    if (savedData) {
+      setData(JSON.parse(savedData));
+    }
     const removeLocalStorage = () => {
       //remove the data of localStorage
-      localStorage.removeItem("EditItems");
+      localStorage.removeItem("items");
       window.addEventListener("beforeunload", removeLocalStorage);
       return () => {
         window.removeEventListener("beforeunload", removeLocalStorage);
@@ -73,7 +77,7 @@ export default function DropdownParties({ selected, setSelected, onSelect }) {
     setIsActive(false);
 
     // Update local storage with the updated data
-    localStorage.setItem("EditItems", JSON.stringify(updatedData));
+    localStorage.setItem("items", JSON.stringify(updatedData));
     setSelected(option);
     onSelect(option);
   };
@@ -85,7 +89,7 @@ export default function DropdownParties({ selected, setSelected, onSelect }) {
     setData(updatedData);
 
     //Update local storage with updated data after removal
-    localStorage.setItem("EditItems", JSON.stringify(updatedData));
+    localStorage.setItem("items", JSON.stringify(updatedData));
 
     // If the removed dropdown's id matches the active dropdown's id, reset isActive and id state
     if (id === remove_id) {

@@ -7,16 +7,8 @@ import Terms from "../../components/Terms/Terms";
 import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
 import { renderToString } from "react-dom/server";
 import SuccessfulPage from "./SuccessfulPage";
-import DropdownParties from "../../components/Parties/DropdownParties";
 import axios from "axios";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-  useLocation,
-} from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 export default function CustomizeDoc() {
   let { id } = useParams();
@@ -25,7 +17,7 @@ export default function CustomizeDoc() {
   const [data, setData] = useState([]);
   const [templateSelect, setTemplateSelect] = useState(null);
   const [matchedItem, setMatchedItem] = useState(null);
-
+  //GET data from database
   useEffect(() => {
     const apiUrl = "http://localhost:8800/create-document/default-templates";
 
@@ -40,6 +32,7 @@ export default function CustomizeDoc() {
         const item = response.data.find((item) => item.template.type === id);
         if (item) {
           setMatchedItem(item);
+          //select docTitle from datbase
           const rawDocTitle = item.docTitle;
           const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, ""); // remove <title> and </title>
           setDocTitle(cleanedTitle);
@@ -64,13 +57,13 @@ export default function CustomizeDoc() {
       </div>
     </React.Fragment>
   );
-  const [selectedParty, setSelectedParty] = useState("");
+  const [selectedParty] = useState("");
 
   const editor = useRef(null);
   // const for managing the selected style
   const [selected, setSelected] = useState(1);
   //this is the state for the title
-  const [content, setDocContent] = useState(docTitle);
+  const [content, setDocContent] = useState("");
   //this is the state for the term of the doc
   const [terms, setDocTerms] = useState(docTerms);
   // this is the state for the input list
@@ -108,6 +101,27 @@ export default function CustomizeDoc() {
       anchor.href = "/createDoc";
       anchor.click();
     }
+  };
+
+  //GATHER DATA
+  const payload = {
+    content,
+    terms,
+    savedItem,
+  };
+
+  //
+  const saveToDatabase = (data) => {
+    axios
+      .post("http://localhost:8800/customise-document/template", data)
+      .then((response) => {
+        console.log("Data saved successfully:", response);
+        // Maybe update some state here to notify the user that the save was successful.
+      })
+      .catch((error) => {
+        console.error("Error saving data:", error);
+        // Handle the error. Maybe display an error message to the user.
+      });
   };
   return (
     <div className="customiseDoc">
@@ -179,7 +193,7 @@ export default function CustomizeDoc() {
               selected={selected}
               setContent={setDocTerms}
               inputList={inputList}
-              setInputList={setInputList}
+              // setInputList={setInputList}
             />
           ) : (
             selected === 4 && (
@@ -211,6 +225,7 @@ export default function CustomizeDoc() {
                 if (selected !== 4) {
                   setSelected((prev) => prev + 1);
                   handleSave();
+                  saveToDatabase(payload);
                 } else {
                   handleAlert();
                 }
