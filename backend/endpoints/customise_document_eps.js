@@ -7,6 +7,7 @@ const customise_document_ep_router = express.Router();
 customise_document_ep_router.use(cors());
 customise_document_ep_router .use(express.json());
 const macros = new ep_macros();
+const if_exists = macros.exists;
 
 //no need this route, the data is sent through props from create_document
 // customise_document_ep_router.get("/:id", (req, res) => {
@@ -30,7 +31,7 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
   const { parties_id, parties_approval } = req.body;
 
   const sql =
-    "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?, ?, '0')";
+    "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?, ?, 0)";
 
   db.query(
     sql,
@@ -45,6 +46,7 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
   );
 });
 
+
 //the :id in param is redundant if u have it in the body, besides, there are 8 fields in the frontend, u need to add more field in the database if neccessary
 // --> Done. The extra fields are meant to be redundant as they are mandatory!
 
@@ -56,7 +58,7 @@ customise_document_ep_router.post("/:id/configuration", (req, res) => {
 
   db.query(
     sql,
-    [req.params.id, address, student_id, age, title],
+    [req.params.id, if_exists(address), if_exists(student_id), if_exists(age), if_exists(title)],
     (err, result) => {
       if (err) return res.send(err);
       return res.json({

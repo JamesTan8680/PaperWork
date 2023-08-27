@@ -54,6 +54,12 @@ class ep_macros {
             return res.json(data);
         });
     }
+
+
+    //check if an item is defined
+    //item: the object
+    exists = (item) => item ? 1 : 0;
+
 }
 
 export default ep_macros;
