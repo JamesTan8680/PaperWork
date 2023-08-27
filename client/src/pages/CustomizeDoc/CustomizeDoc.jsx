@@ -50,6 +50,7 @@ export default function CustomizeDoc() {
         console.error("Error fetching data: ", error);
       });
   }, [templateSelect, id]);
+  console.log(data);
 
   const docTerms = renderToString(
     //this is only temporarily, will change accordingly
@@ -171,6 +172,8 @@ export default function CustomizeDoc() {
             <Parties selectedParty={selectedParty} />
           ) : selected === 3 ? (
             <Terms
+              id={id}
+              data={data}
               editor={editor}
               terms={terms}
               selected={selected}

@@ -1,7 +1,11 @@
 import React from "react";
 import TextEditor from "../../components/TextEditor/TextEditor";
 import "./Terms.scss";
+import { useState, useEffect } from "react";
+
 function Terms({
+  id,
+  data,
   editor,
   selected,
   terms,
@@ -9,6 +13,16 @@ function Terms({
   inputList,
   setInputList,
 }) {
+  console.log(data);
+  console.log(id);
+  //finding the data and matching it with the type
+  useEffect(() => {
+    const findTerms = data.find((item) => item.template.type === id);
+    console.log(findTerms);
+    const displayTerms = `<p>${findTerms.template.term}</p>`;
+    console.log(displayTerms);
+    setContent(displayTerms);
+  }, [data, setContent]);
   return (
     <div className="term">
       <TextEditor
