@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Parties.scss";
 import Dropdown from "./DropdownParties";
 
-function Parties({ selectedParty }) {
+function Parties({ partyList, setPartyList }) {
   const [selected, setSelected] = useState("Select Parties Name");
   const [partiesList, setPartiesList] = useState([]);
 
-  useEffect(() => {
-    console.log(`Number of parties: ${partiesList.length}`);
-  }, [partiesList]);
+  // useEffect(() => {
+  //   console.log(`Number of parties: ${partiesList.length}`);
+  // }, [partiesList]);
   return (
     <>
       <div className="parties-container">
@@ -23,7 +23,8 @@ function Parties({ selectedParty }) {
         setSelected={setSelected}
         selectedParties={partiesList}
         setSelectedParties={setPartiesList}
-        onSelect={() => {}}
+        partyList={partyList}
+        setPartyList={setPartyList}
       />
     </>
   );

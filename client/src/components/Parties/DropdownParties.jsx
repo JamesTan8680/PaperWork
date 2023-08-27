@@ -6,13 +6,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import TooltipDropdownParties from "./TooltipDropdownParties";
 import axios from "axios";
-import onPartySelect from "../../pages/CustomizeDoc/CustomizeDoc";
 export default function DropdownParties({
-  selected,
+  // selected,
   setSelected,
-  onSelect,
-  selectedParties,
   setSelectedParties,
+  partyList,
+  setPartyList,
 }) {
   const [isActive, setIsActive] = useState(false);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
@@ -24,14 +23,6 @@ export default function DropdownParties({
   //   Thang: "Name: Thang\nCompany: ABC Pty Ltd Company\nEmail: thang@abc.com",
   // };
   const [partiesData, setPartiesData] = useState([]);
-
-  const [data, setData] = useState([
-    {
-      id: uuid(),
-      number: 1,
-      selectedOption: selected, //Manage the selected option state seperately for each dropdown item
-    },
-  ]);
 
   useEffect(() => {
     // Fetch data from database
@@ -45,27 +36,20 @@ export default function DropdownParties({
       });
     const savedData = localStorage.getItem("items");
     if (savedData) {
-      setData(JSON.parse(savedData));
+      setPartyList(JSON.parse(savedData));
     }
-    const removeLocalStorage = () => {
-      //remove the data of localStorage
-      localStorage.removeItem("items");
-      window.addEventListener("beforeunload", removeLocalStorage);
-      return () => {
-        window.removeEventListener("beforeunload", removeLocalStorage);
-      };
-    };
-    // ... rest of your useEffect code ...
   }, []);
 
-  const availableOptions = partiesData.filter((party) => {
-    return !data.some((item) => item.selectedOption === party.parties_name);
+  const availableOptions = partiesData?.filter((party) => {
+    return !partyList.some(
+      (item) => item.selectedOption === party.parties_name
+    );
   });
 
   const handleAddButtonClick = () => {
     setShowAdditionalDropdown(!showAdditionalDropdown);
     const obj = { id: uuid(), selectedOption: "Select Parties Name" };
-    setData([...data, obj]);
+    setPartyList([...partyList, obj]);
   };
 
   const handleDropdownButtonClick = (id) => {
@@ -75,17 +59,17 @@ export default function DropdownParties({
 
   //Responsible for updating the selected option for specific dropdown item
   const handleOptionClick = (option, id) => {
-    const updatedData = data.map((item) =>
+    const updatedData = partyList?.map((item) =>
       item.id === id ? { ...item, selectedOption: option } : item
     );
-    setData(updatedData);
+    setPartyList(updatedData);
     setSelected(option);
     setIsActive(false);
 
     // Update local storage with the updated data
     localStorage.setItem("items", JSON.stringify(updatedData));
     setSelected(option);
-    onSelect(option);
+
     setSelectedParties((prevParties) => {
       // Check if the party is already added to avoid duplicates
       if (!prevParties.includes(option)) {
@@ -94,12 +78,12 @@ export default function DropdownParties({
       return prevParties;
     });
   };
-
+  console.log(partyList);
   const handleRemoveButtonClick = (remove_id) => {
-    if (data.length === 1) return; //only one dropdown left, don't allow removal
+    if (partyList?.length === 1) return; //only one dropdown left, don't allow removal
 
-    const updatedData = data.filter((item) => item.id !== remove_id);
-    setData(updatedData);
+    const updatedData = partyList?.filter((item) => item.id !== remove_id);
+    setPartyList(updatedData);
 
     //Update local storage with updated data after removal
     localStorage.setItem("items", JSON.stringify(updatedData));
@@ -109,7 +93,7 @@ export default function DropdownParties({
       setIsActive(false);
       setId(null);
     }
-    const partyToRemove = data.find(
+    const partyToRemove = partyList?.find(
       (item) => item.id === remove_id
     )?.selectedOption;
     setSelectedParties((prevParties) =>
@@ -119,19 +103,17 @@ export default function DropdownParties({
 
   return (
     <div className="dropdown">
-      {data?.map((item) => {
+      {partyList?.map((item) => {
         return (
           <React.Fragment key={item.id}>
             <div className="dropdown-container">
               <div
                 className="dropdown-btn"
-                onClick={(e) => handleDropdownButtonClick(item.id)}
-              >
+                onClick={(e) => handleDropdownButtonClick(item.id)}>
                 {item.selectedOption}
                 <span
                   className="fas fa-caret-down dropdown-icon"
-                  aria-hidden="true"
-                ></span>
+                  aria-hidden="true"></span>
               </div>
 
               <button className="add" onClick={handleAddButtonClick}>
@@ -139,8 +121,7 @@ export default function DropdownParties({
               </button>
               <button
                 className="remove"
-                onClick={() => handleRemoveButtonClick(item.id)}
-              >
+                onClick={() => handleRemoveButtonClick(item.id)}>
                 Remove
               </button>
             </div>
@@ -150,14 +131,12 @@ export default function DropdownParties({
                 {availableOptions.map((party) => (
                   <TooltipDropdownParties
                     text={`ABN: ${party.abn}\nAddress: ${party.parties_address}\nEmail: ${party.parties_email}`}
-                    key={party.parties_id}
-                  >
+                    key={party.parties_id}>
                     <div
                       onClick={(e) =>
                         handleOptionClick(party.parties_name, item.id)
                       }
-                      className="dropdown-item"
-                    >
+                      className="dropdown-item">
                       {party.parties_name}
                       <FontAwesomeIcon
                         icon={faQuestionCircle}

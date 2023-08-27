@@ -13,8 +13,10 @@ export default function TextEditor({
   title,
   selected,
   setContent,
+  setTitle,
   inputList,
   setInputList,
+  page,
 }) {
   const [showAddInputPopup, setShowAddInputPopup] = useState(false);
 
@@ -43,7 +45,11 @@ export default function TextEditor({
   );
 
   const onChangeHandler = (event) => {
-    setContent(event);
+    if (page === "title") {
+      setTitle(event);
+    } else if (page === "content") {
+      setContent(event);
+    }
   };
   //handle on mouse over
   const handleOver = (id) => {

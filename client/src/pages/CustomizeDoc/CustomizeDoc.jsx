@@ -5,18 +5,20 @@ import TextEditor from "../../components/TextEditor/TextEditor";
 import Parties from "../../components/Parties/Parties";
 import Terms from "../../components/Terms/Terms";
 import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
-import { renderToString } from "react-dom/server";
 import SuccessfulPage from "./SuccessfulPage";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import uuid from "react-uuid";
 
 export default function CustomizeDoc() {
+  //the id that get from the params
   let { id } = useParams();
+  //setting the doc title for the document
   const [docTitle, setDocTitle] = useState(""); // default value
-
   const [data, setData] = useState([]);
-  const [templateSelect, setTemplateSelect] = useState(null);
-  const [matchedItem, setMatchedItem] = useState(null);
+  const [templateSelect, setTemplateSelect] = useState();
+  //this is the state for the term of the doc
+  const [terms, setDocTerms] = useState("");
   //GET data from database
   useEffect(() => {
     const apiUrl = "http://localhost:8800/create-document/default-templates";
@@ -31,32 +33,21 @@ export default function CustomizeDoc() {
 
         const item = response.data.find((item) => item.template.type === id);
         if (item) {
-          setMatchedItem(item);
           //select docTitle from datbase
           const rawDocTitle = item.docTitle;
           const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, ""); // remove <title> and </title>
           setDocTitle(cleanedTitle);
           setDocContent(cleanedTitle);
+          setDocTerms(item?.template?.term);
         }
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
   }, [templateSelect, id]);
-  console.log(data);
+  //console.log(data);
 
-  const docTerms = renderToString(
-    //this is only temporarily, will change accordingly
-    <React.Fragment>
-      <div>
-        <b>Terms</b>
-      </div>
-      &nbsp; &nbsp;
-      <div>
-        <span>This document is confidential</span>
-      </div>
-    </React.Fragment>
-  );
+  //console.log(terms);
   const [selectedParty] = useState("");
 
   const editor = useRef(null);
@@ -64,8 +55,14 @@ export default function CustomizeDoc() {
   const [selected, setSelected] = useState(1);
   //this is the state for the title
   const [content, setDocContent] = useState("");
-  //this is the state for the term of the doc
-  const [terms, setDocTerms] = useState(docTerms);
+  //state for the parties
+  const [partyList, setPartyList] = useState([
+    {
+      id: uuid(),
+      number: 1,
+      selectedOption: selected, //Manage the selected option state seperately for each dropdown item
+    },
+  ]);
   // this is the state for the input list
   const [inputList, setInputList] = useState([]);
   //state that saving for the signature config
@@ -77,6 +74,9 @@ export default function CustomizeDoc() {
   const handleSave = () => {
     // Save the content can be save to backend
     console.log("Saving content:", content);
+    console.log(partyList[1].selectedOption);
+    console.log(partyList);
+    console.log(partyList.length);
   };
   //handle close modal
   const handleClose = () => {
@@ -138,8 +138,7 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}
-          >
+            }}>
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -147,8 +146,7 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}
-            >
+              }}>
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -156,8 +154,7 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}
-            >
+              }}>
               <b>Terms</b>
 
               <span>Note: Put the Document Terms Here That Involve</span>
@@ -166,8 +163,7 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}
-            >
+              }}>
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -179,11 +175,12 @@ export default function CustomizeDoc() {
                 editor={editor}
                 title={content}
                 selected={selected}
-                setContent={setDocContent}
+                setTitle={setDocContent}
+                page="title"
               />
             </div>
           ) : selected === 2 ? (
-            <Parties selectedParty={selectedParty} />
+            <Parties partyList={partyList} setPartyList={setPartyList} />
           ) : selected === 3 ? (
             <Terms
               id={id}
@@ -193,7 +190,8 @@ export default function CustomizeDoc() {
               selected={selected}
               setContent={setDocTerms}
               inputList={inputList}
-              // setInputList={setInputList}
+              page="content"
+              setInputList={setInputList}
             />
           ) : (
             selected === 4 && (
@@ -214,8 +212,7 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}
-            >
+              }}>
               Cancel
             </button>
 
@@ -224,13 +221,12 @@ export default function CustomizeDoc() {
               onClick={() => {
                 if (selected !== 4) {
                   setSelected((prev) => prev + 1);
-                  handleSave();
                   saveToDatabase(payload);
                 } else {
+                  handleSave();
                   handleAlert();
                 }
-              }}
-            >
+              }}>
               Save
             </button>
           </div>

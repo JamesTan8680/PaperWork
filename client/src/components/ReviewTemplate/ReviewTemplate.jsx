@@ -40,12 +40,7 @@ function ReviewTemplate({ type, templateData }) {
               <div className="preview-signature">Signature and date</div>
 
               <div className="cus-btn">
-                <Link
-                  to={{
-                    pathname: `/CustomizeDoc/${templateData?.type}`,
-                    state: { docTitle: templateData.title },
-                  }}
-                >
+                <Link to={`/CustomizeDoc/${templateData?.type}`}>
                   <button className="btn">CUSTOMISE</button>
                 </Link>
               </div>
@@ -68,14 +63,11 @@ function ReviewTemplate({ type, templateData }) {
               <div className="preview-signature">
                 <span>Signature and date</span>
               </div>
-              <Link
-                to={{
-                  pathname: `/CustomizeDoc/${templateData?.type}`,
-                  state: { docTitle: templateData.title },
-                }}
-              >
-                <button className="btn">CUSTOMISE</button>
-              </Link>
+              <div className="cus-btn">
+                <Link to={`/CustomizeDoc/${templateData?.type}`}>
+                  <button className="btn">CUSTOMISE</button>
+                </Link>
+              </div>
             </div>
           </div>
         </>
