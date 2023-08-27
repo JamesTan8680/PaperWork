@@ -51,24 +51,47 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
 // --> Done. The extra fields are meant to be redundant as they are mandatory!
 
 customise_document_ep_router.post("/:id/configuration", (req, res) => {
-  const { address, student_id, age, title } = req.body;
+  const dataArray = req.body;
+
+  const valuesToCheck = ["firstname", "lastname", "student_id", "address", "title", "date", "age", "signature"];
+
+  // Create an object to hold the values for each field
+  const fieldValues = {
+    firstname: dataArray.includes("firstname") ? 1 : 0,
+    lastname: dataArray.includes("lastname") ? 1 : 0,
+    student_id: dataArray.includes("student_id") ? 1 : 0,
+    address: dataArray.includes("address") ? 1 : 0,
+    title: dataArray.includes("title") ? 1 : 0,
+    date: dataArray.includes("date") ? 1 : 0,
+    age: dataArray.includes("age") ? 1 : 0,
+    signature: dataArray.includes("signature") ? 1 : 0,
+  };
 
   const sql =
-    "INSERT INTO configuration (document_template_id, address, student_id, age, title) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO configuration (document_template_id, firstname, lastname, student_id, address, title, date, age, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
   db.query(
     sql,
-    [req.params.id, if_exists(address), if_exists(student_id), if_exists(age), if_exists(title)],
+    [
+      req.params.id,
+      fieldValues.firstname,
+      fieldValues.lastname,
+      fieldValues.student_id,
+      fieldValues.address,
+      fieldValues.title,
+      fieldValues.date,
+      fieldValues.age,
+      fieldValues.signature,
+    ],
     (err, result) => {
       if (err) return res.send(err);
       return res.json({
         message: "Document configuration appended successfully",
-        insert_id: result.insertId,
+        insert_id: req.params.id,
       });
     }
   );
 });
-
 
 customise_document_ep_router.post("/template", (req, res) => {
   const { type, title, content, parties_number, created_date } = req.body;
@@ -105,8 +128,8 @@ customise_document_ep_router.post("/template", (req, res) => {
 
         return res.json({ message: "Template inserted successfully", document_template_id }); // Return the new ID
       }
-    ); // end of second query
-  }); // end of first query
-}); // end of event
+    );
+  }); 
+}); 
 
 export default customise_document_ep_router;
