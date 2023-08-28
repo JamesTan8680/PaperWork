@@ -78,7 +78,7 @@ export default function DropdownParties({
       return prevParties;
     });
   };
-  console.log(partyList);
+  //console.log(partyList);
   const handleRemoveButtonClick = (remove_id) => {
     if (partyList?.length === 1) return; //only one dropdown left, don't allow removal
 

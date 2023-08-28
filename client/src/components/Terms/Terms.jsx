@@ -13,8 +13,8 @@ function Terms({
   setInputList,
   page,
 }) {
-  console.log(data);
-  console.log(id);
+  // console.log(data);
+  // console.log(id);
   //finding the data and matching it with the type
   // useEffect(() => {
   //   const findTerms = data?.find((item) => item.template.type === id);

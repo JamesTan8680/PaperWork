@@ -22,7 +22,7 @@ export default function CustomizeDoc() {
   //GET data from database
   useEffect(() => {
     const apiUrl = "http://localhost:8800/create-document/default-templates";
-
+    console.log("i");
     axios
       .get(apiUrl)
       .then((response) => {
@@ -45,7 +45,7 @@ export default function CustomizeDoc() {
         console.error("Error fetching data: ", error);
       });
   }, [templateSelect, id]);
-  //console.log(data);
+  //console.log(docTitle);
 
   //console.log(terms);
   const [selectedParty] = useState("");
@@ -74,7 +74,7 @@ export default function CustomizeDoc() {
   const handleSave = () => {
     // Save the content can be save to backend
     console.log("Saving content:", content);
-    console.log(partyList[1].selectedOption);
+    //console.log(partyList[1].selectedOption);
     console.log(partyList);
     console.log(partyList.length);
     sendDataToTheTemplateEndpoint();
@@ -118,12 +118,12 @@ export default function CustomizeDoc() {
     };
   });
 
-  console.log("type = ", id);
-  console.log("title = ", docTitle);
-  console.log("content =  ", terms);
-  console.log("parties_number = ", partyList.length);
-  console.log("date = ", date.toLocaleDateString());
-  console.log("SavedItem = ", savedItem);
+  // console.log("type = ", id);
+  // console.log("title = ", docTitle);
+  // console.log("content =  ", terms);
+  // console.log("parties_number = ", partyList.length);
+  // console.log("date = ", date.toLocaleDateString());
+  // console.log("SavedItem = ", savedItem);
 
   const sendDataToTheTemplateEndpoint = () => {
     console.log("Hi from function ");
@@ -148,7 +148,7 @@ export default function CustomizeDoc() {
           }
           */
           type: id,
-          title: docTitle,
+          title: content,
           content: terms,
           parties_number: partyList.length,
           created_date: date.toLocaleDateString(),
@@ -212,8 +212,7 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}
-          >
+            }}>
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -221,8 +220,7 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}
-            >
+              }}>
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -230,8 +228,7 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}
-            >
+              }}>
               <b>Terms</b>
 
               <span>Note: Put the Document Terms Here That Involve</span>
@@ -240,8 +237,7 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}
-            >
+              }}>
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -290,8 +286,7 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}
-            >
+              }}>
               Cancel
             </button>
 
@@ -308,8 +303,7 @@ export default function CustomizeDoc() {
                   handleSave();
                   handleAlert();
                 }
-              }}
-            >
+              }}>
               Save
             </button>
           </div>

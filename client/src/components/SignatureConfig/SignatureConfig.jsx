@@ -13,7 +13,7 @@ function SignatureConfig({ savedItem, setSaveItem }) {
     },
     {
       id: 3,
-      name: "student ID",
+      name: "student_id",
     },
     {
       id: 4,
