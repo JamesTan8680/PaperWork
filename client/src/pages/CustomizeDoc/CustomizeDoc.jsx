@@ -77,6 +77,7 @@ export default function CustomizeDoc() {
     console.log(partyList[1].selectedOption);
     console.log(partyList);
     console.log(partyList.length);
+    sendDataToTheTemplateEndpoint();
   };
   //handle close modal
   const handleClose = () => {
@@ -109,13 +110,85 @@ export default function CustomizeDoc() {
     terms,
     savedItem,
   };
+  const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    var timer = setInterval(() => setDate(new Date()), 1000);
+    return function cleanup() {
+      clearInterval(timer);
+    };
+  });
+
+  console.log("type = ", id);
+  console.log("title = ", docTitle);
+  console.log("content =  ", terms);
+  console.log("parties_number = ", partyList.length);
+  console.log("date = ", date.toLocaleDateString());
+  console.log("SavedItem = ", savedItem);
+
+  const sendDataToTheTemplateEndpoint = () => {
+    console.log("Hi from function ");
+    console.log(id);
+    try {
+      axios
+        .post("http://localhost:8800/customise-document/template", {
+          //build up the array
+          // document_template_id: 1,
+          // type: "type_A",
+          // title: "non-discloser agreement",
+          // content: terms,
+          // parties_number: selectedParty,
+          // date: date.toLocaleTimeString(),
+          /*
+          {
+          "type": "Type_A",
+          "title": "test new 4 ",
+          "content": "Sample Content",
+          "parties_number": 2,
+          "created_date": "2023-08-21",
+          }
+          */
+          type: id,
+          title: docTitle,
+          content: terms,
+          parties_number: partyList.length,
+          created_date: date.toLocaleDateString(),
+        })
+        .then((res) => {
+          console.log("Data sent successfully 12345", res.data);
+          sendSignatureConfigToTheBackend(
+            res.data.document_template_id,
+            savedItem
+          );
+        });
+    } catch (error) {
+      console.log("Error sending data *********", error);
+    }
+  };
+
+  // sending signature config to the backend
+  const sendSignatureConfigToTheBackend = (id, savedItem) => {
+    console.log("Hi from the SendToSignatureConfig function");
+    console.log("id in ***", id);
+    try {
+      axios
+        .post(
+          `http://localhost:8800/customise-document/${id}/configuration`,
+          savedItem
+        )
+        .then((res) => {
+          console.log("Config data send successfully from Lachie", res.data);
+        });
+    } catch (error) {
+      console.log("Error saving Config data", error);
+    }
+  };
 
   //
   const saveToDatabase = (data) => {
     axios
       .post("http://localhost:8800/customise-document/template", data)
       .then((response) => {
-        console.log("Data saved successfully:", response);
+        console.log("Data saved successfully :", response);
         // Maybe update some state here to notify the user that the save was successful.
       })
       .catch((error) => {
@@ -123,6 +196,7 @@ export default function CustomizeDoc() {
         // Handle the error. Maybe display an error message to the user.
       });
   };
+
   return (
     <div className="customiseDoc">
       <div className="top-customiseDoc">
@@ -138,7 +212,8 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}>
+            }}
+          >
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -146,7 +221,8 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}>
+              }}
+            >
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -154,7 +230,8 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}>
+              }}
+            >
               <b>Terms</b>
 
               <span>Note: Put the Document Terms Here That Involve</span>
@@ -163,7 +240,8 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}>
+              }}
+            >
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -212,21 +290,26 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}>
+              }}
+            >
               Cancel
             </button>
 
             <button
               className="save"
               onClick={() => {
+                console.log("$$$ Save Click " + selected);
                 if (selected !== 4) {
                   setSelected((prev) => prev + 1);
-                  saveToDatabase(payload);
+                  // saveToDatabase(payload);
+                  //    sendDataToTheTemplateEndpoint();
+                  // sendSignatureConfigToTheBackend(savedItem);
                 } else {
                   handleSave();
                   handleAlert();
                 }
-              }}>
+              }}
+            >
               Save
             </button>
           </div>

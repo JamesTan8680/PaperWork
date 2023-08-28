@@ -51,44 +51,29 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
 customise_document_ep_router.post("/:id/configuration", (req, res) => {
   const dataArray = req.body;
 
-  const valuesToCheck = [
-    "firstname",
-    "lastname",
-    "student_id",
-    "address",
-    "title",
-    "date",
-    "age",
-    "signature",
-  ];
+  const exists_tinyint = (name) => (dataArray.includes(name) ? 1 : 0);
 
   // Create an object to hold the values for each field
   const fieldValues = {
-    firstname: dataArray.includes("firstname") ? 1 : 0,
-    lastname: dataArray.includes("lastname") ? 1 : 0,
-    student_id: dataArray.includes("student_id") ? 1 : 0,
-    address: dataArray.includes("address") ? 1 : 0,
-    title: dataArray.includes("title") ? 1 : 0,
-    date: dataArray.includes("date") ? 1 : 0,
-    age: dataArray.includes("age") ? 1 : 0,
-    signature: dataArray.includes("signature") ? 1 : 0,
+    student_id: exists_tinyint("student_id"),
+    address: exists_tinyint("address"),
+    title: exists_tinyint("title"),
+    age: exists_tinyint("age"),
+    email: exists_tinyint("email"),
   };
 
   const sql =
-    "INSERT INTO configuration (document_template_id, firstname, lastname, student_id, address, title, date, age, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    "INSERT INTO configuration (document_template_id, student_id, address, title, age, email) VALUES (?, ?, ?, ?, ?, ?)";
 
   db.query(
     sql,
     [
       req.params.id,
-      fieldValues.firstname,
-      fieldValues.lastname,
       fieldValues.student_id,
       fieldValues.address,
       fieldValues.title,
-      fieldValues.date,
       fieldValues.age,
-      fieldValues.signature,
+      fieldValues.email,
     ],
     (err, result) => {
       if (err) return res.send(err);
@@ -112,11 +97,9 @@ customise_document_ep_router.post("/template", (req, res) => {
     [type],
     (latest_version_err, latest_version_result) => {
       if (latest_version_err) {
-        return res
-          .status(500)
-          .json({
-            error: "An error occurred while querying for the latest version.",
-          });
+        return res.status(500).json({
+          error: "An error occurred while querying for the latest version.",
+        });
       }
 
       let newNumber = 1; // Initialize the newNumber to 1 as default
@@ -145,11 +128,9 @@ customise_document_ep_router.post("/template", (req, res) => {
         ],
         (insert_err, insert_result) => {
           if (insert_err) {
-            return res
-              .status(500)
-              .json({
-                error: "An error occurred while inserting the template.",
-              });
+            return res.status(500).json({
+              error: "An error occurred while inserting the template.",
+            });
           }
 
           return res.json({

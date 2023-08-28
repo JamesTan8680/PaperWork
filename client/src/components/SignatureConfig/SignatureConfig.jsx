@@ -5,11 +5,11 @@ function SignatureConfig({ savedItem, setSaveItem }) {
   const data = [
     {
       id: 1,
-      name: "Firstname",
+      name: "firstname",
     },
     {
       id: 2,
-      name: "Lastname",
+      name: "lastname",
     },
     {
       id: 3,
@@ -17,27 +17,27 @@ function SignatureConfig({ savedItem, setSaveItem }) {
     },
     {
       id: 4,
-      name: "Address",
+      name: "address",
     },
     {
       id: 5,
-      name: "Title",
+      name: "title",
     },
     {
       id: 6,
-      name: "Date",
+      name: "date",
     },
     {
       id: 7,
-      name: "Age",
+      name: "age",
     },
     {
       id: 8,
-      name: "Signature",
+      name: "signature",
     },
     {
       id: 9,
-      name: "Email",
+      name: "email",
     },
   ];
   const [selectedSubCats, setSelectedSubCats] = useState([]);
