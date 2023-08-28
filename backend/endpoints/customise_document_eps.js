@@ -53,7 +53,7 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
 customise_document_ep_router.post("/:id/configuration", (req, res) => {
   const dataArray = req.body;
 
-  const valuesToCheck = ["firstname", "lastname", "student_id", "address", "title", "date", "age", "signature"];
+  const valuesToCheck = ["student_id", "address", "title", "age", "email"];
 
   // Create an object to hold the values for each field
   const fieldValues = {
@@ -61,7 +61,7 @@ customise_document_ep_router.post("/:id/configuration", (req, res) => {
     address: dataArray.includes("address") ? 1 : 0,
     title: dataArray.includes("title") ? 1 : 0,
     age: dataArray.includes("age") ? 1 : 0,
-    signature: dataArray.includes("email") ? 1 : 0,
+    email: dataArray.includes("email") ? 1 : 0,
   };
 
   const sql =
