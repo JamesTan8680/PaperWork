@@ -30,11 +30,11 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
   const { parties_id, parties_approval } = req.body;
 
   const sql =
-    "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?, ?, '0')";
+    "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?, ?, ?)";
 
   db.query(
     sql,
-    [req.params.id, parties_id, parties_approval],
+    [req.params.id, parties_id, parties_approval], // Use the boolean value directly
     (err, result) => {
       if (err) return res.send(err);
       return res.json({

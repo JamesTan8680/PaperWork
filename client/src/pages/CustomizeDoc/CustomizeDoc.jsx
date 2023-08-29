@@ -77,6 +77,8 @@ export default function CustomizeDoc() {
     {
       id: uuid(),
       selectedOption: selected, //Manage the selected option state seperately for each dropdown item
+      parties_email: "",
+      parties_id: "",
     },
   ]);
   console.log(partyList);
@@ -154,10 +156,36 @@ export default function CustomizeDoc() {
             res.data.document_template_id,
             savedItem
           );
+          sendPartiesToTheBackend(res.data.document_template_id,partyList)
         });
     } catch (error) {
       // console.log("Error sending data *********", error);
     }
+  };
+
+  const sendPartyToTheBackend = async (id, partyId) => {
+    console.log("Hi from the sendPartyToTheBackend function");
+    console.log("id:", id);
+    console.log("partyId:", partyId);
+    
+    try {
+      const response = await axios.post(
+        `http://localhost:8800/customise-document/${id}/parties`,
+        { parties_id: partyId, parties_approval: false }
+      );
+      
+      console.log("Party sent successfully:", response.data);
+    } catch (error) {
+      console.log("Error sending party:", error);
+    }
+  };
+
+  const sendPartiesToTheBackend = (id, partyList) => {
+    console.log("Hi from the sendPartiesToTheBackend function");
+    console.log("id in ***", id);
+    partyList.forEach((party) => {
+      sendPartyToTheBackend(id, party.parties_id);
+    });
   };
 
   // sending signature config to the backend
