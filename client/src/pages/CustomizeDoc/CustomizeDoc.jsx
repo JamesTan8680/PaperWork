@@ -13,8 +13,6 @@ import uuid from "react-uuid";
 export default function CustomizeDoc() {
   //the id that get from the params
   let { id } = useParams();
-  //NAVIGATION FUNCTION
-  const navigate = useNavigate();
   //setting the doc title for the document
   const [docTitle, setDocTitle] = useState(""); // default value
   const [data, setData] = useState([]);
@@ -24,7 +22,7 @@ export default function CustomizeDoc() {
   //GET data from database
   useEffect(() => {
     const apiUrl = "http://localhost:8800/create-document/default-templates";
-    console.log("i");
+
     axios
       .get(apiUrl)
       .then((response) => {
@@ -32,22 +30,31 @@ export default function CustomizeDoc() {
         if (!templateSelect && response.data.length > 0) {
           setTemplateSelect(response.data[0].id);
         }
-
-        const item = response.data.find((item) => item.template.type === id);
-        if (item) {
-          //select docTitle from datbase
-          const rawDocTitle = item.docTitle;
-          const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, ""); // remove <title> and </title>
-          setDocTitle(cleanedTitle);
-          setDocContent(cleanedTitle);
-          setDocTerms(item?.template?.term);
+        if (type === "blank") {
+          const item = response.data.find((item) => item.template.type === id);
+          if (item) {
+            const rawDocTitle = item.docTitle;
+            const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, "");
+            setDocTitle(cleanedTitle);
+            setDocContent(cleanedTitle);
+            setDocTerms("");
+          }
+        } else {
+          const item = response.data.find((item) => item.template.type === id);
+          if (item) {
+            const rawDocTitle = item.docTitle;
+            const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, "");
+            setDocTitle(cleanedTitle);
+            setDocContent(cleanedTitle);
+            setDocTerms(item?.template?.term);
+          }
         }
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
-  }, [templateSelect, id]);
-  //console.log(docTitle);
+  }, [templateSelect, id, type]);
+  //console.log(data);
 
   //console.log(terms);
   const [selectedParty] = useState("");
@@ -118,12 +125,14 @@ export default function CustomizeDoc() {
     terms,
     savedItem,
   };
-  const date = new Date();
-  let created_date = `${date.getFullYear()}/${(
-    "0" +
-    (date.getMonth() + 1)
-  ).slice(-2)}/${date.getDate()}`;
-  console.log(created_date);
+  const [date, setDate] = useState(new Date());
+  useEffect(() => {
+    var timer = setInterval(() => setDate(new Date()), 1000);
+    return function cleanup() {
+      clearInterval(timer);
+    };
+  });
+
   // console.log("type = ", id);
   // console.log("title = ", docTitle);
   // console.log("content =  ", terms);
@@ -133,7 +142,7 @@ export default function CustomizeDoc() {
 
   const sendDataToTheTemplateEndpoint = () => {
     console.log("Hi from function ");
-    console.log(id);
+    // console.log(id);
     try {
       axios
         .post("http://localhost:8800/customise-document/template", {
@@ -154,27 +163,27 @@ export default function CustomizeDoc() {
           }
           */
           type: id,
-          title: content,
+          title: docTitle,
           content: terms,
           parties_number: partyList.length,
           created_date: created_date,
         })
         .then((res) => {
-          console.log("Data sent successfully 12345", res.data);
+          // console.log("Data sent successfully 12345", res.data);
           sendSignatureConfigToTheBackend(
             res.data.document_template_id,
             savedItem
           );
         });
     } catch (error) {
-      console.log("Error sending data *********", error);
+      // console.log("Error sending data *********", error);
     }
   };
 
   // sending signature config to the backend
   const sendSignatureConfigToTheBackend = (id, savedItem) => {
-    console.log("Hi from the SendToSignatureConfig function");
-    console.log("id in ***", id);
+    // console.log("Hi from the SendToSignatureConfig function");
+    // console.log("id in ***", id);
     try {
       axios
         .post(
@@ -182,27 +191,12 @@ export default function CustomizeDoc() {
           savedItem
         )
         .then((res) => {
-          console.log("Config data send successfully from Lachie", res.data);
+          // console.log("Config data send successfully from Lachie", res.data);
         });
     } catch (error) {
-      console.log("Error saving Config data", error);
+      // console.log("Error saving Config data", error);
     }
   };
-
-  //
-  const saveToDatabase = (data) => {
-    axios
-      .post("http://localhost:8800/customise-document/template", data)
-      .then((response) => {
-        console.log("Data saved successfully :", response);
-        // Maybe update some state here to notify the user that the save was successful.
-      })
-      .catch((error) => {
-        console.error("Error saving data:", error);
-        // Handle the error. Maybe display an error message to the user.
-      });
-  };
-
   return (
     <div className="customiseDoc">
       <div className="top-customiseDoc">
@@ -240,7 +234,11 @@ export default function CustomizeDoc() {
             >
               <b>Terms</b>
 
-              <span>Note: Put the Document Terms Here That Involve</span>
+              {type !== "blank" ? (
+                <span>Note: Put the Document Terms Here That Involve</span>
+              ) : (
+                <span>Start typing to add terms...</span>
+              )}
             </div>
             <div
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
@@ -253,19 +251,19 @@ export default function CustomizeDoc() {
           </div>
         </div>
         <div className="right-customiseDoc">
-          {selected === 1 ? (
-            <div className="this">
-              <TextEditor
-                editor={editor}
-                title={content}
-                selected={selected}
-                setTitle={setDocContent}
-                page="title"
-              />
-            </div>
-          ) : selected === 2 ? (
+          {selected === 1 && (
+            <TextEditor
+              editor={editor}
+              title={content}
+              selected={selected}
+              setTitle={setDocContent}
+              page="title"
+            />
+          )}
+          {selected === 2 && (
             <Parties partyList={partyList} setPartyList={setPartyList} />
-          ) : selected === 3 ? (
+          )}
+          {selected === 3 && (
             <Terms
               id={id}
               data={data}
@@ -277,13 +275,9 @@ export default function CustomizeDoc() {
               page="content"
               setInputList={setInputList}
             />
-          ) : (
-            selected === 4 && (
-              <SignatureConfig
-                savedItem={savedItem}
-                setSaveItem={setSaveItem}
-              />
-            )
+          )}
+          {selected === 4 && (
+            <SignatureConfig savedItem={savedItem} setSaveItem={setSaveItem} />
           )}
           <div className="btn">
             {/* <button className="cancel">Cancel</button> */}
@@ -304,7 +298,7 @@ export default function CustomizeDoc() {
             <button
               className="save"
               onClick={() => {
-                console.log("$$$ Save Click " + selected);
+                // console.log("$$$ Save Click " + selected);
                 if (selected !== 4) {
                   setSelected((prev) => prev + 1);
                   // saveToDatabase(payload);
