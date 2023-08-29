@@ -14,15 +14,22 @@ export default function CustomizeDoc() {
   //the id that get from the params
   let { id } = useParams();
   let { type } = useParams();
+
   //setting the doc title for the document
   const [docTitle, setDocTitle] = useState(""); // default value
   const [data, setData] = useState([]);
   const [templateSelect, setTemplateSelect] = useState();
   //this is the state for the term of the doc
   const [terms, setDocTerms] = useState("");
+
   //GET data from database
   //this is for the navigation
   const navigate = useNavigate();
+  console.log(id);
+  if (data?.some((item) => item.template.type === id)) {
+  } else {
+    navigate("/createDoc");
+  }
   useEffect(() => {
     const apiUrl = "http://localhost:8800/create-document/default-templates";
 
