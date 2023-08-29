@@ -48,7 +48,7 @@ function DocControl() {
     <>
       <BreadCrumbs />
       <div className="docControl">
-        <DocControlList data={data} boldItemId="Version 1.5" />
+        <DocControlList data={data} />
       </div>
     </>
   );
