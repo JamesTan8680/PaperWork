@@ -7,19 +7,21 @@ import Terms from "../../components/Terms/Terms";
 import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
 import SuccessfulPage from "./SuccessfulPage";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import uuid from "react-uuid";
 
 export default function CustomizeDoc() {
   //the id that get from the params
   let { id } = useParams();
   let { type } = useParams();
+
   //setting the doc title for the document
   const [docTitle, setDocTitle] = useState(""); // default value
   const [data, setData] = useState([]);
   const [templateSelect, setTemplateSelect] = useState();
   //this is the state for the term of the doc
   const [terms, setDocTerms] = useState("");
+
   //GET data from database
   //this is for the navigation
   const navigate = useNavigate();
@@ -62,9 +64,7 @@ export default function CustomizeDoc() {
         console.error("Error fetching data: ", error);
       });
   }, [templateSelect, id, type]);
-  //console.log(data);
 
-  //console.log(terms);
   const [selectedParty] = useState("");
 
   const editor = useRef(null);
@@ -76,7 +76,6 @@ export default function CustomizeDoc() {
   const [partyList, setPartyList] = useState([
     {
       id: uuid(),
-      number: 1,
       selectedOption: selected, //Manage the selected option state seperately for each dropdown item
     },
   ]);
@@ -89,16 +88,18 @@ export default function CustomizeDoc() {
 
   // Function to handle saving the content
   const handleSave = () => {
-    // Save the content can be save to backend
-    console.log("Saving content:", content);
-    // console.log(partyList[1].selectedOption);
-    // console.log(partyList);
-    // console.log(partyList.length);
-    sendDataToTheTemplateEndpoint();
+    if (content === "<p><br></p>" || terms === "<p><br></p>" || terms === "") {
+      //this is for the title that we replace
+      alert("Put the content inside Title or Terms");
+    } else {
+      sendDataToTheTemplateEndpoint();
+      handleAlert();
+    }
   };
   //handle close modal
   const handleClose = () => {
     setShowAlert(!showAlert);
+    navigate("/createDoc");
   };
   //handle alert
   const handleAlert = () => {
@@ -120,13 +121,12 @@ export default function CustomizeDoc() {
       anchor.click();
     }
   };
-  const [date, setDate] = useState(new Date());
-  useEffect(() => {
-    var timer = setInterval(() => setDate(new Date()), 1000);
-    return function cleanup() {
-      clearInterval(timer);
-    };
-  });
+
+  const date = new Date();
+  let created_date = `${date.getFullYear()}/${(
+    "0" +
+    (date.getMonth() + 1)
+  ).slice(-2)}/${date.getDate()}`;
 
   // console.log("type = ", id);
   // console.log("title = ", docTitle);
@@ -141,27 +141,11 @@ export default function CustomizeDoc() {
     try {
       axios
         .post("http://localhost:8800/customise-document/template", {
-          //build up the array
-          // document_template_id: 1,
-          // type: "type_A",
-          // title: "non-discloser agreement",
-          // content: terms,
-          // parties_number: selectedParty,
-          // date: date.toLocaleTimeString(),
-          /*
-          {
-          "type": "Type_A",
-          "title": "test new 4 ",
-          "content": "Sample Content",
-          "parties_number": 2,
-          "created_date": "2023-08-21",
-          }
-          */
           type: id,
-          title: docTitle,
+          title: content,
           content: terms,
           parties_number: partyList.length,
-          created_date: date.toLocaleDateString(),
+          created_date: created_date,
         })
         .then((res) => {
           // console.log("Data sent successfully 12345", res.data);
@@ -207,8 +191,7 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}
-          >
+            }}>
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -216,8 +199,7 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}
-            >
+              }}>
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -225,8 +207,7 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}
-            >
+              }}>
               <b>Terms</b>
 
               {type !== "blank" ? (
@@ -239,8 +220,7 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}
-            >
+              }}>
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -285,8 +265,7 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}
-            >
+              }}>
               Cancel
             </button>
 
@@ -301,10 +280,8 @@ export default function CustomizeDoc() {
                   // sendSignatureConfigToTheBackend(savedItem);
                 } else {
                   handleSave();
-                  handleAlert();
                 }
-              }}
-            >
+              }}>
               Save
             </button>
           </div>

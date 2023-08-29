@@ -105,7 +105,7 @@ customise_document_ep_router.post("/template", (req, res) => {
       let newNumber = 1; // Initialize the newNumber to 1 as default
       if (latest_version_result.length > 0) {
         const latest_version = latest_version_result[0].version;
-        newNumber = latest_version + 1; // Increment the latest version to get the new number
+        newNumber = (latest_version + 0.1).toFixed(1);
       }
 
       // Create the new template ID
