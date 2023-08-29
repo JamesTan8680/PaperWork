@@ -61,7 +61,6 @@ export default function CustomizeDoc() {
   const [partyList, setPartyList] = useState([
     {
       id: uuid(),
-      number: 1,
       selectedOption: selected, //Manage the selected option state seperately for each dropdown item
     },
   ]);
@@ -76,31 +75,16 @@ export default function CustomizeDoc() {
   const handleSave = () => {
     let validateTitle = "";
     let validateTerm = "";
-    // Save the content can be save to backend
-    //console.log("Saving content:", content);
-    //console.log(partyList[1].selectedOption);
-    //console.log(partyList);
-    //console.log(partyList.length);
-    // if (partyList.length !== 0 && content.length !== 0 && terms.length !== 0) {
-    // sendDataToTheTemplateEndpoint();
-    // alert("hi");
-    // } else {
-    //   alert("Put the content inside the Text Editor");
-    // }
+
     if (content === "<p><br></p>" || terms === "<p><br></p>") {
       //this is for the title that we replace
       validateTitle = content.replace("<p><br></p>", "");
       validateTerm = terms.replace("<p><br></p>", "");
       alert("Put the content inside Title or Terms");
+    } else {
+      sendDataToTheTemplateEndpoint();
+      handleAlert();
     }
-
-    // if (validateTerm.length === 0 && validateTitle.length === 0) {
-    //   alert("Put the content inside Title or Terms");
-    // }
-    //  else {
-    //   sendDataToTheTemplateEndpoint();
-    //   handleAlert();
-    // }
   };
   //handle close modal
   const handleClose = () => {

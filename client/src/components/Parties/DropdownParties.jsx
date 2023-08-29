@@ -38,6 +38,8 @@ export default function DropdownParties({
     if (savedData) {
       setPartyList(JSON.parse(savedData));
     }
+
+    localStorage.removeItem("items");
   }, []);
 
   const availableOptions = partiesData?.filter((party) => {
@@ -109,11 +111,13 @@ export default function DropdownParties({
             <div className="dropdown-container">
               <div
                 className="dropdown-btn"
-                onClick={(e) => handleDropdownButtonClick(item.id)}>
+                onClick={() => handleDropdownButtonClick(item.id)}
+              >
                 {item.selectedOption}
                 <span
                   className="fas fa-caret-down dropdown-icon"
-                  aria-hidden="true"></span>
+                  aria-hidden="true"
+                ></span>
               </div>
 
               <button className="add" onClick={handleAddButtonClick}>
@@ -121,7 +125,8 @@ export default function DropdownParties({
               </button>
               <button
                 className="remove"
-                onClick={() => handleRemoveButtonClick(item.id)}>
+                onClick={() => handleRemoveButtonClick(item.id)}
+              >
                 Remove
               </button>
             </div>
@@ -131,12 +136,14 @@ export default function DropdownParties({
                 {availableOptions.map((party) => (
                   <TooltipDropdownParties
                     text={`ABN: ${party.abn}\nAddress: ${party.parties_address}\nEmail: ${party.parties_email}`}
-                    key={party.parties_id}>
+                    key={party.parties_id}
+                  >
                     <div
                       onClick={(e) =>
                         handleOptionClick(party.parties_name, item.id)
                       }
-                      className="dropdown-item">
+                      className="dropdown-item"
+                    >
                       {party.parties_name}
                       <FontAwesomeIcon
                         icon={faQuestionCircle}
