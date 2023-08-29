@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Note.scss";
-import Edit from "../../img/home/editIcon2.svg";
+import Edit from "../../img/home/edit.svg";
 import Delete from "../../img/home/delete.svg";
 import Plus from "../../img/home/plus.svg";
 import DeleteConfirmation from "./DeleteConfirmation";
@@ -81,8 +81,7 @@ function Note({ data, onUpdate, setShowAddNotePopup, setSelected, selected }) {
         Notes
         <button
           className="add-button"
-          onClick={() => setShowAddNotePopup(true)}
-        >
+          onClick={() => setShowAddNotePopup(true)}>
           <img src={Plus} alt="" />
         </button>
       </div>
@@ -95,8 +94,7 @@ function Note({ data, onUpdate, setShowAddNotePopup, setSelected, selected }) {
               selected === note.note_id
                 ? setSelected("")
                 : setSelected(note.note_id);
-            }}
-          >
+            }}>
             <span>{note.header}</span>
             <div className="icons">
               <img
@@ -142,8 +140,7 @@ function Note({ data, onUpdate, setShowAddNotePopup, setSelected, selected }) {
                 Content
                 <textarea
                   value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                ></textarea>
+                  onChange={(e) => setEditContent(e.target.value)}></textarea>
               </label>
               <button onClick={handleSaveClick}>Save Changes</button>
               <button onClick={handleCloseModal}>Cancel</button>
