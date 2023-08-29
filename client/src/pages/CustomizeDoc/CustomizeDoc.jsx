@@ -79,6 +79,7 @@ export default function CustomizeDoc() {
       selectedOption: selected, //Manage the selected option state seperately for each dropdown item
     },
   ]);
+  console.log(partyList);
   // this is the state for the input list
   const [inputList, setInputList] = useState([]);
   //state that saving for the signature config

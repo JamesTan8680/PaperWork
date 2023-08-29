@@ -9,6 +9,8 @@ function Parties({ partyList, setPartyList }) {
   // useEffect(() => {
   //   console.log(`Number of parties: ${partiesList.length}`);
   // }, [partiesList]);
+  console.log(partyList);
+  console.log(partiesList);
   return (
     <>
       <div className="parties-container">
