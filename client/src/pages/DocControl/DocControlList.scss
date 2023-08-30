@@ -80,7 +80,7 @@
         }
 
         .editicon {
-          margin-left: 8px;
+          width: 20px;
           height: 18px;
         }
 
@@ -131,6 +131,8 @@
 
           border-radius: 5px;
           padding: 1px;
+          background-color: #ccc;
+
           .progress {
             border-radius: 5px;
             background-color: #0afc88;

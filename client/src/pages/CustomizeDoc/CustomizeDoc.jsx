@@ -25,7 +25,7 @@ export default function CustomizeDoc() {
   //GET data from database
   //this is for the navigation
   const navigate = useNavigate();
-  console.log(id);
+  //console.log(id);
   if (data?.some((item) => item.template.type === id)) {
   } else {
     navigate("/createDoc");
@@ -76,7 +76,7 @@ export default function CustomizeDoc() {
   const [partyList, setPartyList] = useState([
     {
       id: uuid(),
-      selectedOption: selected, //Manage the selected option state seperately for each dropdown item
+      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
     },
   ]);
   // this is the state for the input list
@@ -191,7 +191,8 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}>
+            }}
+          >
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -199,7 +200,8 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}>
+              }}
+            >
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -207,7 +209,8 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}>
+              }}
+            >
               <b>Terms</b>
 
               {type !== "blank" ? (
@@ -220,7 +223,8 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}>
+              }}
+            >
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -265,7 +269,8 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}>
+              }}
+            >
               Cancel
             </button>
 
@@ -281,7 +286,8 @@ export default function CustomizeDoc() {
                 } else {
                   handleSave();
                 }
-              }}>
+              }}
+            >
               Save
             </button>
           </div>
