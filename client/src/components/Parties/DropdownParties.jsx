@@ -60,13 +60,22 @@ export default function DropdownParties({
   };
 
   //Responsible for updating the selected option for specific dropdown item
-  const handleOptionClick = (option, id) => {
+  const handleOptionClick = (option, parties_id, parties_email, id) => {
     const updatedData = partyList?.map((item) =>
-      item.id === id ? { ...item, selectedOption: option } : item
+      item.id === id
+        ? {
+            ...item,
+            selectedOption: option,
+            parties_email: parties_email,
+            parties_id: parties_id,
+          }
+        : item
     );
     setPartyList(updatedData);
     setSelected(option);
     setIsActive(false);
+    console.log(parties_id);
+    console.log(parties_email);
 
     // Update local storage with the updated data
     localStorage.setItem("items", JSON.stringify(updatedData));
@@ -141,7 +150,12 @@ export default function DropdownParties({
                   >
                     <div
                       onClick={(e) =>
-                        handleOptionClick(party.parties_name, item.id)
+                        handleOptionClick(
+                          party.parties_name,
+                          party.parties_id,
+                          party.parties_email,
+                          item.id
+                        )
                       }
                       className="dropdown-item"
                     >

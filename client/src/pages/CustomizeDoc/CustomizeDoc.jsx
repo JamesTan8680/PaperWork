@@ -9,6 +9,7 @@ import SuccessfulPage from "./SuccessfulPage";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import uuid from "react-uuid";
+import emailjs from "@emailjs/browser";
 
 export default function CustomizeDoc() {
   //the id that get from the params
@@ -77,8 +78,11 @@ export default function CustomizeDoc() {
     {
       id: uuid(),
       selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
+      parties_email: "",
+      parties_id: "",
     },
   ]);
+  console.log(partyList);
   // this is the state for the input list
   const [inputList, setInputList] = useState([]);
   //state that saving for the signature config
@@ -93,7 +97,32 @@ export default function CustomizeDoc() {
       alert("Put the content inside Title or Terms");
     } else {
       sendDataToTheTemplateEndpoint();
-      handleAlert();
+      const arrayofEmail = partyList?.map((item) => item.parties_email);
+      //alert(arrayofEmail);
+      //create the template to pass props into the emailJs API
+      var templateParams = {
+        docName: docTitle,
+        message:
+          "Please kindly check and approve or deny the document that was created by the Paperwork Team.",
+        email: arrayofEmail,
+      };
+      //email js api request method
+      emailjs
+        .send(
+          "service_7d8l9ff",
+          "template_25x692y",
+          templateParams,
+          "VBzIorHlAAspUrEhL"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+            handleAlert();
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
     }
   };
   //handle close modal
@@ -153,10 +182,36 @@ export default function CustomizeDoc() {
             res.data.document_template_id,
             savedItem
           );
+          sendPartiesToTheBackend(res.data.document_template_id, partyList);
         });
     } catch (error) {
       // console.log("Error sending data *********", error);
     }
+  };
+
+  const sendPartyToTheBackend = async (id, partyId) => {
+    console.log("Hi from the sendPartyToTheBackend function");
+    console.log("id:", id);
+    console.log("partyId:", partyId);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:8800/customise-document/${id}/parties`,
+        { parties_id: partyId, parties_approval: false }
+      );
+
+      console.log("Party sent successfully:", response.data);
+    } catch (error) {
+      console.log("Error sending party:", error);
+    }
+  };
+
+  const sendPartiesToTheBackend = (id, partyList) => {
+    console.log("Hi from the sendPartiesToTheBackend function");
+    console.log("id in ***", id);
+    partyList.forEach((party) => {
+      sendPartyToTheBackend(id, party.parties_id);
+    });
   };
 
   // sending signature config to the backend
