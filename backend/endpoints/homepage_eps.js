@@ -20,8 +20,7 @@ homepage_ep_router.get("/documents/total", (req, res) => {
   });
   
   homepage_ep_router.get("/documents/recently-created", (req, res) => {
-    fetch("SELECT title, version, DATE_FORMAT(created_date, '%d/%m/%Y') AS date_created FROM document_template ORDER BY created_date DESC LIMIT 5",res);
-
+    fetch("SELECT ddt.title as title, dt.version as version, DATE_FORMAT(dt.created_date, '%d/%m/%Y') AS date_created FROM document_template dt JOIN document_default_template ddt ON dt.type = ddt.type ORDER BY dt.created_date DESC LIMIT 5;",res);
   });
   
   homepage_ep_router.get("/notes", (req, res) => {
