@@ -124,7 +124,7 @@ function SignatureConfig({ savedItem, setSaveItem }) {
           })}
         </div>
       </div>
-      {savedItem}
+      {/* {savedItem} */}
     </div>
   );
 }

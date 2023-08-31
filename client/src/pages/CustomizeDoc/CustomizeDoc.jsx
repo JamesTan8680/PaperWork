@@ -9,6 +9,7 @@ import SuccessfulPage from "./SuccessfulPage";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import uuid from "react-uuid";
+import emailjs from "@emailjs/browser";
 
 export default function CustomizeDoc() {
   //the id that get from the params
@@ -25,7 +26,7 @@ export default function CustomizeDoc() {
   //GET data from database
   //this is for the navigation
   const navigate = useNavigate();
-  console.log(id);
+  //console.log(id);
   if (data?.some((item) => item.template.type === id)) {
   } else {
     navigate("/createDoc");
@@ -76,7 +77,7 @@ export default function CustomizeDoc() {
   const [partyList, setPartyList] = useState([
     {
       id: uuid(),
-      selectedOption: selected, //Manage the selected option state seperately for each dropdown item
+      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
       parties_email: "",
       parties_id: "",
     },
@@ -96,7 +97,32 @@ export default function CustomizeDoc() {
       alert("Put the content inside Title or Terms");
     } else {
       sendDataToTheTemplateEndpoint();
-      handleAlert();
+      const arrayofEmail = partyList?.map((item) => item.parties_email);
+      //alert(arrayofEmail);
+      //create the template to pass props into the emailJs API
+      var templateParams = {
+        docName: docTitle,
+        message:
+          "Please kindly check and approve or deny the document that was created by the Paperwork Team.",
+        email: arrayofEmail,
+      };
+      //email js api request method
+      emailjs
+        .send(
+          "service_7d8l9ff",
+          "template_25x692y",
+          templateParams,
+          "VBzIorHlAAspUrEhL"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+            handleAlert();
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
     }
   };
   //handle close modal
@@ -156,7 +182,7 @@ export default function CustomizeDoc() {
             res.data.document_template_id,
             savedItem
           );
-          sendPartiesToTheBackend(res.data.document_template_id,partyList)
+          sendPartiesToTheBackend(res.data.document_template_id, partyList);
         });
     } catch (error) {
       // console.log("Error sending data *********", error);
@@ -167,13 +193,13 @@ export default function CustomizeDoc() {
     console.log("Hi from the sendPartyToTheBackend function");
     console.log("id:", id);
     console.log("partyId:", partyId);
-    
+
     try {
       const response = await axios.post(
         `http://localhost:8800/customise-document/${id}/parties`,
         { parties_id: partyId, parties_approval: false }
       );
-      
+
       console.log("Party sent successfully:", response.data);
     } catch (error) {
       console.log("Error sending party:", error);
@@ -220,7 +246,8 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}>
+            }}
+          >
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -228,7 +255,8 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}>
+              }}
+            >
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -236,7 +264,8 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}>
+              }}
+            >
               <b>Terms</b>
 
               {type !== "blank" ? (
@@ -249,7 +278,8 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}>
+              }}
+            >
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -294,7 +324,8 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}>
+              }}
+            >
               Cancel
             </button>
 
@@ -310,7 +341,8 @@ export default function CustomizeDoc() {
                 } else {
                   handleSave();
                 }
-              }}>
+              }}
+            >
               Save
             </button>
           </div>

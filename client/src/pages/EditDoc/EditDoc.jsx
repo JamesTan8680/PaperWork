@@ -9,6 +9,7 @@ import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
 import { renderToString } from "react-dom/server";
 import Back from "../../img/editDoc/back.svg";
 import { Link } from "react-router-dom";
+import uuid from "react-uuid";
 
 export default function EditDoc() {
   const docTitle = "Non-Disclosure Agreement";
@@ -28,6 +29,13 @@ export default function EditDoc() {
   const editor = useRef(null);
   // const for managing the selected style
   const [selected, setSelected] = useState(1);
+  //state for the parties
+  const [partyList, setPartyList] = useState([
+    {
+      id: uuid(),
+      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
+    },
+  ]);
   //this is the state for the title
   const [content, setDocContent] = useState(docTitle);
   //this is the state for the term of the doc
@@ -72,7 +80,8 @@ export default function EditDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}>
+            }}
+          >
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -80,7 +89,8 @@ export default function EditDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}>
+              }}
+            >
               <b>Parties</b>
               <span>Note: Put the Parties Name Here That Involve</span>
             </div>
@@ -88,7 +98,8 @@ export default function EditDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}>
+              }}
+            >
               <b>Terms</b>
               <span>Note: Put the Document Terms Here That Involve</span>
             </div>
@@ -96,7 +107,8 @@ export default function EditDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}>
+              }}
+            >
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -112,7 +124,7 @@ export default function EditDoc() {
               />
             </div>
           ) : selected === 2 ? (
-            <Parties />
+            <Parties partyList={partyList} setPartyList={setPartyList} />
           ) : selected === 3 ? (
             <Terms
               editor={editor}
@@ -140,7 +152,8 @@ export default function EditDoc() {
                 } else {
                   handleAlert();
                 }
-              }}>
+              }}
+            >
               Cancel
             </button>
 
@@ -153,7 +166,8 @@ export default function EditDoc() {
                 } else {
                   handleAlert();
                 }
-              }}>
+              }}
+            >
               Save
             </button>
           </div>
