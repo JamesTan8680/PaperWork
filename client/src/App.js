@@ -8,6 +8,7 @@ import ViewDoc from "./pages/ViewDoc/ViewDoc";
 import DocControl from "./pages/DocControl/DocControl";
 import CustomizeDoc from "./pages/CustomizeDoc/CustomizeDoc";
 import EditDoc from "./pages/EditDoc/EditDoc";
+import ReviewDoc from "./pages/ReviewDoc/ReviewDoc";
 const Layout = () => {
   return (
     <div className="app">
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "/editDoc/:id",
         element: <EditDoc />,
+      },
+      {
+        path: "/ReviewDoc",
+        element: <ReviewDoc />,
       },
     ],
   },

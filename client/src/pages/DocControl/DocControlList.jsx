@@ -90,7 +90,8 @@ const DocControlList = ({ data }) => {
                     className="progress"
                     style={{
                       width: `${(item.progress / totalParties) * 100}%`,
-                    }}></div>
+                    }}
+                  ></div>
                 </div>
               </div>
 
@@ -114,12 +115,13 @@ const DocControlList = ({ data }) => {
                     />
                   )}
                 </span>
-
-                <img
-                  src={reviewIcon}
-                  alt="Review Icon"
-                  className="reviewicon"
-                />
+                <Link to="/ReviewDoc">
+                  <img
+                    src={reviewIcon}
+                    alt="Review Icon"
+                    className="reviewicon"
+                  />
+                </Link>
 
                 <span className="send-icon">
                   {item.progress < totalParties ? (
