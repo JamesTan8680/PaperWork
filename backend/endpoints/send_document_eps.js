@@ -21,8 +21,8 @@ send_document_ep_router.get("/:id/progress", (req, res) => {
     //https://stackoverflow.com/questions/14962970/sql-query-if-value-is-null-then-return-1
     //select
     //  results:  the total number of the non-null signatures
-    //  ratio:    number of approvals divided by the total matches in group (throw 0 if then dividing by zero)
-    //from template parties BUT righted-join to AND grouped by ALL templates
+    //  ratio:    number of approvals divided by the total matches in group (throws 0 if then dividing by zero)
+    //from template parties BUT right-joined to AND grouped by ALL templates
     macro.query("SELECT COUNT(CASE WHEN document_parties.document_template_id IS NOT NULL THEN 1 END) as results, CASE WHEN document_parties.document_template_id IS NULL THEN 0 ELSE COUNT(CASE WHEN parties_approval=1 THEN 1 END)/COUNT(*) END AS ratio FROM paperwork_project.document_parties RIGHT JOIN paperwork_project.document_template ON document_parties.document_template_id = document_template.document_template_id WHERE document_template.document_template_id='" + req.params.id + "' GROUP BY document_template.document_template_id", res)
 })
 
@@ -30,17 +30,6 @@ send_document_ep_router.get("/:id/progress", (req, res) => {
 send_document_ep_router.get("/:id/signature", (req, res) => {
     macro.select("document_parties",{where:"document_template_id='"+req.params.id+"'"},res)
 })
-
-//get all parties
-send_document_ep_router.get("/parties", (req, res) => {
-    macro.select("parties",{},res)
-})
-
-//get a party
-send_document_ep_router.get("/parties/:id", (req, res) => {
-    macro.select("parties",{where:"parties_id='"+req.params.id+"'"},res)
-})
-
 
 
 export default send_document_ep_router;

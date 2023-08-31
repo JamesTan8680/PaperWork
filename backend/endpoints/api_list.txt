@@ -19,5 +19,12 @@ customise_documents:
     PST customise-document/{tempId}/parties
     PST customise-document/{tempId}/configuration
     PST customise-document/template
+    PUT customise-document/{tempId}
 
+send_document:
+    GET /{tempId}/progress
+    GET /{tempId}/signature
+
+misc:
     GET /parties
+    GET /parties/{partiesId}

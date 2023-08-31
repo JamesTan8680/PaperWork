@@ -85,6 +85,50 @@ customise_document_ep_router.post("/:id/configuration", (req, res) => {
   );
 });
 
+// edit a template (NOT INCREMENT IT)
+
+customise_document_ep_router.put("/:id", (req, res) => {
+  const { type, title, content, parties_number, created_date } = req.body;
+  const id = req.params.id;
+
+  {
+
+
+
+    // Insert the new template
+    const insertQuery =
+      "ALTER TABLE document_template type=?, title=?, content=?, parties_number=?, created_date=? WHERE document_template_id=?";
+
+    db.query(
+      insertQuery,
+      [
+        type,
+        title,
+        content,
+        parties_number,
+        created_date,
+        id
+      ],
+      (insert_err, insert_result) => {
+        if (insert_err) {
+          return res.status(500).json({
+            error: "An error occurred while inserting the template.",
+          });
+        }
+
+        return res.json({
+          message: "Template inserted successfully",
+          document_template_id,
+        }); // Return the new ID
+      }
+    ); // end of second query
+  }
+
+});
+
+
+// fork a template (do increment it)
+
 customise_document_ep_router.post("/template", (req, res) => {
   const { type, title, content, parties_number, created_date } = req.body;
 

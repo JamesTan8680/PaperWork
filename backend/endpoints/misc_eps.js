@@ -11,5 +11,9 @@ const macros = new ep_macros();
 misc_router.get("/parties", (req, res) => {
     macros.select("parties", {}, res);
   })
+  
+  misc_router.get("/parties/:id", (req, res) => {
+    macros.select("parties",{where:"parties_id='"+req.params.id+"'"},res)
+})
 
 export default misc_router;
