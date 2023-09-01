@@ -12,9 +12,8 @@ function ViewDoc() {
 
   const fetchFolders = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/view-document/document-template");
+      const res = await axios.get("http://localhost:8800/view-document/document-template/type");
       setData(res.data);
-      console.log(data);
 
     } catch (err) { 
       console.error(err);

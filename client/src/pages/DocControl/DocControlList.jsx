@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./DocControlList.scss";
 
 import partiesIcon from "../../img/docControl/partiesIcon.svg";
@@ -8,10 +8,12 @@ import greysendIcon from "../../img/docControl/greysendIcon.svg";
 import lockIcon from "../../img/docControl/lockIcon.png";
 import editIcon from "../../img/home/editIcon2.svg";
 import DocModal from "./DocModal/DocModal";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import GroupViewModal from "../../components/GroupViewModal/GroupViewModal";
+import axios from "axios";
 
 const DocControlList = ({ data }) => {
+
   // Initialize progress property for each item in the data
   const updatedData = data.map((item) => ({
     ...item,
@@ -20,13 +22,15 @@ const DocControlList = ({ data }) => {
 
   //using this state to manage the state for the DocModal
   const [show, setShow] = useState(false);
-
+  //state for the title of the document
+  const [metadata, setMetadata] = useState([]);
   const totalParties = 5; //Assume Total Parties is 5
   // state to manage THE groupviewModal to open or close
   const [viewOpen, setViewOpen] = useState(false);
   // Set the state to hold the data with the progress property
   const [dataWithProgress, setDataWithProgress] = useState(updatedData);
 
+  
   const handleSignDocument = (itemId) => {
     const updatedData = dataWithProgress.map((item) => {
       //Create new array map over the old one
@@ -41,9 +45,19 @@ const DocControlList = ({ data }) => {
 
     setDataWithProgress(updatedData); //Update the state with modified progress values
   };
+  var {id} = useParams();
 
-  //state for the title of the document
-  const [title] = useState("Non-disclosure Agreement");
+  const fetchParentMetadata = async () => {
+    try {
+      const res = await axios.get("http://localhost:8800/view-document/document-template/type/" + id);
+      setMetadata(res.data[0]);
+    } catch (err) { 
+      console.error(err);
+    }
+  }
+
+  useEffect(()=>{fetchParentMetadata()},[]);
+
   return (
     <>
       <div className="docControlHeader">
@@ -54,7 +68,7 @@ const DocControlList = ({ data }) => {
 
       <div className="docControlWrapper">
         <div className="documentTitle">
-          <p>Non Disclosure Document</p>
+          <p>{metadata.title}</p>
           <p className="docuementLatestVersion">Version 1.5</p>
           <p className="otherdocument">Other Versions</p>
         </div>
@@ -140,7 +154,7 @@ const DocControlList = ({ data }) => {
               </div>
             </div>
           ))}
-          <DocModal show={show} setShow={setShow} title={title} />
+          <DocModal show={show} setShow={setShow} title={metadata.title} />
           <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} />
         </div>
       </div>
