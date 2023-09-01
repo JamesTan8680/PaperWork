@@ -13,7 +13,7 @@ function Doc({ data, id }) {
         <div className="folder-detail">
           <div className="title">{data.title}</div>
           <div className="date">{data.date}</div>
-          <div className="amount">{data.amount} Items</div>
+          <div className="amount">{data.count} Items</div>
         </div>
       </div>
     </Link>
