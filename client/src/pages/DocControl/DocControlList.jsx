@@ -12,13 +12,19 @@ import { Link, useParams } from "react-router-dom";
 import GroupViewModal from "../../components/GroupViewModal/GroupViewModal";
 import axios from "axios";
 
+
 const DocControlList = ({ data }) => {
 
   // Initialize progress property for each item in the data
-  const updatedData = data.map((item) => ({
-    ...item,
-    progress: 0,
-  }));
+  const [updatedData, updateData] = useState(data);
+
+  useEffect(() => {
+    updateData(data.map((item) => ({
+      ...item,
+      issue_date: Date.now(),
+      progress: 0,
+    })).reverse());
+  }, [data]);
 
   //using this state to manage the state for the DocModal
   const [show, setShow] = useState(false);
@@ -29,8 +35,10 @@ const DocControlList = ({ data }) => {
   const [viewOpen, setViewOpen] = useState(false);
   // Set the state to hold the data with the progress property
   const [dataWithProgress, setDataWithProgress] = useState(updatedData);
+  const [expanded, setExpanded] = useState(false);
 
-  
+
+
   const handleSignDocument = (itemId) => {
     const updatedData = dataWithProgress.map((item) => {
       //Create new array map over the old one
@@ -45,18 +53,36 @@ const DocControlList = ({ data }) => {
 
     setDataWithProgress(updatedData); //Update the state with modified progress values
   };
-  var {id} = useParams();
+
+
+
+
+
+  var { id } = useParams();
 
   const fetchParentMetadata = async () => {
     try {
       const res = await axios.get("http://localhost:8800/view-document/document-template/type/" + id);
       setMetadata(res.data[0]);
-    } catch (err) { 
+    } catch (err) {
       console.error(err);
     }
   }
 
-  useEffect(()=>{fetchParentMetadata()},[]);
+  useEffect(() => {
+    fetchParentMetadata()
+    setDataWithProgress(expanded ? updatedData : updatedData.length == 0 ? [] : [updatedData[0]])
+  }, [updatedData,expanded]);
+
+
+  // console.log("data");
+  // console.log(data);
+  // console.log("updatedData");
+  // console.log(updatedData);
+  // console.log("dataWithProgress");
+  // console.log(dataWithProgress);
+
+  // TODO: Do a third query that checks progress
 
   return (
     <>
@@ -69,8 +95,8 @@ const DocControlList = ({ data }) => {
       <div className="docControlWrapper">
         <div className="documentTitle">
           <p>{metadata.title}</p>
-          <p className="docuementLatestVersion">Version 1.5</p>
-          <p className="otherdocument">Other Versions</p>
+          <p className="docuementLatestVersion">Version {dataWithProgress[0]?.version}</p>
+          <a href="#" onClick={()=>setExpanded(!expanded)} className="otherdocument">{expanded ? "Latest Version" : "Other Versions..."}</a>
         </div>
       </div>
 
@@ -80,8 +106,11 @@ const DocControlList = ({ data }) => {
             <div key={index} className="table-row">
               <span className="item-id">
                 <div className="wrap-item-id">{item.id}</div>
+             Version   {
+                  item.version
+                }
 
-                {/* Do a if else statement here when itis pending! the img src will be editIcon instead of lockIcon
+                {/* TODO: Do a if else statement here when itis pending! the img src will be editIcon instead of lockIcon
                 Else the version will be lock, not able to edit */}
 
                 {item.progress < totalParties ? (
@@ -92,9 +121,9 @@ const DocControlList = ({ data }) => {
                   <img src={lockIcon} alt="Lock" className="lockicon" />
                 )}
               </span>
-              <span className="item-name">{item.date_created}</span>
-              <span className="item_modified">{item.date_modified}</span>
-              <span className="issued_date">{item.issue_date}</span>
+              <span className="item_created">{(new Date(item.created_date)).toLocaleDateString("en-UK")}</span>
+              <span className="item_modified">{(new Date(item.date_modified)).toLocaleDateString("en-UK")}</span>
+              <span className="issue_date">{(new Date(item.issue_date)).toLocaleDateString("en-UK") + " (dummy)"}</span>
               <div className="additional_info">
                 <div className="status">
                   {item.progress < totalParties ? "Pending!" : "Approved!"}

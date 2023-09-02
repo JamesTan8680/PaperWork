@@ -2,7 +2,7 @@ import mysql from "mysql";
 
 //DEBUG LOCAHOST-ONLY MODE !!!
 //TODO: Maybe delete me in production
-const LOCALHOST_ONLY_MODE = true;
+const LOCALHOST_ONLY_MODE = false;
 if (LOCALHOST_ONLY_MODE) console.warn("LOCALHOST_ONLY_MODE on!!");
 
 const db = mysql.createConnection(!LOCALHOST_ONLY_MODE ? {

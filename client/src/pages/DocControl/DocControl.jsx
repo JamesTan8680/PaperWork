@@ -26,7 +26,6 @@ function DocControl() {
     fetchFolders();
   },[]);
 
-  console.log(data);
 
   return (
     <>
