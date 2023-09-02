@@ -157,7 +157,7 @@ customise_document_ep_router.post("/template", (req, res) => {
 
       // Insert the new template
       const insertQuery =
-        "INSERT INTO document_template (document_template_id, type, title, content, parties_number, created_date, version) VALUES (?, ?, ?, ?, ?, ?, ?)";
+  "INSERT INTO document_template (document_template_id, type, title, content, parties_number, created_date, date_modified, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
       db.query(
         insertQuery,
@@ -167,6 +167,7 @@ customise_document_ep_router.post("/template", (req, res) => {
           title,
           content,
           parties_number,
+          created_date,
           created_date,
           newNumber,
         ],
