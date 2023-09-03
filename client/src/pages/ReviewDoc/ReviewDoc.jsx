@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
+
 import { Link } from "react-router-dom";
+import { PDFExport } from "@progress/kendo-react-pdf";
 
 function ReviewDoc() {
-  //dummy data for the title
+  const pdfExportComponent = useRef(null);
 
+  //handle the export pdf
+  const handleExportWithComponent = (event) => {
+    pdfExportComponent.current.save();
+  };
+
+  //dummy data for the title
   const title =
     "<h1><center>Non-Disclosure Agreement (One-Way)</center></strong></h1>";
   //dummy data for the version
@@ -48,27 +56,34 @@ function ReviewDoc() {
   return (
     <div className="reviewDoc">
       <div className="review-container">
-        <div className="recipient">
-          <div className="recipient-dropdown">
-            {HTMLReactParser(recipients)}
+        <PDFExport
+          ref={pdfExportComponent}
+          paperSize="A4"
+          margin={{ left: "15mm", top: "20mm", right: "15mm", bottom: "20mm" }}
+          scale={0.6}
+        >
+          <div className="recipient">
+            <div className="recipient-dropdown">
+              {HTMLReactParser(recipients)}
+            </div>
+            <div className="version">{HTMLReactParser(version)}</div>
           </div>
-          <div className="version">{HTMLReactParser(version)}</div>
-        </div>
-        <div className="header">{HTMLReactParser(title)}</div>
+          <div className="header">{HTMLReactParser(title)}</div>
 
-        <div className="parties">
-          <h3>Party</h3>
+          <div className="parties">
+            <h3>Party</h3>
 
-          {parties?.map((item) => {
-            return (
-              <div className="party">
-                <b>Name:</b> {item.name} <b>Company:</b> {item.company}{" "}
-                <b>Address:</b> {item.address}
-              </div>
-            );
-          })}
-        </div>
-        <div className="reciew-content">{HTMLReactParser(content)}</div>
+            {parties?.map((item) => {
+              return (
+                <div key={item.address} className="party">
+                  <b>Name:</b> {item.name} <b>Company:</b> {item.company}{" "}
+                  <b>Address:</b> {item.address}
+                </div>
+              );
+            })}
+          </div>
+          <div className="reciew-content">{HTMLReactParser(content)}</div>
+        </PDFExport>
         <div className="review-signature">
           <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
           <div className="parties_sign_container">
@@ -96,7 +111,9 @@ function ReviewDoc() {
         <Link to="/viewDoc/1">
           <button className="cancel">Cancel</button>
         </Link>
-        <button className="export-pdf">Export PDF</button>
+        <button className="export-pdf" onClick={handleExportWithComponent}>
+          Export PDF
+        </button>
       </div>
     </div>
   );
