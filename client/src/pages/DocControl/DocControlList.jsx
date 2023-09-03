@@ -143,7 +143,8 @@ const DocControlList = ({ data }) => {
             </div>
           ))}
           <DocModal show={show} setShow={setShow} title={title} />
-          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} />
+          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} docId="Type_A_1.4" />
+
         </div>
       </div>
     </>

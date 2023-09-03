@@ -94,6 +94,37 @@ view_document_ep_router.get("/document-template", (req, res) => {
     });
   });
 
+  view_document_ep_router.get("/receipients/:id", (req, res) => {
+    // Get the party ID from the request parameters
+    const partyId = req.params.id;
   
+    // Define the SQL query to retrieve party information based on the given party ID
+    const getPartyInfo = `
+      SELECT document_container.identity_id, identity.firstname, identity.email
+      FROM document_container
+      INNER JOIN identity ON document_container.identity_id = identity.identity_id
+      WHERE document_container.document_template_id = ?;
+    `;
+  
+    // Execute the query
+    db.query(getPartyInfo, [partyId], (err, result) => {
+      if (err) {
+        // Handle database query error
+        return res.status(500).json({
+          error: "An error occurred while querying for party information.",
+        });
+      }
+  
+      if (result.length === 0) {
+        // If no party with the specified ID is found, return a 404 error
+        return res.status(404).json({
+          error: "Party not found.",
+        });
+      }
+  
+      // If the query is successful, return all matching party information
+      res.status(200).json(result);
+    });
+  });
   
  export default view_document_ep_router;
