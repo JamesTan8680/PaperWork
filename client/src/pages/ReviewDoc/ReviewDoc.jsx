@@ -58,10 +58,13 @@ function ReviewDoc() {
     if (recipients && recipients.length > 0) {
       return (
         <div>
-          <select onChange={handleRecipientChange}>
+          <select
+            onChange={handleRecipientChange}
+            value={selectedRecipient ? selectedRecipient.identity_id : ""}
+          >
             {recipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
-                {recipient.firstname} - {recipient.email}
+                {recipient.firstname}
               </option>
             ))}
           </select>
@@ -70,6 +73,7 @@ function ReviewDoc() {
     }
     return null;
   };
+
   console.log("Rendering RecipientDropdown with recipients: ", recipients);
 
   return (
