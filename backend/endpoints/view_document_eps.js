@@ -111,7 +111,7 @@ view_document_ep_router.get("/document-template", (req, res) => {
       if (err) {
         // Handle database query error
         return res.status(500).json({
-          error: "An error occurred while querying for party information.",
+          error: "An error occurred while querying for receipient information.",
         });
       }
   

@@ -1,56 +1,83 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function ReviewDoc() {
-  //dummy data for the title
+  const [title, setTitle] = useState("");
+  const [version, setVersion] = useState("");
+  const [recipients, setRecipients] = useState("");
+  const [parties, setParties] = useState([]);
+  const [content, setContent] = useState("");
+  const [selectedRecipient, setSelectedRecipient] = useState(null);
 
-  const title =
-    "<h1><center>Non-Disclosure Agreement (One-Way)</center></strong></h1>";
-  //dummy data for the version
-  const version = "<h2><strong>Version 1.5</strong></h2>";
-  //dummy data for the recipient
-  const recipients = `
-  <div>
-    <select>
-      <option value="alex">Alex</option>
-      <option value="dave">Dave</option>
-      <option value="david">David</option>
-      <option value="james">James</option>
-    </select>
-  </div>
-`;
-  //dummy data for the parties
-  const parties = [
-    {
-      name: "chingsien",
-      company: "ABC company",
-      address: "234 gal Rd, VIC, 3122",
-    },
-    {
-      name: "Thang",
-      company: "ABB company",
-      address: "122 wakedfield, VIC, 3122",
-    },
-    {
-      name: "JunDa",
-      company: "ABD company",
-      address: "123 wakedfield, VIC, 3122",
-    },
-  ];
+  useEffect(() => {
+    // Fetching data from two endpoints using axios
+    axios
+      .all([
+        axios.get("http://localhost:8800/create-document/default-templates"),
+        axios.get(`http://localhost:8800/parties`),
+        axios.get("http://localhost:8800/view-document/receipients/Type_A_1.4"),
+      ])
+      .then(
+        axios.spread((response1, response2, response3) => {
+          setTitle(response1.data[0].docTitle || "");
+          setVersion(response1.data[0].template.version || "");
+          setParties(response2.data);
+          setRecipients(response3.data);
+          setContent(response1.data[0].template.term || "");
 
-  //dummy data for the content
-  const content =
-    '<p>This Non-Disclosure Agreement (the "Agreement") is made and entered into by and between:</p><h2>Disclosing Party:</h2><p><strong>[Name of Disclosing Party]</strong>, with an address at [Address of Disclosing Party]</p><h2>Receiving Party:</h2><p><strong>[Name of Receiving Party]</strong>, with an address at [Address of Receiving Party]</p><p>Collectively, the "Parties."</p><h2>Definition of Confidential Information:</h2><p>"Confidential Information" shall mean any information or data that is disclosed by the Disclosing Party to the Receiving Party, whether orally or in writing, and is marked as "Confidential" or is otherwise clearly identified as confidential at the time of disclosure.</p><h2>Obligations:</h2><p>The Receiving Party agrees to:</p><ul><li>Use the Confidential Information solely for the purpose of [Purpose of NDA]</li><li>Not disclose the Confidential Information to any third party without the prior written consent of the Disclosing Party</li><li>Take reasonable measures to protect the Confidential Information from unauthorized access or use</li></ul><h2>Term:</h2><p>This Agreement shall remain in effect for [Duration of NDA] from the date of signing.</p><h2>Governing Law:</h2><p>This Agreement shall be governed by and construed in accordance with the laws of [Applicable Jurisdiction].</p><h2>Entire Agreement:</h2><p>This Agreement contains the entire understanding between the Parties with respect to the subject matter hereof and supersedes all prior agreements, representations, and understandings.</p><p>IN WITNESS WHEREOF, the Parties hereto have executed this Non-Disclosure Agreement as of the date first above written.</p>';
-  //dummy data for the signature config
+          // If a callback for fetched data has been provided, call it
+        })
+      )
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, []);
+  // const recipientss = `
+  //   <div>
+  //     <select>
+  //       <option value="alex">Alex</option>
+  //       <option value="dave">Dave</option>
+  //       <option value="david">David</option>
+  //       <option value="james">James</option>
+  //     </select>
+  //   </div>
+  // `;
+  const RecipientDropdown = () => {
+    const handleRecipientChange = (e) => {
+      e.stopPropagation();
+      const recipientId = e.target.value;
+      const selected = recipients.find(
+        (recipient) => recipient.identity_id === recipientId
+      );
+      setSelectedRecipient(selected);
+    };
+
+    if (recipients && recipients.length > 0) {
+      return (
+        <div>
+          <select onChange={handleRecipientChange}>
+            {recipients?.map((recipient) => (
+              <option key={recipient.identity_id} value={recipient.identity_id}>
+                {recipient.firstname} - {recipient.email}
+              </option>
+            ))}
+          </select>
+        </div>
+      );
+    }
+    return null;
+  };
+  console.log("Rendering RecipientDropdown with recipients: ", recipients);
 
   return (
     <div className="reviewDoc">
       <div className="review-container">
         <div className="recipient">
           <div className="recipient-dropdown">
-            {HTMLReactParser(recipients)}
+            <RecipientDropdown />
           </div>
           <div className="version">{HTMLReactParser(version)}</div>
         </div>
@@ -62,8 +89,8 @@ function ReviewDoc() {
           {parties?.map((item) => {
             return (
               <div className="party">
-                <b>Name:</b> {item.name} <b>Company:</b> {item.company}{" "}
-                <b>Address:</b> {item.address}
+                <b>Name:</b> {item.parties_name} <b>Company:</b>{" "}
+                {item.Parties_company} <b>Address:</b> {item.parties_address}
               </div>
             );
           })}
@@ -76,18 +103,26 @@ function ReviewDoc() {
               {parties?.map((item) => {
                 return (
                   <div className="party_sign">
-                    <div className="Dname">Discloser Name: {item.name}</div>
-                    <div className="Sname">Signature: {item.name}</div>
+                    <div className="Dname">
+                      Discloser Name: {item.parties_name}
+                    </div>
+                    <div className="Sname">Signature: {item.parties_name}</div>
                     <div className="Sdate">Date: 8/31/2023</div>
                   </div>
                 );
               })}
             </div>
             <div className="recipient_side">
-              <div>Name: Ching</div>
-              <div>Address: 234 wakedfield, hawthorn, VIC 3122</div>
-              <div>Email: Chingsien@gmail.com</div>
-              <div>student_ID: 102890973</div>
+              {selectedRecipient ? (
+                <>
+                  <div>Name: {selectedRecipient.firstname}</div>
+                  {/* <div>Address: {selectedRecipient.address}</div> */}
+                  <div>Email: {selectedRecipient.email}</div>
+                  {/* You can add other details if the recipient object has more fields */}
+                </>
+              ) : (
+                <p>No Recipient Selected</p>
+              )}
             </div>
           </div>
         </div>
