@@ -12,18 +12,20 @@ import { Link, useParams } from "react-router-dom";
 import GroupViewModal from "../../components/GroupViewModal/GroupViewModal";
 import axios from "axios";
 
-
 const DocControlList = ({ data }) => {
-
   // Initialize progress property for each item in the data
   const [updatedData, updateData] = useState(data);
 
   useEffect(() => {
-    updateData(data.map((item) => ({
-      ...item,
-      issue_date: Date.now(),
-      progress: 0,
-    })).reverse());
+    updateData(
+      data
+        .map((item) => ({
+          ...item,
+          issue_date: Date.now(),
+          progress: 0,
+        }))
+        .reverse()
+    );
   }, [data]);
 
   //using this state to manage the state for the DocModal
@@ -37,7 +39,9 @@ const DocControlList = ({ data }) => {
   const [dataWithProgress, setDataWithProgress] = useState(updatedData);
   const [expanded, setExpanded] = useState(false);
 
-
+  const [itemProgress, setItemProgress] = useState(
+    dataWithProgress.map(() => 0)
+  );
 
   const handleSignDocument = (itemId) => {
     const updatedData = dataWithProgress.map((item) => {
@@ -54,26 +58,35 @@ const DocControlList = ({ data }) => {
     setDataWithProgress(updatedData); //Update the state with modified progress values
   };
 
-
-
-
+  //function for handling sign document to handle progress bars move independently
+  const handleSignDocument1 = (itemIndex) => {
+    if (dataWithProgress[itemIndex].progress < totalParties) {
+      const newProgress = [...itemProgress];
+      newProgress[itemIndex]++;
+      setItemProgress(newProgress);
+    }
+  };
 
   var { id } = useParams();
 
   const fetchParentMetadata = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/view-document/document-template/type/" + id);
+      const res = await axios.get(
+        "http://localhost:8800/view-document/document-template/type/" + id
+      );
       setMetadata(res.data[0]);
     } catch (err) {
       console.error(err);
     }
-  }
+  };
+  console.log(metadata);
 
   useEffect(() => {
-    fetchParentMetadata()
-    setDataWithProgress(expanded ? updatedData : updatedData.length == 0 ? [] : [updatedData[0]])
-  }, [updatedData,expanded]);
-
+    fetchParentMetadata();
+    setDataWithProgress(
+      expanded ? updatedData : updatedData.length == 0 ? [] : [updatedData[0]]
+    );
+  }, [updatedData, expanded]);
 
   // console.log("data");
   // console.log(data);
@@ -95,8 +108,16 @@ const DocControlList = ({ data }) => {
       <div className="docControlWrapper">
         <div className="documentTitle">
           <p>{metadata.title}</p>
-          <p className="docuementLatestVersion">Version {dataWithProgress[0]?.version}</p>
-          <a href="#" onClick={()=>setExpanded(!expanded)} className="otherdocument">{expanded ? "Latest Version" : "Other Versions..."}</a>
+          <p className="docuementLatestVersion">
+            Version {dataWithProgress[0]?.version}
+          </p>
+          <a
+            href="#"
+            onClick={() => setExpanded(!expanded)}
+            className="otherdocument"
+          >
+            {expanded ? "Latest Version" : "Other Versions..."}
+          </a>
         </div>
       </div>
 
@@ -106,34 +127,43 @@ const DocControlList = ({ data }) => {
             <div key={index} className="table-row">
               <span className="item-id">
                 <div className="wrap-item-id">{item.id}</div>
-             Version   {
-                  item.version
-                }
-
+                Version {item.version}
                 {/* TODO: Do a if else statement here when itis pending! the img src will be editIcon instead of lockIcon
                 Else the version will be lock, not able to edit */}
-
                 {item.progress < totalParties ? (
-                  <Link to={"/editDoc/:id"}>
+                  // <Link to={"/editDoc/:id"}>
+                  //   <img src={editIcon} alt="edit" className="editicon" />
+                  // </Link>
+
+                  <Link to={`/editDoc/${item.document_template_id}`}>
                     <img src={editIcon} alt="edit" className="editicon" />
                   </Link>
                 ) : (
                   <img src={lockIcon} alt="Lock" className="lockicon" />
                 )}
               </span>
-              <span className="item_created">{(new Date(item.created_date)).toLocaleDateString("en-UK")}</span>
-              <span className="item_modified">{(new Date(item.date_modified)).toLocaleDateString("en-UK")}</span>
-              <span className="issue_date">{(new Date(item.issue_date)).toLocaleDateString("en-UK") + " (dummy)"}</span>
+              <span className="item_created">
+                {new Date(item.created_date).toLocaleDateString("en-UK")}
+              </span>
+              <span className="item_modified">
+                {new Date(item.date_modified).toLocaleDateString("en-UK")}
+              </span>
+              <span className="issue_date">
+                {new Date(item.issue_date).toLocaleDateString("en-UK") +
+                  " (dummy)"}
+              </span>
               <div className="additional_info">
                 <div className="status">
                   {item.progress < totalParties ? "Pending!" : "Approved!"}
                 </div>
+
                 <div className="pro-bar">
                   <div
                     className="progress"
                     style={{
                       width: `${(item.progress / totalParties) * 100}%`,
-                    }}></div>
+                    }}
+                  ></div>
                 </div>
               </div>
 
@@ -142,6 +172,12 @@ const DocControlList = ({ data }) => {
                   Sign Document
                 </button>
               )}
+              {/* <span
+                className="item-version"
+                onClick={() => handleSignDocument(item.id)}
+              >
+                Version {item.version}
+              </span> */}
 
               <div className="icons">
                 {/* Not matter parties approve or not we still need to view the parties info */}

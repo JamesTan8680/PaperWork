@@ -5,25 +5,27 @@ import BreadCrumbs from "../../components/BreadCrumbs/BreadCrumbs";
 import Sort from "../../img/viewDoc/sort.svg";
 import { useSelector } from "react-redux";
 import axios from "axios";
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 function ViewDoc() {
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   const fetchFolders = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/view-document/document-template/type");
+      const res = await axios.get(
+        "http://localhost:8800/view-document/document-template/type"
+      );
       setData(res.data);
-
-    } catch (err) { 
+    } catch (err) {
       console.error(err);
     }
-  }
+  };
+  console.log(data);
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchFolders();
-  },[]);
- // const data = useSelector((state) => state.data);
+  }, []);
+  // const data = useSelector((state) => state.data);
 
   return (
     <>

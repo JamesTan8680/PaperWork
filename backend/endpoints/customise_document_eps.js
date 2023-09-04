@@ -45,6 +45,25 @@ customise_document_ep_router.post("/:id/parties", (req, res) => {
   );
 });
 
+customise_document_ep_router.put("/:id/parties", (req, res) => {
+  const { parties_id, parties_approval } = req.body;
+
+  const sql =
+    "UPDATE document_parties SET parties_id=? parties_approval=? WHERE document_template_id = ?";
+
+  db.query(
+    sql,
+    [parties_id, parties_approval, req.params.id], // Use the boolean value directly
+    (err, result) => {
+      if (err) return res.send(err);
+      return res.json({
+        message: "Document parties appended successfully",
+        insert_id: result.insertId,
+      });
+    }
+  );
+});
+
 //the :id in param is redundant if u have it in the body, besides, there are 8 fields in the frontend, u need to add more field in the database if neccessary
 // --> Done. The extra fields are meant to be redundant as they are mandatory!
 
@@ -85,6 +104,42 @@ customise_document_ep_router.post("/:id/configuration", (req, res) => {
   );
 });
 
+customise_document_ep_router.put("/:id/configuration", (req, res) => {
+  const dataArray = req.body;
+
+  const exists_tinyint = (name) => (dataArray.includes(name) ? 1 : 0);
+
+  // Create an object to hold the values for each field
+  const fieldValues = {
+    student_id: exists_tinyint("student_id"),
+    address: exists_tinyint("address"),
+    title: exists_tinyint("title"),
+    age: exists_tinyint("age"),
+    email: exists_tinyint("email"),
+  };
+
+  const sql =
+    "UPDATE configuration SET student_id=?, address=?, title=?, age=?, email=? WHERE document_template_id=?";
+  db.query(
+    sql,
+    [
+      fieldValues.student_id,
+      fieldValues.address,
+      fieldValues.title,
+      fieldValues.age,
+      fieldValues.email,
+      req.params.id,
+    ],
+    (err, result) => {
+      if (err) return res.send(err);
+      return res.json({
+        message: "Document configuration edited successfully",
+        insert_id: req.params.id,
+      });
+    }
+  );
+});
+
 // edit a template (NOT INCREMENT IT)
 
 customise_document_ep_router.put("/:id", (req, res) => {
@@ -92,40 +147,25 @@ customise_document_ep_router.put("/:id", (req, res) => {
   const id = req.params.id;
 
   {
-
-
-
     // Insert the new template
     const insertQuery =
-      "ALTER TABLE document_template type=?, title=?, content=?, parties_number=?, created_date=? WHERE document_template_id=?";
+      "UPDATE document_template SET type=?, title=?, content=?, parties_number=?, created_date=? WHERE document_template_id=?";
 
     db.query(
       insertQuery,
-      [
-        type,
-        title,
-        content,
-        parties_number,
-        created_date,
-        id
-      ],
+      [type, title, content, parties_number, created_date, id],
       (insert_err, insert_result) => {
         if (insert_err) {
-          return res.status(500).json({
-            error: "An error occurred while inserting the template.",
-          });
+          return res.send(insert_err);
         }
 
         return res.json({
-          message: "Template inserted successfully",
-          document_template_id,
+          message: "Template edited successfully",
         }); // Return the new ID
       }
     ); // end of second query
   }
-
 });
-
 
 // fork a template (do increment it)
 

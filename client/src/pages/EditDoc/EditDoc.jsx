@@ -1,7 +1,7 @@
 import React from "react";
 import "./EditDoc.scss";
 import Doc from "../../img/home/doc.svg";
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import TextEditor from "../../components/TextEditor/TextEditor";
 import Parties from "../../components/Parties/Parties";
 import Terms from "../../components/Terms/Terms";
@@ -10,9 +10,49 @@ import { renderToString } from "react-dom/server";
 import Back from "../../img/editDoc/back.svg";
 import { Link } from "react-router-dom";
 import uuid from "react-uuid";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 export default function EditDoc() {
-  const docTitle = "Non-Disclosure Agreement";
+  let { id } = useParams();
+  let { type } = useParams();
+
+  console.log("id*** in Edit Doc ", id);
+  console.log("id_sliced*** in Edit Doc ", id.slice(0, 6));
+  //I am meant to fetch the data from the viewDoc template version into the editDoc.jsx
+  //function for getting the data by type
+  const [data, setData] = useState([]);
+  const [docTitle, setDocTitle] = useState(""); // default value
+
+  const fetchDataByType = async () => {
+    try {
+      axios
+        .get("http://localhost:8800/view-document/document-template/type/")
+        .then((res) => {
+          setData(res.data);
+          //match template type version with the id
+          const item = res.data.find((item) => item.type === id.slice(0, 6));
+          //if the item is true then fetch the data into the corresponding section
+          if (item) {
+            //first fetch the title from the correct type
+            const rawDocTitle = item.title;
+            const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, "");
+            setDocTitle(cleanedTitle);
+            setDocContent(cleanedTitle);
+            //fetch the terms into from the correct type
+            setDocTerms(item?.content);
+          }
+        });
+    } catch (err) {
+      console.log("Error fetching data ", err);
+    }
+  };
+  useEffect(() => {
+    fetchDataByType();
+  }, [id]);
+  console.log(data);
+
+  // const docTitle = "Non-Disclosure Agreement";
   const docTerms = renderToString(
     //this is only temporarily, will change accordingly
     <React.Fragment>
@@ -37,22 +77,98 @@ export default function EditDoc() {
     },
   ]);
   //this is the state for the title
-  const [content, setDocContent] = useState(docTitle);
+  const [content, setDocContent] = useState("");
   //this is the state for the term of the doc
-  const [terms, setDocTerms] = useState(docTerms);
+  const [terms, setDocTerms] = useState("");
   // this is the state for the input list
   const [inputList, setInputList] = useState([]);
   //state that saving for the signature config
   const [savedItem, setSaveItem] = useState([]);
   // Function to handle saving the content
+  const navigate = useNavigate();
+
   const handleSave = () => {
     // Save the content can be save to backend
+
     console.log("Saving content:", content);
+    //update the template version data to the backend
+    updateTemplateEndpoint(id);
+
+    navigate(`/viewDoc/${id.slice(0, 6)}`);
   };
 
   //handle alert
   const handleAlert = () => {
     alert(savedItem);
+  };
+  console.log("SavedItem = ", savedItem);
+
+  //get today's date
+  const date = new Date();
+  let created_date = `${date.getFullYear()}/${(
+    "0" +
+    (date.getMonth() + 1)
+  ).slice(-2)}/${date.getDate()}`;
+  console.log("date*** ", created_date);
+  console.log("parties_number = ", partyList.length);
+  console.log("title = ", content);
+  console.log("terms = ", terms);
+
+  // update the template endpoint using the put method in axios
+  const updateTemplateEndpoint = (id) => {
+    try {
+      axios
+        .put(`http://localhost:8800/customise-document/${id}`, {
+          type: id.slice(0, 6),
+          title: content,
+          content: terms,
+          parties_number: partyList.length,
+          created_date: created_date,
+        })
+        .then((res) => {
+          console.log("Updated data successfully ", res.data);
+          updateSignatureConfigEndpoint(id, savedItem);
+          updatePartiesToTheEndpoint(id, partyList);
+        });
+    } catch (error) {
+      console.log("Error updating data *********", error);
+    }
+  };
+
+  //update the signature config endpoint
+  const updateSignatureConfigEndpoint = (id, savedItem) => {
+    try {
+      axios
+        .put(
+          `http://localhost:8800/customise-document/${id}/configuration`,
+          savedItem
+        )
+        .then((res) => {
+          console.log("Successfully updated signatureConfig data", res.data);
+        });
+    } catch (error) {
+      console.log("Error updating date");
+    }
+  };
+  //update parties to the backend
+  const updatePartyToTheEndpoint = (id, partyId) => {
+    try {
+      const response = axios.put(
+        `http://localhost:8800/customise-document/${id}/parties`,
+        { parties_id: partyId, parties_approval: false }
+      );
+
+      console.log("Party sent successfully:", response.data);
+    } catch (error) {
+      console.log("Error sending party:", error);
+    }
+  };
+  const updatePartiesToTheEndpoint = (id, partyList) => {
+    console.log("Hi from the updatePartiesToTheEndpoint function");
+    console.log("id in ***", id);
+    partyList.forEach((party) => {
+      updatePartyToTheEndpoint(id, party.parties_id);
+    });
   };
 
   return (
@@ -120,7 +236,9 @@ export default function EditDoc() {
                 editor={editor}
                 title={content}
                 selected={selected}
-                setContent={setDocContent}
+                setTitle={setDocContent}
+                // save the title when the user edits it
+                page="title"
               />
             </div>
           ) : selected === 2 ? (
@@ -132,6 +250,8 @@ export default function EditDoc() {
               selected={selected}
               setContent={setDocTerms}
               inputList={inputList}
+              // save the terms when the user edits it
+              page="content"
               setInputList={setInputList}
             />
           ) : (
@@ -162,9 +282,12 @@ export default function EditDoc() {
               onClick={() => {
                 if (selected !== 4) {
                   setSelected((prev) => prev + 1);
-                  handleSave();
                 } else {
-                  handleAlert();
+                  // handleAlert();
+                  handleSave();
+                  <Link to={`/viewDoc/${id.slice(0, 6)}`} className="save">
+                    Save
+                  </Link>;
                 }
               }}
             >
