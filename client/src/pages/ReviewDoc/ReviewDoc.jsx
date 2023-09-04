@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
 
@@ -7,9 +7,11 @@ import { PDFExport } from "@progress/kendo-react-pdf";
 
 function ReviewDoc() {
   const pdfExportComponent = useRef(null);
-
+  //state for the blur the signature
+  const [blurry, setBlur] = useState(true);
   //handle the export pdf
   const handleExportWithComponent = (event) => {
+    setBlur(false);
     pdfExportComponent.current.save();
   };
 
@@ -60,8 +62,7 @@ function ReviewDoc() {
           ref={pdfExportComponent}
           paperSize="A4"
           margin={{ left: "15mm", top: "20mm", right: "15mm", bottom: "20mm" }}
-          scale={0.6}
-        >
+          scale={0.6}>
           <div className="recipient">
             <div className="recipient-dropdown">
               {HTMLReactParser(recipients)}
@@ -83,32 +84,44 @@ function ReviewDoc() {
             })}
           </div>
           <div className="reciew-content">{HTMLReactParser(content)}</div>
-        </PDFExport>
-        <div className="review-signature">
-          <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
-          <div className="parties_sign_container">
-            <div className="parties_side">
-              {parties?.map((item) => {
-                return (
-                  <div className="party_sign">
-                    <div className="Dname">Discloser Name: {item.name}</div>
-                    <div className="Sname">Signature: {item.name}</div>
-                    <div className="Sdate">Date: 8/31/2023</div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="recipient_side">
-              <div>Name: Ching</div>
-              <div>Address: 234 wakedfield, hawthorn, VIC 3122</div>
-              <div>Email: Chingsien@gmail.com</div>
-              <div>student_ID: 102890973</div>
+
+          <div className="review-signature">
+            <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
+            <div className="parties_sign_container">
+              <div className="parties_side">
+                {parties?.map((item) => {
+                  return (
+                    <div className="party_sign">
+                      <div className="Dname">Discloser Name: {item.name}</div>
+                      <div className="Sname">Signature: {item.name}</div>
+                      <div className="Sdate">Date: 8/31/2023</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="recipient_side">
+                <div>Name: Ching</div>
+                <div>Address: 234 wakedfield, hawthorn, VIC 3122</div>
+                <div>Email: Chingsien@gmail.com</div>
+                <div>student_ID: 102890973</div>
+                <div
+                  style={{
+                    color: blurry ? "black" : "none",
+                    display: blurry ? "" : "none",
+                  }}>
+                  signature: Ching
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </PDFExport>
       </div>
       <div className="review-button">
-        <Link to="/viewDoc/1">
+        <Link
+          to="/viewDoc/1"
+          onClick={() => {
+            setBlur(false);
+          }}>
           <button className="cancel">Cancel</button>
         </Link>
         <button className="export-pdf" onClick={handleExportWithComponent}>
