@@ -37,8 +37,6 @@ const DocControlList = ({ data }) => {
 
   const [itemData, setItemData] = useState([]);
 
-  const totalParties = 5; //Assume Total Parties is 5
-  // state to manage THE groupviewModal to open or close
   const [viewOpen, setViewOpen] = useState(false);
   // Set the state to hold the data with the progress property
   const [dataWithProgress, setDataWithProgress] = useState(updatedData);
@@ -49,29 +47,20 @@ const DocControlList = ({ data }) => {
     dataWithProgress.map(() => 0)
   );
 
-  const handleSignDocument = (itemId) => {
-    const updatedData = dataWithProgress.map((item) => {
-      //Create new array map over the old one
-      if (item.document_template_id === itemId && item.progress < totalParties) {
-        return {
-          ...item,
-          progress: item.progress + 1,
-        };
-      }
-      return item; //Else return the item as-is
-    });
-    updateData(updatedData);
-    setDataWithProgress(updatedData); //Update the state with modified progress values
-  };
-
-  //function for handling sign document to handle progress bars move independently
-  const handleSignDocument1 = (itemIndex) => {
-    if (dataWithProgress[itemIndex].progress < totalParties) {
-      const newProgress = [...itemProgress];
-      newProgress[itemIndex]++;
-      setItemProgress(newProgress);
-    }
-  };
+  // const handleSignDocument = (itemId) => {
+  //   const updatedData = dataWithProgress.map((item) => {
+  //     //Create new array map over the old one
+  //     if (item.document_template_id === itemId && item.progress < totalParties) {
+  //       return {
+  //         ...item,
+  //         progress: item.progress + 1,
+  //       };
+  //     }
+  //     return item; //Else return the item as-is
+  //   });
+  //   updateData(updatedData);
+  //   setDataWithProgress(updatedData); //Update the state with modified progress values
+  // };
 
   var { id } = useParams();
 
@@ -103,7 +92,6 @@ const DocControlList = ({ data }) => {
   // console.log(dataWithProgress);
 
   // TODO: Do a third query that checks progress
-
   return (
     <>
       <div className="docControlHeader">
@@ -141,7 +129,7 @@ const DocControlList = ({ data }) => {
                 <div className="wrap-item-id">Version {item.version}</div>
                 {/* TODO: Do a if else statement here when itis pending! the img src will be editIcon instead of lockIcon
                 Else the version will be lock, not able to edit */}
-                {item.progress < totalParties ? (
+                {item.approvalRatio < 1  ? (
                   // <Link to={"/editDoc/:id"}>
                   //   <img src={editIcon} alt="edit" className="editicon" />
                   // </Link>
@@ -165,28 +153,18 @@ const DocControlList = ({ data }) => {
               </span>
               <div className="additional_info">
                 <div className="status">
-                  {item.progress < totalParties ? "Pending!" : "Approved!"}
+                  {item.approvalRatio < 1 ? "Pending!" : "Approved!"}
                 </div>
 
                 <div className="pro-bar">
                   <div
                     className="progress"
                     style={{
-                      width: `${(item.progress / totalParties) * 100}%`,
+                      width: item.approvalRatio * 100
                     }}
                   ></div>
                 </div>
               </div>
-
-              {item.progress < totalParties && (
-                <button
-                  onClick={() =>
-                    handleSignDocument(item.document_template_id)
-                  }
-                >
-                  Sign Document
-                </button>
-              )}
               {/* <span
                 className="item-version"
                 onClick={() => handleSignDocument(item.id)}
@@ -219,7 +197,7 @@ const DocControlList = ({ data }) => {
                 </Link>
 
                 <span className="send-icon">
-                  {item.progress < totalParties ? (
+                  {item.approvalRatio < 1 ? (
                     <img
                       src={greysendIcon}
                       alt="Send Icon"

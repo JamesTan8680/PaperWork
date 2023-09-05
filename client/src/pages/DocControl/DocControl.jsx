@@ -14,7 +14,7 @@ function DocControl() {
   var {id} = useParams();
   const fetchFolders = async () => {
     try {
-      const res = await axios.get("http://localhost:8800/view-document/document-template/" + id);
+      const res = await axios.get("http://localhost:8800/view-document/document-template2/" + id);
       setData(res.data);
 
     } catch (err) { 
