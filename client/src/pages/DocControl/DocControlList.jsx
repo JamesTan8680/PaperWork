@@ -32,6 +32,9 @@ const DocControlList = ({ data }) => {
   const [show, setShow] = useState(false);
   //state for the title of the document
   const [metadata, setMetadata] = useState([]);
+
+  const [itemData, setItemData] = useState([]);
+
   const totalParties = 5; //Assume Total Parties is 5
   // state to manage THE groupviewModal to open or close
   const [viewOpen, setViewOpen] = useState(false);
@@ -168,7 +171,9 @@ const DocControlList = ({ data }) => {
 
               {item.progress < totalParties && (
                 <button
-                  onClick={() => handleSignDocument(item.document_template_id)}
+                  onClick={() =>
+                    handleSignDocument(itemData.document_template_id)
+                  }
                 >
                   Sign Document
                 </button>
@@ -189,6 +194,7 @@ const DocControlList = ({ data }) => {
                       alt="Parties Icon "
                       className="partiesicon"
                       onClick={() => {
+                        setItemData(item);
                         setViewOpen((prev) => !prev);
                       }}
                     />
@@ -215,18 +221,21 @@ const DocControlList = ({ data }) => {
                       src={sendIcon}
                       alt="Send Icon "
                       className="sendicon"
-                      onClick={() => setShow((s) => !s)}
+                      onClick={() => {
+                        setItemData(item);
+                        setShow((s) => !s);
+                      }}
                     />
                   )}
                 </span>
               </div>
             </div>
           ))}
-          <DocModal show={show} setShow={setShow} title={data.title} />
+          <DocModal show={show} setShow={setShow} title={itemData.title} />
           <GroupViewModal
             viewOpen={viewOpen}
             setViewOpen={setViewOpen}
-            docId={data.document_template_id}
+            docId={itemData.document_template_id}
           />
         </div>
       </div>
