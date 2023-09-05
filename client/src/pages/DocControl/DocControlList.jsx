@@ -193,12 +193,13 @@ const DocControlList = ({ data }) => {
                     />
                   )}
                 </span>
-
-                <img
-                  src={reviewIcon}
-                  alt="Review Icon"
-                  className="reviewicon"
-                />
+                <Link to="/ReviewDoc">
+                  <img
+                    src={reviewIcon}
+                    alt="Review Icon"
+                    className="reviewicon"
+                  />
+                </Link>
 
                 <span className="send-icon">
                   {item.progress < totalParties ? (
@@ -219,8 +220,9 @@ const DocControlList = ({ data }) => {
               </div>
             </div>
           ))}
-          <DocModal show={show} setShow={setShow} title={metadata.title} />
-          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} />
+          <DocModal show={show} setShow={setShow} title={title} />
+          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} docId="Type_A_1.4" />
+
         </div>
       </div>
     </>

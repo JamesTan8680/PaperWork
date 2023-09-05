@@ -1,0 +1,80 @@
+.reviewDoc {
+  box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+  border-radius: 5px;
+  width: 100%;
+  height: calc(100vh - 75px);
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  overflow: auto;
+
+  .review-container {
+    align-self: center;
+    padding-left: 50px;
+    padding-right: 50px;
+    width: 70%;
+
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 5px;
+  }
+
+  .review-button {
+    font-size: 16px;
+    width: calc(70% + 100px);
+    align-self: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .cancel {
+      cursor: pointer;
+      background-color: red;
+      border: none;
+      padding: 15px 32px;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .export-pdf {
+      cursor: pointer;
+      background-color: green;
+      border: none;
+      border-radius: 5px;
+      padding: 15px 32px;
+      color: white;
+    }
+  }
+}
+.recipient {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .recipient-dropdown {
+    position: relative;
+  }
+
+  .recipient-dropdown select {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    width: 200px;
+  }
+}
+
+.parties_sign_container {
+  display: flex;
+  justify-content: space-between;
+
+  .parties_side {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-weight: bold;
+  }
+}
