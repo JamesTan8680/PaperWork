@@ -120,7 +120,7 @@ view_document_ep_router.get("/parties/:id", (req, res) => {
 
   // Define the SQL query to retrieve party information based on the given party ID
   const getPartyInfo = `
-      SELECT parties.parties_id, parties.parties_name
+      SELECT parties.parties_id, parties.parties_name, parties.address, parties.email
       FROM document_parties
       INNER JOIN parties ON document_parties.parties_id = parties.parties_id
       WHERE document_parties.document_template_id = ?;

@@ -12,27 +12,35 @@ function GroupViewModal({ viewOpen, setViewOpen, docId }) {
 
   useEffect(() => {
     if (!viewOpen) return;
-
-    // Fetch data from the API endpoint
-    console.log("docID:",docId);
-    axios.get(`http://localhost:8800/view-document/parties/${docId}`)
-      .then((response) => {
+  
+    const fetchData = async () => {
+      try {
+        // Fetch data from the API endpoint for parties
+        const partiesResponse = await axios.get(`http://localhost:8800/view-document/parties/${docId}`);
         // Assuming the response.data contains the parties data
-        setPartiesData(response.data);
-        console.log(partiesData);
-      })
-      .catch((error) => {
+        if (partiesResponse.data) {
+          setPartiesData(partiesResponse.data);
+        } else {
+          setPartiesData(null); 
+        }
+  
+        // Fetch data from the API endpoint for recipients
+        const recipientsResponse = await axios.get(`http://localhost:8800/view-document/receipients/${docId}`);
+        if (recipientsResponse.data) {
+          setRecipientData(recipientsResponse.data);
+        } else {
+          setRecipientData(null); 
+        }
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
-
-      axios.get(`http://localhost:8800/view-document/receipients/${docId}`)
-      .then((response) => {
-        setRecipientData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching recipient data:", error);
-      });
+        setRecipientData(null);
+      }
+    };
+  
+    fetchData();
   }, [viewOpen, docId]);
+  
+  
 
   if (!viewOpen) return null;
   //create the close view modol
