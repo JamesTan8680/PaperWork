@@ -27,18 +27,33 @@
     background-color: #4cc9cf;
     border-radius: 15px;
     color: white;
-    padding: 5px 40px 5px 30px;
+    //padding: 5px 40px 5px 30px;
+    text-align: center;
+    width: 100px;
+    padding: 5px 20px;
     margin-left: 12px;
     margin-right: 45rem;
     white-space: nowrap;
   }
 
-  .otherdocument {
-    color: #4cc9cf;
+  a.otherDocument:hover{
+    background-color: #eeeeee;
+  }
+  span.otherDocument{
+    color: gray;
+    text-decoration: line-through;
+  }
+  .otherDocument {
+    padding: 5px 20px;
+    min-width: 150px;
+    border-radius: 3px;
+     color: #4cc9cf;
     font-size: large;
     margin-left: 70px;
   }
-
+  a.expanded{
+    box-shadow: inset 0px 0px 5px gray;
+  }
   .dropdownicon {
     width: 90px;
     height: 60px;

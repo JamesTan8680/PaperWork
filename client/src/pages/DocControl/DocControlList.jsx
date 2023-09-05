@@ -26,6 +26,8 @@ const DocControlList = ({ data }) => {
         }))
         .reverse()
     );
+    setDataWithProgress(updatedData);
+    fetchParentMetadata();
   }, [data]);
 
   //using this state to manage the state for the DocModal
@@ -40,6 +42,7 @@ const DocControlList = ({ data }) => {
   const [viewOpen, setViewOpen] = useState(false);
   // Set the state to hold the data with the progress property
   const [dataWithProgress, setDataWithProgress] = useState(updatedData);
+  const [dataVisible, setDataVisible] = useState(updatedData);
   const [expanded, setExpanded] = useState(false);
 
   const [itemProgress, setItemProgress] = useState(
@@ -49,7 +52,7 @@ const DocControlList = ({ data }) => {
   const handleSignDocument = (itemId) => {
     const updatedData = dataWithProgress.map((item) => {
       //Create new array map over the old one
-      if (item.id === itemId && item.progress < totalParties) {
+      if (item.document_template_id === itemId && item.progress < totalParties) {
         return {
           ...item,
           progress: item.progress + 1,
@@ -57,7 +60,7 @@ const DocControlList = ({ data }) => {
       }
       return item; //Else return the item as-is
     });
-
+    updateData(updatedData);
     setDataWithProgress(updatedData); //Update the state with modified progress values
   };
 
@@ -82,14 +85,15 @@ const DocControlList = ({ data }) => {
       console.error(err);
     }
   };
-  console.log(metadata);
+
+
 
   useEffect(() => {
-    fetchParentMetadata();
-    setDataWithProgress(
-      expanded ? updatedData : updatedData.length == 0 ? [] : [updatedData[0]]
+    setDataVisible(
+      expanded ? dataWithProgress : dataWithProgress.length == 0 ? [] : [dataWithProgress[0]]
     );
-  }, [updatedData, expanded]);
+
+  }, [updatedData, dataWithProgress, expanded]);
 
   // console.log("data");
   // console.log(data);
@@ -114,19 +118,24 @@ const DocControlList = ({ data }) => {
           <p className="docuementLatestVersion">
             Version {dataWithProgress[0]?.version}
           </p>
-          <a
-            href="#"
-            onClick={() => setExpanded(!expanded)}
-            className="otherdocument"
-          >
-            {expanded ? "Latest Version" : "Other Versions..."}
-          </a>
+        { data.length > 1 ?
+        <a
+        href="#"
+        onClick={() => setExpanded(!expanded)}
+        className={"otherDocument" + (expanded ? " expanded" : "")}
+      >
+        {expanded ? "▲ Latest Version " : "▼ Other Versions..."}
+      </a>
+      :
+      <span className="otherDocument">
+          ● (No Other Versions)
+        </span>}
         </div>
       </div>
 
       <div className="docControlList">
         <div className="table">
-          {dataWithProgress.map((item, index) => (
+          {dataVisible.map((item, index) => (
             <div key={index} className="table-row">
               <span className="item-id">
                 <div className="wrap-item-id">Version {item.version}</div>
@@ -172,7 +181,7 @@ const DocControlList = ({ data }) => {
               {item.progress < totalParties && (
                 <button
                   onClick={() =>
-                    handleSignDocument(itemData.document_template_id)
+                    handleSignDocument(item.document_template_id)
                   }
                 >
                   Sign Document
