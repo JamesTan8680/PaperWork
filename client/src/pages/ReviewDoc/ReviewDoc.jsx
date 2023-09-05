@@ -13,7 +13,7 @@ function ReviewDoc() {
   const [blurry, setBlur] = useState(true);
   //handle the export pdf
   const handleExportWithComponent = (event) => {
-    setBlur(false);
+    // setBlur(false);
     pdfExportComponent.current.save();
   };
 
@@ -129,7 +129,19 @@ function ReviewDoc() {
         >
           <button className="cancel">Cancel</button>
         </Link>
-        <VisibilityIcon />
+
+        {blurry ? (
+          <VisibilityIcon
+            className="visibilityIcon"
+            onClick={() => setBlur(false)} //setBlur to false
+          />
+        ) : (
+          <VisibilityOffIcon
+            className="visibilityOffIcon"
+            onClick={() => setBlur(true)} //setBlur to true
+          />
+        )}
+
         <button className="export-pdf" onClick={handleExportWithComponent}>
           Export PDF
         </button>
