@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 import { Link } from "react-router-dom";
 import { PDFExport } from "@progress/kendo-react-pdf";
@@ -62,7 +64,8 @@ function ReviewDoc() {
           ref={pdfExportComponent}
           paperSize="A4"
           margin={{ left: "15mm", top: "20mm", right: "15mm", bottom: "20mm" }}
-          scale={0.6}>
+          scale={0.6}
+        >
           <div className="recipient">
             <div className="recipient-dropdown">
               {HTMLReactParser(recipients)}
@@ -91,7 +94,7 @@ function ReviewDoc() {
               <div className="parties_side">
                 {parties?.map((item) => {
                   return (
-                    <div className="party_sign">
+                    <div key={item.name} className="party_sign">
                       <div className="Dname">Discloser Name: {item.name}</div>
                       <div className="Sname">Signature: {item.name}</div>
                       <div className="Sdate">Date: 8/31/2023</div>
@@ -108,7 +111,8 @@ function ReviewDoc() {
                   style={{
                     color: blurry ? "black" : "none",
                     display: blurry ? "" : "none",
-                  }}>
+                  }}
+                >
                   signature: Ching
                 </div>
               </div>
@@ -121,9 +125,11 @@ function ReviewDoc() {
           to="/viewDoc/1"
           onClick={() => {
             setBlur(false);
-          }}>
+          }}
+        >
           <button className="cancel">Cancel</button>
         </Link>
+        <VisibilityIcon />
         <button className="export-pdf" onClick={handleExportWithComponent}>
           Export PDF
         </button>
