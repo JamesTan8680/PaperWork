@@ -126,8 +126,7 @@ const DocControlList = ({ data }) => {
           {dataWithProgress.map((item, index) => (
             <div key={index} className="table-row">
               <span className="item-id">
-                <div className="wrap-item-id">{item.id}</div>
-                Version {item.version}
+                <div className="wrap-item-id">Version {item.version}</div>
                 {/* TODO: Do a if else statement here when itis pending! the img src will be editIcon instead of lockIcon
                 Else the version will be lock, not able to edit */}
                 {item.progress < totalParties ? (
@@ -168,7 +167,9 @@ const DocControlList = ({ data }) => {
               </div>
 
               {item.progress < totalParties && (
-                <button onClick={() => handleSignDocument(item.id)}>
+                <button
+                  onClick={() => handleSignDocument(item.document_template_id)}
+                >
                   Sign Document
                 </button>
               )}
@@ -182,7 +183,7 @@ const DocControlList = ({ data }) => {
               <div className="icons">
                 {/* Not matter parties approve or not we still need to view the parties info */}
                 <span className="parties-icon">
-                  {item.id && (
+                  {item.document_template_id && (
                     <img
                       src={partiesIcon}
                       alt="Parties Icon "
@@ -192,6 +193,7 @@ const DocControlList = ({ data }) => {
                       }}
                     />
                   )}
+                  {console.log(item.document_template_id)}
                 </span>
                 <Link to="/ReviewDoc">
                   <img
@@ -221,8 +223,11 @@ const DocControlList = ({ data }) => {
             </div>
           ))}
           <DocModal show={show} setShow={setShow} title={data.title} />
-          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} docId={data.document_template_id} />
-
+          <GroupViewModal
+            viewOpen={viewOpen}
+            setViewOpen={setViewOpen}
+            docId={data.document_template_id}
+          />
         </div>
       </div>
     </>
