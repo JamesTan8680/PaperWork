@@ -220,8 +220,8 @@ const DocControlList = ({ data }) => {
               </div>
             </div>
           ))}
-          <DocModal show={show} setShow={setShow} title={title} />
-          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} docId="Type_A_1.4" />
+          <DocModal show={show} setShow={setShow} title={data.title} />
+          <GroupViewModal viewOpen={viewOpen} setViewOpen={setViewOpen} docId={data.document_template_id} />
 
         </div>
       </div>
