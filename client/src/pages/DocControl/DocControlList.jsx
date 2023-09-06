@@ -188,7 +188,7 @@ const DocControlList = ({ data }) => {
                   )}
                   {console.log(item.document_template_id)}
                 </span>
-                <Link to="/ReviewDoc">
+                <Link to={`/ReviewDoc/${item.document_template_id}`}>
                   <img
                     src={reviewIcon}
                     alt="Review Icon"
@@ -218,7 +218,7 @@ const DocControlList = ({ data }) => {
               </div>
             </div>
           ))}
-          <DocModal show={show} setShow={setShow} title={itemData.title} />
+          <DocModal show={show} setShow={setShow} title={itemData.title} doc_id={itemData.document_template_id} />
           <GroupViewModal
             viewOpen={viewOpen}
             setViewOpen={setViewOpen}

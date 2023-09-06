@@ -7,7 +7,7 @@ import uuid from "react-uuid";
 import SuccessfulePage from "./SuccessfulPage";
 import emailjs from "@emailjs/browser";
 
-function DocModal({ show, setShow, title }) {
+function DocModal({ show, setShow, title, doc_id }) {
   //manage the state for the send button
   const [open, setOpen] = useState(false);
   //save the email that user type inside the input
@@ -110,6 +110,40 @@ function DocModal({ show, setShow, title }) {
         );
     }
   };
+  const onSendToDatabase = () => {
+    if (elements.length === 0) {
+      setError("Please add the email addresses to the list!");
+    } else {
+      const emailsArray = elements.map((item) => item.name);
+      const apiUrl = `http://localhost:8800/send-document/container/${doc_id}`;
+  
+      // Define the request body as an array of emails
+      const requestBody = emailsArray;
+  
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      })
+        .then((response) => {
+          if (response.ok) {
+            console.log("API request was successful.");
+            setOpen((s) => !s);
+          } else {
+            console.error("API request failed.");
+            setOpen((s) => !s);
+          }
+        })
+        .catch((error) => {
+          console.error("Error making API request:", error);
+          setOpen((s) => !s);
+        });
+    }
+  };
+  
+
   if (!show) return null;
   return ReactDOM.createPortal(
     <div className="modal">
@@ -154,7 +188,7 @@ function DocModal({ show, setShow, title }) {
             Remove
           </button>
           <div className="send-button">
-            <button className="send-btn" onClick={onSend}>
+            <button className="send-btn" onClick={() => { onSend(); onSendToDatabase(); }}>
               Send
             </button>
             <SuccessfulePage

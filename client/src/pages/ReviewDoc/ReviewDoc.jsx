@@ -3,6 +3,7 @@ import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 function ReviewDoc() {
   const [title, setTitle] = useState("");
@@ -11,30 +12,47 @@ function ReviewDoc() {
   const [parties, setParties] = useState([]);
   const [content, setContent] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState(null);
-
+  var { id } = useParams();
   useEffect(() => {
-    // Fetching data from two endpoints using axios
+    // Initialize state variables with default values
+    setTitle("");
+    setVersion("");
+    setParties([]);
+    setContent("");
+    setSelectedRecipient(null);
+  
+    // Make separate API requests
     axios
-      .all([
-        axios.get("http://localhost:8800/create-document/default-templates"),
-        axios.get(`http://localhost:8800/parties`),
-        axios.get("http://localhost:8800/view-document/receipients/Type_A_1.4"),
-      ])
-      .then(
-        axios.spread((response1, response2, response3) => {
-          setTitle(response1.data[0].docTitle || "");
-          setVersion(response1.data[0].template.version || "");
-          setParties(response2.data);
-          setRecipients(response3.data);
-          setContent(response1.data[0].template.term || "");
-
-          // If a callback for fetched data has been provided, call it
-        })
-      )
+      .get(`http://localhost:8800/view-document/document/${id}`)
+      .then((response1) => {
+        const documentData = response1.data || {}; // Handle empty response
+        setTitle(documentData[0].title || "");
+        setVersion(documentData.version || "");
+        setContent(documentData[0].content || "");
+      })
       .catch((err) => {
         console.log(err.message);
       });
-  }, []);
+  
+    axios
+      .get(`http://localhost:8800/view-document/parties/${id}`)
+      .then((response2) => {
+        setParties(response2.data || []); // Handle empty response
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  
+    axios
+      .get(`http://localhost:8800/view-document/receipients/${id}`)
+      .then((response3) => {
+        setRecipients(response3.data || []); // Handle empty response
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, [id]);
+  
   // const recipientss = `
   //   <div>
   //     <select>

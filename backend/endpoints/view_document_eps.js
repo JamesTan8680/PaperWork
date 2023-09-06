@@ -120,7 +120,7 @@ view_document_ep_router.get("/parties/:id", (req, res) => {
 
   // Define the SQL query to retrieve party information based on the given party ID
   const getPartyInfo = `
-      SELECT parties.parties_id, parties.parties_name, parties.address, parties.email
+      SELECT parties.parties_id, parties.parties_name, parties.parties_address, parties.parties_email
       FROM document_parties
       INNER JOIN parties ON document_parties.parties_id = parties.parties_id
       WHERE document_parties.document_template_id = ?;
@@ -179,5 +179,39 @@ view_document_ep_router.get("/receipients/:id", (req, res) => {
     res.status(200).json(result);
   });
 });
+
+
+view_document_ep_router.get("/document/:id", (req, res) => {
+  // Get the party ID from the request parameters
+  const template_id = req.params.id;
+
+  // Define the SQL query to retrieve party information based on the given party ID
+  const getPartyInfo = `
+      SELECT *
+      FROM document_template
+      WHERE document_template_id = ?;
+    `;
+
+  // Execute the query
+  db.query(getPartyInfo, [template_id], (err, result) => {
+    if (err) {
+      // Handle database query error
+      return res.status(500).json({
+        error: "An error occurred while querying for receipient information.",
+      });
+    }
+
+    if (result.length === 0) {
+      // If no party with the specified ID is found, return a 404 error
+      return res.status(404).json({
+        error: "Template not found.",
+      });
+    }
+
+    // If the query is successful, return all matching party information
+    res.status(200).json(result);
+  });
+});
+
 
 export default view_document_ep_router;

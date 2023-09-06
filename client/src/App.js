@@ -54,7 +54,7 @@ const router = createBrowserRouter([
         element: <EditDoc />,
       },
       {
-        path: "/ReviewDoc",
+        path: "/ReviewDoc/:id",
         element: <ReviewDoc />,
       },
     ],
