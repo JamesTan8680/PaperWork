@@ -39,7 +39,7 @@ export default function EditDoc(item) {
             setData(item);
             //first fetch the title from the correct type
             const rawDocTitle = item.title;
-            const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, "");
+            const cleanedTitle = rawDocTitle.replace(/<\/?[^>]*>/g, "");
             setDocTitle(cleanedTitle);
             setDocContent(cleanedTitle);
             //fetch the terms into from the correct type
@@ -248,7 +248,7 @@ export default function EditDoc(item) {
               />
             </div>
           ) : selected === 2 ? (
-            <Parties partyList={partyList} setPartyList={setPartyList} />
+            <Parties itemId={id} partyList={partyList} setPartyList={setPartyList} />
           ) : selected === 3 ? (
             <Terms
               editor={editor}

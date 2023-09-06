@@ -15,9 +15,9 @@ customise_document_ep_router.get("/:id", (req, res) => {
 
 //no need id, just return all the parties from parties
 //--> It is temporarily in a different file as it has nothing to do with the template
-// customise_document_ep_router.get("/:id/parties", (req, res) => {
-//   macros.select("document_parties", {where:"document_template_id='"+req.params.id+"'"}, res);
-// })
+customise_document_ep_router.get("/:id/parties", (req, res) => {
+  macros.select("document_parties", {where:"document_template_id='"+req.params.id+"'"}, res);
+})
 
 //no need this route, just need post method
 // customise_document_ep_router.get("/:id/configuration", (req, res) => {
