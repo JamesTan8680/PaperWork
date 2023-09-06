@@ -38,62 +38,117 @@ send_document_ep_router.get("/:id/signature", (req, res) => {
     res
   );
 });
+
 send_document_ep_router.post("/container/:id", (req, res) => {
-    const email_list = req.body;
-    const doc_id = req.params.id; // Use req.params.id to get the value of ":id" in the route
-    const identity_email_list = [];
-  
-    // Check if email_list is an array
-    if (!Array.isArray(email_list)) {
-      return res.status(400).send("email_list is not provided as an array.");
+  const email_list = req.body;
+  const doc_id = req.params.id; // Use req.params.id to get the value of ":id" in the route
+  const identity_email_list = [];
+
+  // Check if email_list is an array
+  if (!Array.isArray(email_list)) {
+    return res.status(400).send("email_list is not provided as an array.");
+  }
+
+  const query =
+    "SELECT DISTINCT identity.email FROM document_container INNER JOIN identity ON document_container.identity_id = identity.identity_id WHERE document_container.document_template_id = ?";
+  db.query(query, [doc_id], (error, results) => {
+    if (error) {
+      console.error("Error executing SQL query:", error);
+      return res.status(500).send("Internal Server Error");
     }
-  
-    // First, retrieve the identity emails
-    const query = "SELECT identity_id, email FROM identity";
-    db.query(query, (error, results) => {
-      if (error) {
-        console.error("Error executing SQL query:", error);
-        return res.status(500).send("Internal Server Error");
-      }
-  
-      // Extract the email and identity data into identity_email_list
-      for (const row of results) {
-        identity_email_list.push({ identity: row.identity_id, email: row.email });
-      }
-  
-      // Now, iterate through email_list and perform INSERT queries
-      for (const input_email of email_list) {
-        // Check if input_email exists in identity_email_list
-        const matchingIdentity = identity_email_list.find(
-          (identityEmail) => identityEmail.email === input_email
-        );
-  
-        if (matchingIdentity) {
-            // Define the issue_date value (you may need to replace this with the actual date)
-            const issue_date = new Date().toISOString(); // Example: using the current date as an ISO string
-          
-            // Perform the INSERT query
+
+    // Extract the email data into identity_email_list
+    for (const row of results) {
+      identity_email_list.push(row.email);
+    }
+
+    // Now, filter out the emails that already exist in the database
+    const remainingEmails = email_list.filter(
+      (input_email) => !identity_email_list.includes(input_email)
+    );
+
+    // Iterate through the remaining emails
+    remainingEmails.forEach((input_email) => {
+      // Check if the email exists in the identity table
+      const identityQuery = "SELECT identity_id FROM identity WHERE email = ?";
+      db.query(
+        identityQuery,
+        [input_email],
+        (identityError, identityResults) => {
+          if (identityError) {
+            console.error("Error executing identity SQL query:", identityError);
+            // Handle the error as needed
+          } else if (identityResults.length > 0) {
+            const identity_id = identityResults[0].identity_id;
+            const issue_date = new Date().toISOString(); // Today's date as an ISO string
+
+            // Insert into the document_container table
             const insertQuery =
               "INSERT INTO document_container (identity_id, document_template_id, issue_date) VALUES (?, ?, ?)";
             db.query(
               insertQuery,
-              [matchingIdentity.identity, doc_id, issue_date], // Include the issue_date value
+              [identity_id, doc_id, issue_date],
               (insertError, insertResults) => {
                 if (insertError) {
-                  console.error("Error executing INSERT SQL query:", insertError);
-                  res.status(500).send("Internal Server Error");
+                  console.error(
+                    "Error executing INSERT SQL query:",
+                    insertError
+                  );
+                  // Handle the error as needed
                 } else {
                   console.log("Inserted into document_container");
                   // Continue processing or send a success response if needed
                 }
               }
             );
+          } else {
+            // If the email is not found in the identity table, insert into guest_identity
+            const guestInsertQuery =
+              "INSERT INTO guest_identity (email) VALUES (?)";
+            db.query(
+              guestInsertQuery,
+              [input_email],
+              (guestInsertError, guestInsertResults) => {
+                if (guestInsertError) {
+                  console.error(
+                    "Error executing guest INSERT SQL query:",
+                    guestInsertError
+                  );
+                  // Handle the error as needed
+                } else {
+                  const identity_id = input_email; // Use the email as identity_id
+                  const issue_date = new Date().toISOString(); // Today's date as an ISO string
+
+                  // Insert into the document_container table
+                  const insertQuery =
+                    "INSERT INTO document_container (identity_id, document_template_id, issue_date) VALUES (?, ?, ?)";
+                  db.query(
+                    insertQuery,
+                    [identity_id, doc_id, issue_date],
+                    (insertError, insertResults) => {
+                      if (insertError) {
+                        console.error(
+                          "Error executing INSERT SQL query:",
+                          insertError
+                        );
+                        // Handle the error as needed
+                      } else {
+                        console.log("Inserted into document_container");
+                        // Continue processing or send a success response if needed
+                      }
+                    }
+                  );
+                }
+              }
+            );
           }
-      }
-  
-      // Send a success response once all INSERTs are done
-      res.status(200).send("Emails inserted into document_container successfully.");
+        }
+      );
     });
+
+    // Return a response after processing all remaining emails
+    res.status(200).json({ message: "Processing completed." });
   });
+});
 
 export default send_document_ep_router;
