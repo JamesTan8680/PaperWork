@@ -43,6 +43,7 @@ function Parties({itemId, partyList, setPartyList, updateParties, party}) {
         setSelectedParties={setPartiesList}
         partyList={partyList}
         setPartyList={setPartyList}
+        setSelected={setSelected}
       />
     </>
   );
