@@ -13,27 +13,30 @@ import uuid from "react-uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-export default function EditDoc() {
-  let { id } = useParams();
-  let { type } = useParams();
+export default function EditDoc(item) {
 
-  console.log("id*** in Edit Doc ", id);
-  console.log("id_sliced*** in Edit Doc ", id.slice(0, 6));
+
   //I am meant to fetch the data from the viewDoc template version into the editDoc.jsx
   //function for getting the data by type
   const [data, setData] = useState([]);
   const [docTitle, setDocTitle] = useState(""); // default value
+  var { id } = useParams();
+
+  console.log("id*** in Edit Doc ", data.document_template_id);
+  console.log("id_sliced*** in Edit Doc ", data.type);
 
   const fetchDataByType = async () => {
+    console.warn("Getting the stuff");
+
     try {
       axios
-        .get("http://localhost:8800/view-document/document-template/type/")
+        .get("http://localhost:8800/customise-document/"+id)
         .then((res) => {
-          setData(res.data);
           //match template type version with the id
-          const item = res.data.find((item) => item.type === id.slice(0, 6));
+          const item = res.data.find((item) => item.document_template_id === id)
           //if the item is true then fetch the data into the corresponding section
           if (item) {
+            setData(item);
             //first fetch the title from the correct type
             const rawDocTitle = item.title;
             const cleanedTitle = rawDocTitle.replace(/<\/?title>/g, "");
@@ -41,16 +44,19 @@ export default function EditDoc() {
             setDocContent(cleanedTitle);
             //fetch the terms into from the correct type
             setDocTerms(item?.content);
+            console.warn(item);
           }
         });
     } catch (err) {
-      console.log("Error fetching data ", err);
+      document.write("Error fetching data ", err);
     }
   };
-  useEffect(() => {
+
+  useEffect(()=>{
     fetchDataByType();
-  }, [id]);
-  console.log(data);
+  },[]);
+
+  //console.log(data);
 
   // const docTitle = "Non-Disclosure Agreement";
   const docTerms = renderToString(
@@ -92,9 +98,9 @@ export default function EditDoc() {
 
     console.log("Saving content:", content);
     //update the template version data to the backend
-    updateTemplateEndpoint(id);
+    updateTemplateEndpoint(data.document_template_id);
 
-    navigate(`/viewDoc/${id.slice(0, 6)}`);
+    navigate(`/viewDoc/${data.type}`);
   };
 
   //handle alert
@@ -109,17 +115,17 @@ export default function EditDoc() {
     "0" +
     (date.getMonth() + 1)
   ).slice(-2)}/${date.getDate()}`;
-  console.log("date*** ", created_date);
-  console.log("parties_number = ", partyList.length);
-  console.log("title = ", content);
-  console.log("terms = ", terms);
+  //console.log("date*** ", created_date);
+  //console.log("parties_number = ", partyList.length);
+  //console.log("title = ", content);
+  //console.log("terms = ", terms);
 
   // update the template endpoint using the put method in axios
   const updateTemplateEndpoint = (id) => {
     try {
       axios
         .put(`http://localhost:8800/customise-document/${id}`, {
-          type: id.slice(0, 6),
+          type: data.type,
           title: content,
           content: terms,
           parties_number: partyList.length,
@@ -131,7 +137,7 @@ export default function EditDoc() {
           updatePartiesToTheEndpoint(id, partyList);
         });
     } catch (error) {
-      console.log("Error updating data *********", error);
+      document.write("Error updating data *********", error);
     }
   };
 
@@ -147,7 +153,7 @@ export default function EditDoc() {
           console.log("Successfully updated signatureConfig data", res.data);
         });
     } catch (error) {
-      console.log("Error updating date");
+      document.write("Error updating date");
     }
   };
   //update parties to the backend
@@ -160,7 +166,7 @@ export default function EditDoc() {
 
       console.log("Party sent successfully:", response.data);
     } catch (error) {
-      console.log("Error sending party:", error);
+      document.write("Error sending party:", error);
     }
   };
   const updatePartiesToTheEndpoint = (id, partyList) => {
@@ -174,7 +180,7 @@ export default function EditDoc() {
   return (
     <div className="customiseDoc">
       <div className="top-editDoc">
-        <Link to={`/viewDoc/${id.slice(0, 6)}`}>
+        <Link to={`/viewDoc/${data.type}`}>
           <div className="back-btn">
             <img src={Back} alt="" />
             <span>
@@ -285,7 +291,7 @@ export default function EditDoc() {
                 } else {
                   // handleAlert();
                   handleSave();
-                  <Link to={`/viewDoc/${id.slice(0, 6)}`} className="save">
+                  <Link to={`/viewDoc/${data.type}`} className="save">
                     Save
                   </Link>;
                 }

@@ -9,9 +9,9 @@ customise_document_ep_router.use(express.json());
 const macros = new ep_macros();
 
 //no need this route, the data is sent through props from create_document
-// customise_document_ep_router.get("/:id", (req, res) => {
-//   macros.select("document_template", {where:"document_template_id='"+req.params.id+"'"}, res);
-// })
+customise_document_ep_router.get("/:id", (req, res) => {
+  macros.select("document_template", {where:"document_template_id='"+req.params.id+"'"}, res);
+})
 
 //no need id, just return all the parties from parties
 //--> It is temporarily in a different file as it has nothing to do with the template
