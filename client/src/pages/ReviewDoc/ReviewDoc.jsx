@@ -3,9 +3,14 @@ import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ReviewDoc() {
+  let { id } = useParams();
+
   const [title, setTitle] = useState("");
+  //creating type useState
+  const [type, setType] = useState("");
   const [version, setVersion] = useState("");
   const [recipients, setRecipients] = useState("");
   const [parties, setParties] = useState([]);
@@ -23,6 +28,7 @@ function ReviewDoc() {
       .then(
         axios.spread((response1, response2, response3) => {
           setTitle(response1.data[0].docTitle || "");
+          setType(response1.data[0].template.type);
           setVersion(response1.data[0].template.version || "");
           setParties(response2.data);
           setRecipients(response3.data);
@@ -35,6 +41,12 @@ function ReviewDoc() {
         console.log(err.message);
       });
   }, []);
+
+  console.log();
+  console.log("title*** ", title);
+  console.log("version** ", version);
+  console.log("content** ", content);
+  console.log("type ** ", type);
   // const recipientss = `
   //   <div>
   //     <select>

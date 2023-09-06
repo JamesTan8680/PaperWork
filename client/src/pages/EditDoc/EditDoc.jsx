@@ -174,7 +174,7 @@ export default function EditDoc() {
   return (
     <div className="customiseDoc">
       <div className="top-editDoc">
-        <Link to="/viewDoc/:id">
+        <Link to={`/viewDoc/${id.slice(0, 6)}`}>
           <div className="back-btn">
             <img src={Back} alt="" />
             <span>
