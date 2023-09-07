@@ -2,7 +2,7 @@ import React from "react";
 import BreadCrumbs from "../../components/BreadCrumbs/BreadCrumbs";
 import DocControlList from "./DocControlList";
 import "./DocControl.scss";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from 'react'
 
@@ -21,11 +21,19 @@ function DocControl() {
       console.error(err);
     }
   }
+  const location = useLocation();
 
-  useEffect(()=>{
+  useEffect(() => {
+    // Fetch data when the component is first mounted
     fetchFolders();
-  },[]);
+  }, []);
 
+  useEffect(() => {
+    // Fetch data when the route changes back to /viewDoc/:id
+    if (location.pathname === `/viewDoc/${id}`) {
+      fetchFolders();
+    }
+  }, [location.pathname, id]);
 
   return (
     <>
