@@ -16,7 +16,7 @@ customise_document_ep_router.get("/:id", (req, res) => {
 //no need id, just return all the parties from parties
 //--> It is temporarily in a different file as it has nothing to do with the template
 customise_document_ep_router.get("/:id/parties", (req, res) => {
-  macros.select("document_parties", {where:"document_template_id='"+req.params.id+"'"}, res);
+  macros.select("document_parties", {cols:"document_praties.*,parties.parties_name", other: "INNER JOIN parties ON parties.parties_id = document_parties.parties_id ", where:"document_template_id='"+req.params.id+"'"}, res);
 })
 customise_document_ep_router.post("/:id/parties", (req, res) => {
   const { parties_ids } = req.body;

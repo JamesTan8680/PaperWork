@@ -134,7 +134,7 @@ export default function EditDoc(item) {
         .then((res) => {
           console.log("Updated data successfully ", res.data);
           updateSignatureConfigEndpoint(id, savedItem);
-          updatePartiesToTheEndpoint(id, partyList);
+          updatePartiesToTheEndpoint(id, partyList.map(item=>item.parties_id));
         });
     } catch (error) {
       document.write("Error updating data *********", error);
@@ -157,25 +157,52 @@ export default function EditDoc(item) {
     }
   };
   //update parties to the backend
-  const updatePartyToTheEndpoint = (id, partyId) => {
+  // const updatePartyToTheEndpoint = (id, partyId) => {
+  //   try {
+  //     const response = axios.put(
+  //       `http://localhost:8800/customise-document/${id}/parties`,
+  //       { parties_id: partyId, parties_approval: false }
+  //     );
+
+  //     console.log("Party sent successfully:", response.data);
+  //   } catch (error) {
+  //     document.write("Error sending party:", error);
+  //   }
+  // };
+  const updatePartiesToTheEndpoint = (id, partyList) => {
     try {
-      const response = axios.put(
+      const response = axios.post(
         `http://localhost:8800/customise-document/${id}/parties`,
-        { parties_id: partyId, parties_approval: false }
+        { parties_ids: partyList }
       );
 
-      console.log("Party sent successfully:", response.data);
+      console.log("Parties sent successfully:", response.data);
     } catch (error) {
       document.write("Error sending party:", error);
     }
   };
-  const updatePartiesToTheEndpoint = (id, partyList) => {
-    console.log("Hi from the updatePartiesToTheEndpoint function");
-    console.log("id in ***", id);
-    partyList.forEach((party) => {
-      updatePartyToTheEndpoint(id, party.parties_id);
-    });
-  };
+
+  const [partiesList, setPartiesList] = useState([]);
+
+  const getParties = async () => {
+    try {
+      axios
+        .get("http://localhost:8800/customise-document/"+ id + "/parties")
+        .then((res) => {
+          //match template type version with the id
+          setPartiesList(res.data);
+          console.warn("got parties");
+          console.warn(res.data);
+        });
+    } catch (err) {
+      document.write("Error fetching parties ", err);
+    }
+  }
+
+  useEffect(() => {
+    getParties();
+  }, [partyList]);
+
 
   return (
     <div className="customiseDoc">
@@ -248,7 +275,7 @@ export default function EditDoc(item) {
               />
             </div>
           ) : selected === 2 ? (
-            <Parties itemId={id} partyList={partyList} setPartyList={setPartyList} />
+            <Parties partiesList={partiesList} setPartiesList={setPartiesList} />
           ) : selected === 3 ? (
             <Terms
               editor={editor}

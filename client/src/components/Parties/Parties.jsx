@@ -3,31 +3,7 @@ import "./Parties.scss";
 import Dropdown from "./DropdownParties";
 import axios from "axios";
 
-function Parties({itemId, partyList, setPartyList, updateParties, party}) {
-  const [selected, setSelected] = useState("Select Parties Name");
-  const [partiesList, setPartiesList] = useState([]);
-
-  const getParties = async () => {
-    try {
-      axios
-        .get("http://localhost:8800/customise-document/"+ itemId + "/parties")
-        .then((res) => {
-          //match template type version with the id
-          setPartiesList(res.data);
-          console.warn("got parties");
-          console.warn(res.data);
-        });
-    } catch (err) {
-      document.write("Error fetching parties ", err);
-    }
-  }
-
-  useEffect(() => {
-    getParties();
-  }, [partyList]);
-
-
-
+function Parties({partiesList, setPartiesList}) {
 
   return (
     <>
@@ -39,11 +15,7 @@ function Parties({itemId, partyList, setPartyList, updateParties, party}) {
       ))}
 
       <Dropdown
-        selectedParties={partiesList}
-        setSelectedParties={setPartiesList}
-        partyList={partyList}
-        setPartyList={setPartyList}
-        setSelected={setSelected}
+        parties={partiesList} setParties={setPartiesList}
       />
     </>
   );
