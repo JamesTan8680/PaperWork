@@ -189,29 +189,28 @@ export default function CustomizeDoc() {
     }
   };
 
-  const sendPartyToTheBackend = async (id, partyId) => {
-    console.log("Hi from the sendPartyToTheBackend function");
-    console.log("id:", id);
-    console.log("partyId:", partyId);
+  // const sendPartyToTheBackend = async (id, partyId) => {
+  //   console.log("Hi from the sendPartyToTheBackend function");
+  //   console.log("id:", id);
+  //   console.log("partyId:", partyId);
 
-    try {
-      const response = await axios.post(
-        `http://localhost:8800/customise-document/${id}/parties`,
-        { parties_id: partyId, parties_approval: false }
-      );
+  //   try {
+  //     const response = await axios.post(
+  //       `http://localhost:8800/customise-document/${id}/parties`,
+  //       { parties_id: partyId, parties_approval: false }
+  //     );
 
-      console.log("Party sent successfully:", response.data);
-    } catch (error) {
-      console.log("Error sending party:", error);
-    }
-  };
+  //     console.log("Party sent successfully:", response.data);
+  //   } catch (error) {
+  //     console.log("Error sending party:", error);
+  //   }
+  // };
 
   const sendPartiesToTheBackend = (id, partyList) => {
     console.log("Hi from the sendPartiesToTheBackend function");
     console.log("id in ***", id);
-    partyList.forEach((party) => {
-      sendPartyToTheBackend(id, party.parties_id);
-    });
+    updatePartiesToTheEndpoint(id, newList.map(item=>item.parties_id));
+
   };
 
   // sending signature config to the backend
@@ -231,6 +230,40 @@ export default function CustomizeDoc() {
       // console.log("Error saving Config data", error);
     }
   };
+
+  const updatePartiesToTheEndpoint = (id, partyList) => {
+    try {
+      const response = axios.post(
+        `http://localhost:8800/customise-document/${id}/parties`,
+        { parties_ids: partyList }
+      );
+
+      console.log("Parties sent successfully:", response.data);
+    } catch (error) {
+      document.write("Error sending party:", error);
+    }
+  };
+
+
+  const [partiesList, setPartiesList] = useState([])
+  const [newList,pushList] = useState(partiesList)
+
+  const getParties = async () => {
+    try {
+      axios
+        .get("http://localhost:8800/customise-document/"+ id + "/parties")
+        .then((res) => {
+          //match template type version with the id
+          setPartiesList(res.data);
+          console.warn("got parties");
+          console.warn(res.data);
+        });
+    } catch (err) {
+      document.write("Error fetching parties ", err);
+    }
+  }
+
+
   return (
     <div className="customiseDoc">
       <div className="top-customiseDoc">
@@ -295,8 +328,8 @@ export default function CustomizeDoc() {
             />
           )}
           {selected === 2 && (
-            <Parties partyList={partyList} setPartyList={setPartyList} />
-          )}
+            <Parties partiesList={partiesList} setPartiesList={pushList} />
+            )}
           {selected === 3 && (
             <Terms
               id={id}
