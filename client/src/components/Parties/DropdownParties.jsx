@@ -25,6 +25,7 @@ export default function DropdownParties({
   const [selected, setSelected] = useState(undefined);
   const [selectedList, setSelectedList] = useState([]);
 
+
   const fetchParties = async() => {
     // Fetch data from database
     axios
@@ -40,7 +41,7 @@ export default function DropdownParties({
     //   setPartyList(JSON.parse(savedData));
     // }
 
-    localStorage.removeItem("items");
+    //localStorage.removeItem("items");
   };
 
 
@@ -59,6 +60,7 @@ export default function DropdownParties({
 
   useEffect(()=>{
     if (partyList.length == 0) handleAddButtonClick();
+    setParties(partyList);
   },[partyList])
 
 

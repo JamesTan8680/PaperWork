@@ -25,6 +25,7 @@ export default function EditDoc(item) {
   console.log("id*** in Edit Doc ", data.document_template_id);
   console.log("id_sliced*** in Edit Doc ", data.type);
 
+
   const fetchDataByType = async () => {
     console.warn("Getting the stuff");
 
@@ -134,7 +135,7 @@ export default function EditDoc(item) {
         .then((res) => {
           console.log("Updated data successfully ", res.data);
           updateSignatureConfigEndpoint(id, savedItem);
-          updatePartiesToTheEndpoint(id, partyList.map(item=>item.parties_id));
+          updatePartiesToTheEndpoint(id, newList.map(item=>item.parties_id));
         });
     } catch (error) {
       document.write("Error updating data *********", error);
@@ -182,7 +183,8 @@ export default function EditDoc(item) {
     }
   };
 
-  const [partiesList, setPartiesList] = useState([]);
+  const [partiesList, setPartiesList] = useState([])
+  const [newList,pushList] = useState(partiesList)
 
   const getParties = async () => {
     try {
@@ -275,7 +277,7 @@ export default function EditDoc(item) {
               />
             </div>
           ) : selected === 2 ? (
-            <Parties partiesList={partiesList} setPartiesList={setPartiesList} />
+            <Parties partiesList={partiesList} setPartiesList={pushList} />
           ) : selected === 3 ? (
             <Terms
               editor={editor}
@@ -303,7 +305,9 @@ export default function EditDoc(item) {
                 if (selected > 1) {
                   setSelected((prev) => prev - 1); // Decrement index, go back to previous section
                 } else {
-                  handleAlert();
+                  if (window.confirm("Do you wish to go Back?"))
+                  navigate(`/viewDoc/${data.type}`);
+
                 }
               }}
             >
