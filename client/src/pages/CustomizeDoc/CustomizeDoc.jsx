@@ -64,6 +64,7 @@ export default function CustomizeDoc() {
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
+      getParties();
   }, [templateSelect, id, type]);
 
   const [selectedParty] = useState("");
@@ -74,14 +75,7 @@ export default function CustomizeDoc() {
   //this is the state for the title
   const [content, setDocContent] = useState("");
   //state for the parties
-  const [partyList, setPartyList] = useState([
-    {
-      id: uuid(),
-      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
-      parties_email: "",
-      parties_id: "",
-    },
-  ]);
+
   console.log(partyList);
   // this is the state for the input list
   const [inputList, setInputList] = useState([]);
@@ -209,7 +203,7 @@ export default function CustomizeDoc() {
   const sendPartiesToTheBackend = (id, partyList) => {
     console.log("Hi from the sendPartiesToTheBackend function");
     console.log("id in ***", id);
-    updatePartiesToTheEndpoint(id, newList.map(item=>item.parties_id));
+    updatePartiesToTheEndpoint(id, partyList.map(item=>item.parties_id));
 
   };
 
@@ -246,8 +240,15 @@ export default function CustomizeDoc() {
 
 
   const [partiesList, setPartiesList] = useState([])
-  const [newList,pushList] = useState(partiesList)
-
+  const [partyList, setPartyList] = useState([
+    {
+      id: uuid(),
+      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
+      parties_email: "",
+      parties_id: "",
+    },
+  ]);
+  
   const getParties = async () => {
     try {
       axios
@@ -328,7 +329,7 @@ export default function CustomizeDoc() {
             />
           )}
           {selected === 2 && (
-            <Parties partiesList={partiesList} setPartiesList={pushList} />
+            <Parties partiesList={partiesList} setPartiesList={setPartyList} />
             )}
           {selected === 3 && (
             <Terms

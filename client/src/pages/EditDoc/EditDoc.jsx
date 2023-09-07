@@ -55,6 +55,8 @@ export default function EditDoc(item) {
 
   useEffect(()=>{
     fetchDataByType();
+    getParties();
+
   },[]);
 
   //console.log(data);
@@ -77,12 +79,7 @@ export default function EditDoc(item) {
   // const for managing the selected style
   const [selected, setSelected] = useState(1);
   //state for the parties
-  const [partyList, setPartyList] = useState([
-    {
-      id: uuid(),
-      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
-    },
-  ]);
+
   //this is the state for the title
   const [content, setDocContent] = useState("");
   //this is the state for the term of the doc
@@ -135,7 +132,7 @@ export default function EditDoc(item) {
         .then((res) => {
           console.log("Updated data successfully ", res.data);
           updateSignatureConfigEndpoint(id, savedItem);
-          updatePartiesToTheEndpoint(id, newList.map(item=>item.parties_id));
+          updatePartiesToTheEndpoint(id, partyList.map(item=>item.parties_id));
         });
     } catch (error) {
       document.write("Error updating data *********", error);
@@ -184,8 +181,12 @@ export default function EditDoc(item) {
   };
 
   const [partiesList, setPartiesList] = useState([])
-  const [newList,pushList] = useState(partiesList)
-
+  const [partyList, setPartyList] = useState([
+    {
+      id: uuid(),
+      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
+    },
+  ]);
   const getParties = async () => {
     try {
       axios
@@ -202,7 +203,7 @@ export default function EditDoc(item) {
   }
 
   useEffect(() => {
-    getParties();
+
   }, [partyList]);
 
 
@@ -277,7 +278,7 @@ export default function EditDoc(item) {
               />
             </div>
           ) : selected === 2 ? (
-            <Parties partiesList={partiesList} setPartiesList={pushList} />
+            <Parties partiesList={partiesList} setPartiesList={setPartyList} />
           ) : selected === 3 ? (
             <Terms
               editor={editor}
