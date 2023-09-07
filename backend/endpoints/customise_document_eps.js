@@ -176,17 +176,17 @@ customise_document_ep_router.put("/:id/configuration", (req, res) => {
 // edit a template (NOT INCREMENT IT)
 
 customise_document_ep_router.put("/:id", (req, res) => {
-  const { type, title, content, parties_number, created_date } = req.body;
+  const { type, title, content, parties_number, created_date , date_modified} = req.body;
   const id = req.params.id;
 
   {
     // Insert the new template
     const insertQuery =
-      "UPDATE document_template SET type=?, title=?, content=?, parties_number=?, created_date=? WHERE document_template_id=?";
+      "UPDATE document_template SET type=?, title=?, content=?, parties_number=?, created_date=?, date_modified=? WHERE document_template_id=?";
 
     db.query(
       insertQuery,
-      [type, title, content, parties_number, created_date, id],
+      [type, title, content, parties_number, created_date, date_modified, id],
       (insert_err, insert_result) => {
         if (insert_err) {
           return res.send(insert_err);

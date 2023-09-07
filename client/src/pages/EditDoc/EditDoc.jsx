@@ -277,8 +277,8 @@ export default function EditDoc(item) {
                 page="title"
               />
             </div>
-          ) : selected === 2 ? (
-            <Parties partiesList={partiesList} setPartiesList={setPartyList} />
+          // ) : selected === 2 ? (
+          // //   <Parties partiesList={partiesList} setPartiesList={setPartyList} />
           ) : selected === 3 ? (
             <Terms
               editor={editor}
@@ -298,6 +298,9 @@ export default function EditDoc(item) {
               />
             )
           )}
+          <div  className={selected === 2 ? "" : "invisible"}>
+           <Parties  partiesList={partiesList} setPartiesList={setPartyList} />
+           </div>
           <div className="btn">
             {/* <button className="cancel">Cancel</button> */}
             <button
