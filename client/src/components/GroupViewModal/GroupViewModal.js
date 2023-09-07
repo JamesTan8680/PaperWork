@@ -27,7 +27,7 @@ function GroupViewModal({ viewOpen, setViewOpen, docId }) {
 
         // Fetch data from the API endpoint for recipients
         const recipientsResponse = await axios.get(
-          `http://localhost:8800/view-document/receipients/${docId}`
+          `http://localhost:8800/view-document/recipients/${docId}`
         );
         if (recipientsResponse.data) {
           setRecipientData(recipientsResponse.data);

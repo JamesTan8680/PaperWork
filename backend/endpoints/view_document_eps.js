@@ -143,38 +143,55 @@ view_document_ep_router.get("/parties/:id", (req, res) => {
   });
 });
 
-view_document_ep_router.get("/receipients/:id", (req, res) => {
-  // Get the party ID from the request parameters
+view_document_ep_router.get("/recipients/:id", (req, res) => {
   const partyId = req.params.id;
-  console.log(partyId);
-  // Define the SQL query to retrieve party information based on the given party ID
-  const getPartyInfo = `
-      SELECT document_container.identity_id, identity.firstname, identity.email
-      FROM document_container
-      INNER JOIN identity ON document_container.identity_id = identity.identity_id
-      WHERE document_container.document_template_id = ?;
-    `;
 
-  // Execute the query
-  db.query(getPartyInfo, [partyId], (err, result) => {
+  // Define the SQL queries to retrieve information from both tables
+  const getRecipientInfoQuery = `
+    SELECT document_container.identity_id, identity.firstname, identity.email
+    FROM document_container
+    INNER JOIN identity ON document_container.identity_id = identity.identity_id
+    WHERE document_container.document_template_id = ?;
+  `;
+
+  const getGuestInfoQuery = `
+    SELECT document_container.identity_id, guest_identity.firstname, guest_identity.email
+    FROM document_container
+    INNER JOIN guest_identity ON document_container.identity_id = guest_identity.email
+    WHERE document_container.document_template_id = ?;
+  `;
+
+  // Execute both queries
+  db.query(getRecipientInfoQuery, [partyId], (err, recipientInfoResult) => {
     if (err) {
-      // Handle database query error
+      console.error(err);
       return res.status(500).json({
-        error: "An error occurred while querying for receipient information.",
+        error: "An error occurred while querying for recipient information.",
       });
     }
 
-    if (result.length === 0) {
-      // If no party with the specified ID is found, return a 404 error
-      return res.status(404).json({
-        error: "Receipient not found.",
-      });
-    }
+    db.query(getGuestInfoQuery, [partyId], (err, guestInfoResult) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          error: "An error occurred while querying for recipient information.",
+        });
+      }
 
-    // If the query is successful, return all matching party information
-    res.status(200).json(result);
+      // Combine and return both results without labels
+      const combinedResult = [...recipientInfoResult, ...guestInfoResult];
+
+      if (combinedResult.length === 0) {
+        return res.status(404).json({
+          error: "Recipient not found.",
+        });
+      }
+
+      res.status(200).json(combinedResult);
+    });
   });
 });
+
 
 view_document_ep_router.get("/document/:id", (req, res) => {
   // Get the party ID from the request parameters
