@@ -64,7 +64,7 @@ export default function CustomizeDoc() {
       .catch((error) => {
         console.error("Error fetching data: ", error);
       });
-      getParties();
+    getParties();
   }, [templateSelect, id, type]);
 
   const [selectedParty] = useState("");
@@ -76,7 +76,7 @@ export default function CustomizeDoc() {
   const [content, setDocContent] = useState("");
   //state for the parties
 
-  console.log(partyList);
+  // console.log(partyList);
   // this is the state for the input list
   const [inputList, setInputList] = useState([]);
   //state that saving for the signature config
@@ -84,6 +84,14 @@ export default function CustomizeDoc() {
   //state that to handle the successful alert
   const [showAlert, setShowAlert] = useState(false);
 
+  const [partyList, setPartyList] = useState([
+    {
+      id: uuid(),
+      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
+      parties_email: "",
+      parties_id: "",
+    },
+  ]);
   // Function to handle saving the content
   const handleSave = () => {
     if (content === "<p><br></p>" || terms === "<p><br></p>" || terms === "") {
@@ -94,29 +102,53 @@ export default function CustomizeDoc() {
       const arrayofEmail = partyList?.map((item) => item.parties_email);
       //alert(arrayofEmail);
       //create the template to pass props into the emailJs API
-      var templateParams = {
-        docName: docTitle,
-        message:
-          "Please kindly check and approve or deny the document that was created by the Paperwork Team.",
-        email: arrayofEmail,
-      };
+      arrayofEmail.forEach((item) => {
+        var templateParams = {
+          docName: docTitle,
+          email: item,
+          message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: ${item}`,
+        };
+        emailjs
+          .send(
+            "service_7d8l9ff",
+            "template_25x692y",
+            templateParams,
+            "VBzIorHlAAspUrEhL"
+          )
+          .then(
+            (result) => {
+              console.log(result.text);
+              handleAlert();
+            },
+            (error) => {
+              console.log(error.text);
+            }
+          );
+        //alert(templateParams.email);
+      });
+      // var templateParams = {
+      //   docName: docTitle,
+      //   message:
+      //     "Please kindly check and approve or deny the document that was created by the Paperwork Team.",
+      //   email: arrayofEmail,
+      // };
       //email js api request method
-      emailjs
-        .send(
-          "service_7d8l9ff",
-          "template_25x692y",
-          templateParams,
-          "VBzIorHlAAspUrEhL"
-        )
-        .then(
-          (result) => {
-            console.log(result.text);
-            handleAlert();
-          },
-          (error) => {
-            console.log(error.text);
-          }
-        );
+      // emailjs
+      //   .send(
+      //     "service_7d8l9ff",
+      //     "template_25x692y",
+      //     templateParams,
+      //     "VBzIorHlAAspUrEhL"
+      //   )
+      //   .then(
+      //     (result) => {
+      //       console.log(result.text);
+      //       handleAlert();
+      //     },
+      //     (error) => {
+      //       console.log(error.text);
+      //     }
+      //   );
     }
   };
   //handle close modal
@@ -203,8 +235,10 @@ export default function CustomizeDoc() {
   const sendPartiesToTheBackend = (id, partyList) => {
     console.log("Hi from the sendPartiesToTheBackend function");
     console.log("id in ***", id);
-    updatePartiesToTheEndpoint(id, partyList.map(item=>item.parties_id));
-
+    updatePartiesToTheEndpoint(
+      id,
+      partyList.map((item) => item.parties_id)
+    );
   };
 
   // sending signature config to the backend
@@ -238,21 +272,12 @@ export default function CustomizeDoc() {
     }
   };
 
+  const [partiesList, setPartiesList] = useState([]);
 
-  const [partiesList, setPartiesList] = useState([])
-  const [partyList, setPartyList] = useState([
-    {
-      id: uuid(),
-      selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
-      parties_email: "",
-      parties_id: "",
-    },
-  ]);
-  
   const getParties = async () => {
     try {
       axios
-        .get("http://localhost:8800/customise-document/"+ id + "/parties")
+        .get("http://localhost:8800/customise-document/" + id + "/parties")
         .then((res) => {
           //match template type version with the id
           setPartiesList(res.data);
@@ -262,8 +287,7 @@ export default function CustomizeDoc() {
     } catch (err) {
       document.write("Error fetching parties ", err);
     }
-  }
-
+  };
 
   return (
     <div className="customiseDoc">
@@ -280,8 +304,7 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}
-          >
+            }}>
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -289,8 +312,7 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}
-            >
+              }}>
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -298,8 +320,7 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}
-            >
+              }}>
               <b>Terms</b>
 
               {type !== "blank" ? (
@@ -312,8 +333,7 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}
-            >
+              }}>
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -330,7 +350,7 @@ export default function CustomizeDoc() {
           )}
           {selected === 2 && (
             <Parties partiesList={partiesList} setPartiesList={setPartyList} />
-            )}
+          )}
           {selected === 3 && (
             <Terms
               id={id}
@@ -358,8 +378,7 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}
-            >
+              }}>
               Cancel
             </button>
 
@@ -375,8 +394,7 @@ export default function CustomizeDoc() {
                 } else {
                   handleSave();
                 }
-              }}
-            >
+              }}>
               Save
             </button>
           </div>

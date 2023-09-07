@@ -112,8 +112,6 @@ view_document_ep_router.get("/document-template2/:id", (req, res) => {
   });
 });
 
-
-
 view_document_ep_router.get("/parties/:id", (req, res) => {
   // Get the party ID from the request parameters
   const partyId = req.params.id;
@@ -148,7 +146,7 @@ view_document_ep_router.get("/parties/:id", (req, res) => {
 view_document_ep_router.get("/receipients/:id", (req, res) => {
   // Get the party ID from the request parameters
   const partyId = req.params.id;
-
+  console.log(partyId);
   // Define the SQL query to retrieve party information based on the given party ID
   const getPartyInfo = `
       SELECT document_container.identity_id, identity.firstname, identity.email
@@ -177,7 +175,6 @@ view_document_ep_router.get("/receipients/:id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
 
 view_document_ep_router.get("/document/:id", (req, res) => {
   // Get the party ID from the request parameters
@@ -210,6 +207,5 @@ view_document_ep_router.get("/document/:id", (req, res) => {
     res.status(200).json(result);
   });
 });
-
 
 export default view_document_ep_router;

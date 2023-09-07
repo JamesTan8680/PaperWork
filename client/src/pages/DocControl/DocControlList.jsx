@@ -75,13 +75,14 @@ const DocControlList = ({ data }) => {
     }
   };
 
-
-
   useEffect(() => {
     setDataVisible(
-      expanded ? dataWithProgress : dataWithProgress.length == 0 ? [] : [dataWithProgress[0]]
+      expanded
+        ? dataWithProgress
+        : dataWithProgress.length == 0
+        ? []
+        : [dataWithProgress[0]]
     );
-
   }, [updatedData, dataWithProgress, expanded]);
 
   // console.log("data");
@@ -106,18 +107,16 @@ const DocControlList = ({ data }) => {
           <p className="docuementLatestVersion">
             Version {dataWithProgress[0]?.version}
           </p>
-        { data.length > 1 ?
-        <a
-        href="#"
-        onClick={() => setExpanded(!expanded)}
-        className={"otherDocument" + (expanded ? " expanded" : "")}
-      >
-        {expanded ? "▲ Latest Version " : "▼ Other Versions..."}
-      </a>
-      :
-      <span className="otherDocument">
-          ● (No Other Versions)
-        </span>}
+          {data.length > 1 ? (
+            <a
+              href="#"
+              onClick={() => setExpanded(!expanded)}
+              className={"otherDocument" + (expanded ? " expanded" : "")}>
+              {expanded ? "▲ Latest Version " : "▼ Other Versions..."}
+            </a>
+          ) : (
+            <span className="otherDocument">● (No Other Versions)</span>
+          )}
         </div>
       </div>
 
@@ -129,7 +128,7 @@ const DocControlList = ({ data }) => {
                 <div className="wrap-item-id">Version {item.version}</div>
                 {/* TODO: Do a if else statement here when itis pending! the img src will be editIcon instead of lockIcon
                 Else the version will be lock, not able to edit */}
-                {item.approvalRatio < 1  ? (
+                {item.approvalRatio < 1 ? (
                   // <Link to={"/editDoc/:id"}>
                   //   <img src={editIcon} alt="edit" className="editicon" />
                   // </Link>
@@ -160,9 +159,8 @@ const DocControlList = ({ data }) => {
                   <div
                     className="progress"
                     style={{
-                      width: item.approvalRatio * 100
-                    }}
-                  ></div>
+                      width: item.approvalRatio * 100,
+                    }}></div>
                 </div>
               </div>
               {/* <span
@@ -218,7 +216,13 @@ const DocControlList = ({ data }) => {
               </div>
             </div>
           ))}
-          <DocModal show={show} setShow={setShow} title={itemData.title} doc_id={itemData.document_template_id} />
+
+          <DocModal
+            show={show}
+            setShow={setShow}
+            title={itemData.title}
+            doc_id={itemData.document_template_id}
+          />
           <GroupViewModal
             viewOpen={viewOpen}
             setViewOpen={setViewOpen}

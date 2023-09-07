@@ -78,36 +78,38 @@ function DocModal({ show, setShow, title, doc_id }) {
   //handle on send
   const onSend = () => {
     if (elements.length === 0) {
-      setError("Please add the email addres to the list!");
+      setError("Please add the email address to the list!");
     } else {
       var emailsArray = elements.map((item) => item.name);
       console.log(emailsArray);
-      var templateParams = {
-        docName: title,
-        message:
-          "Please kindly check and approve or deny the document that was created by the Paperwork Team.",
-        email: emailsArray,
-      };
+
+      emailsArray.forEach((item) => {
+        var templateParams = {
+          docName: title,
+          message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: recipient/${doc_id}/${item}`,
+          email: item,
+        };
+        emailjs
+          .send(
+            "service_7d8l9ff",
+            "template_25x692y",
+            templateParams,
+            "VBzIorHlAAspUrEhL"
+          )
+          .then(
+            (result) => {
+              console.log(result.text);
+              setOpen((s) => !s);
+              setResult("yes");
+            },
+            (error) => {
+              console.log(error.text);
+              setResult("no");
+              setOpen((s) => !s);
+            }
+          );
+      });
       //email js api request method
-      emailjs
-        .send(
-          "service_7d8l9ff",
-          "template_25x692y",
-          templateParams,
-          "VBzIorHlAAspUrEhL"
-        )
-        .then(
-          (result) => {
-            console.log(result.text);
-            setOpen((s) => !s);
-            setResult("yes");
-          },
-          (error) => {
-            console.log(error.text);
-            setResult("no");
-            setOpen((s) => !s);
-          }
-        );
     }
   };
   const onSendToDatabase = () => {
@@ -116,10 +118,10 @@ function DocModal({ show, setShow, title, doc_id }) {
     } else {
       const emailsArray = elements.map((item) => item.name);
       const apiUrl = `http://localhost:8800/send-document/container/${doc_id}`;
-  
+
       // Define the request body as an array of emails
       const requestBody = emailsArray;
-  
+
       fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -142,7 +144,6 @@ function DocModal({ show, setShow, title, doc_id }) {
         });
     }
   };
-  
 
   if (!show) return null;
   return ReactDOM.createPortal(
@@ -188,7 +189,12 @@ function DocModal({ show, setShow, title, doc_id }) {
             Remove
           </button>
           <div className="send-button">
-            <button className="send-btn" onClick={() => { onSend(); onSendToDatabase(); }}>
+            <button
+              className="send-btn"
+              onClick={() => {
+                onSend();
+                onSendToDatabase();
+              }}>
               Send
             </button>
             <SuccessfulePage

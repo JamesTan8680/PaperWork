@@ -2,9 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./GroupViewModal.scss";
 import Check from "../../img/viewDoc/check.svg";
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from "react";
 import axios from "axios"; //
-
 
 function GroupViewModal({ viewOpen, setViewOpen, docId }) {
   const [partiesData, setPartiesData] = useState([]);
@@ -12,35 +11,37 @@ function GroupViewModal({ viewOpen, setViewOpen, docId }) {
 
   useEffect(() => {
     if (!viewOpen) return;
-  
+
     const fetchData = async () => {
       try {
         // Fetch data from the API endpoint for parties
-        const partiesResponse = await axios.get(`http://localhost:8800/view-document/parties/${docId}`);
+        const partiesResponse = await axios.get(
+          `http://localhost:8800/view-document/parties/${docId}`
+        );
         // Assuming the response.data contains the parties data
         if (partiesResponse.data) {
           setPartiesData(partiesResponse.data);
         } else {
-          setPartiesData(null); 
+          setPartiesData(null);
         }
-  
+
         // Fetch data from the API endpoint for recipients
-        const recipientsResponse = await axios.get(`http://localhost:8800/view-document/receipients/${docId}`);
+        const recipientsResponse = await axios.get(
+          `http://localhost:8800/view-document/receipients/${docId}`
+        );
         if (recipientsResponse.data) {
           setRecipientData(recipientsResponse.data);
         } else {
-          setRecipientData(null); 
+          setRecipientData(null);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
         setRecipientData(null);
       }
     };
-  
+
     fetchData();
   }, [viewOpen, docId]);
-  
-  
 
   if (!viewOpen) return null;
   //create the close view modol
@@ -56,7 +57,12 @@ function GroupViewModal({ viewOpen, setViewOpen, docId }) {
           {partiesData?.map((item) => {
             return (
               <div className="modal-party" key={item.parties_id}>
-                {item.parties_name} {item.parties_approval == 1 ? <img src={Check} alt="" /> : <></>}
+                {item.parties_name}{" "}
+                {item.parties_approval == 1 ? (
+                  <img src={Check} alt="" />
+                ) : (
+                  <></>
+                )}
               </div>
             );
           })}
@@ -66,7 +72,9 @@ function GroupViewModal({ viewOpen, setViewOpen, docId }) {
           {recipientData?.map((item) => {
             return (
               <div key={item.identity_id}>
-                {item.firstname} : {item.email}
+                {console.log(item.firstname)}
+                {item.firstname} {`${item.firstname === null ? "" : ":"}`}{" "}
+                {item.email}
               </div>
             );
           })}

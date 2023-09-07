@@ -18,7 +18,6 @@ function ReviewDoc() {
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [docType, setDocType] = useState("");
 
-  var { id } = useParams();
   useEffect(() => {
     // Initialize state variables with default values
     setVersion("");
@@ -84,8 +83,7 @@ function ReviewDoc() {
         <div>
           <select
             onChange={handleRecipientChange}
-            value={selectedRecipient ? selectedRecipient.identity_id : ""}
-          >
+            value={selectedRecipient ? selectedRecipient.identity_id : ""}>
             {recipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
                 {recipient.firstname}
