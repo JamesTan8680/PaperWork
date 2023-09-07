@@ -1,32 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Parties.scss";
 import Dropdown from "./DropdownParties";
+import axios from "axios";
 
-function Parties({ partyList, setPartyList }) {
-  const [selected, setSelected] = useState("Select Parties Name");
-  const [partiesList, setPartiesList] = useState([]);
+function Parties({partiesList, setPartiesList}) {
 
-  // useEffect(() => {
-  //   console.log(`Number of parties: ${partiesList.length}`);
-  // }, [partiesList]);
-  console.log(partyList);
-  console.log(partiesList);
   return (
     <>
       <div className="parties-container">
         <div className="parties-title">Parties</div>
       </div>
-      {partiesList.map((party) => (
-        <div className="party-name" key={party}></div>
+      {partiesList.map((party,index) => (
+        <div className="party-name" key={index}>{party.partiesId}</div>
       ))}
 
       <Dropdown
-        selected={selected}
-        setSelected={setSelected}
-        selectedParties={partiesList}
-        setSelectedParties={setPartiesList}
-        partyList={partyList}
-        setPartyList={setPartyList}
+        parties={partiesList} setParties={setPartiesList}
       />
     </>
   );

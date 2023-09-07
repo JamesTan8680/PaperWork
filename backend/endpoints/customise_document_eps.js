@@ -9,15 +9,45 @@ customise_document_ep_router.use(express.json());
 const macros = new ep_macros();
 
 //no need this route, the data is sent through props from create_document
-// customise_document_ep_router.get("/:id", (req, res) => {
-//   macros.select("document_template", {where:"document_template_id='"+req.params.id+"'"}, res);
-// })
+customise_document_ep_router.get("/:id", (req, res) => {
+  macros.select("document_template", {where:"document_template_id='"+req.params.id+"'"}, res);
+})
 
 //no need id, just return all the parties from parties
 //--> It is temporarily in a different file as it has nothing to do with the template
-// customise_document_ep_router.get("/:id/parties", (req, res) => {
-//   macros.select("document_parties", {where:"document_template_id='"+req.params.id+"'"}, res);
-// })
+customise_document_ep_router.get("/:id/parties", (req, res) => {
+  macros.select("document_parties", {cols:"document_praties.*,parties.parties_name", other: "INNER JOIN parties ON parties.parties_id = document_parties.parties_id ", where:"document_template_id='"+req.params.id+"'"}, res);
+})
+customise_document_ep_router.post("/:id/parties", (req, res) => {
+  const { parties_ids } = req.body;
+
+  db.query(
+    "DELETE FROM document_parties WHERE document_template_id=?",
+    [req.params.id], // Use the boolean value directly
+    (err, result) => {
+      if (err) return res.send(err);
+      console.log("Parties purged successfully");
+      if (!parties_ids) return res.status(500).send("Missing parties_id list parties_ids");
+      parties_ids.forEach(element => {
+        var err = undefined;
+        db.query(
+          "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?,?,?)",
+          [req.params.id,element, 0], // Use the boolean value directly
+          (errr, result) => {
+            if (err) err = errr;
+            else
+            console.log("Party " + element + " put successfully");
+          }
+        );
+        if (err) return res.status(500).send(err);
+      });
+      console.log("Parties put successfully");
+      return res.send("Parties purged and put successfully");
+
+    }
+  );
+
+})
 
 //no need this route, just need post method
 // customise_document_ep_router.get("/:id/configuration", (req, res) => {
@@ -26,43 +56,46 @@ const macros = new ep_macros();
 
 //the :id in param is redundant if u have it in the body
 //--> Done
-customise_document_ep_router.post("/:id/parties", (req, res) => {
-  const { parties_id, parties_approval } = req.body;
 
-  const sql =
-    "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?, ?, ?)";
+//endpoints not needed due to redesign
 
-  db.query(
-    sql,
-    [req.params.id, parties_id, parties_approval], // Use the boolean value directly
-    (err, result) => {
-      if (err) return res.send(err);
-      return res.json({
-        message: "Document parties appended successfully",
-        insert_id: result.insertId,
-      });
-    }
-  );
-});
+// customise_document_ep_router.post("/:id/parties", (req, res) => {
+//   const { parties_id, parties_approval } = req.body;
 
-customise_document_ep_router.put("/:id/parties", (req, res) => {
-  const { parties_id, parties_approval } = req.body;
+//   const sql =
+//     "INSERT INTO document_parties (document_template_id, parties_id, parties_approval) VALUES (?, ?, ?)";
 
-  const sql =
-    "UPDATE document_parties SET parties_id=? parties_approval=? WHERE document_template_id = ?";
+//   db.query(
+//     sql,
+//     [req.params.id, parties_id, parties_approval], // Use the boolean value directly
+//     (err, result) => {
+//       if (err) return res.send(err);
+//       return res.json({
+//         message: "Document parties appended successfully",
+//         insert_id: result.insertId,
+//       });
+//     }
+//   );
+// });
 
-  db.query(
-    sql,
-    [parties_id, parties_approval, req.params.id], // Use the boolean value directly
-    (err, result) => {
-      if (err) return res.send(err);
-      return res.json({
-        message: "Document parties appended successfully",
-        insert_id: result.insertId,
-      });
-    }
-  );
-});
+// customise_document_ep_router.put("/:id/parties", (req, res) => {
+//   const { parties_id, parties_approval } = req.body;
+
+//   const sql =
+//     "UPDATE document_parties SET parties_id=? parties_approval=? WHERE document_template_id = ?";
+
+//   db.query(
+//     sql,
+//     [parties_id, parties_approval, req.params.id], // Use the boolean value directly
+//     (err, result) => {
+//       if (err) return res.send(err);
+//       return res.json({
+//         message: "Document parties appended successfully",
+//         insert_id: result.insertId,
+//       });
+//     }
+//   );
+// });
 
 //the :id in param is redundant if u have it in the body, besides, there are 8 fields in the frontend, u need to add more field in the database if neccessary
 // --> Done. The extra fields are meant to be redundant as they are mandatory!

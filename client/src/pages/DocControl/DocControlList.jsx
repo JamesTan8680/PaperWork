@@ -102,7 +102,7 @@ const DocControlList = ({ data }) => {
 
       <div className="docControlWrapper">
         <div className="documentTitle">
-          <p>{metadata.title}</p>
+          <p>{metadata?.title}</p>
           <p className="docuementLatestVersion">
             Version {dataWithProgress[0]?.version}
           </p>
