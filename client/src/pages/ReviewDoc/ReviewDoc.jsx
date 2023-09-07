@@ -12,28 +12,30 @@ function ReviewDoc() {
   const [parties, setParties] = useState([]);
   const [content, setContent] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState(null);
+  const [docType, setDocType] = useState("");
+
   var { id } = useParams();
   useEffect(() => {
     // Initialize state variables with default values
-    setTitle("");
     setVersion("");
     setParties([]);
     setContent("");
     setSelectedRecipient(null);
-  
     // Make separate API requests
     axios
       .get(`http://localhost:8800/view-document/document/${id}`)
       .then((response1) => {
         const documentData = response1.data || {}; // Handle empty response
+        console.log("Thang", response1.data);
         setTitle(documentData[0].title || "");
         setVersion(documentData.version || "");
         setContent(documentData[0].content || "");
+        setDocType(documentData[0].type || "");
       })
       .catch((err) => {
         console.log(err.message);
       });
-  
+
     axios
       .get(`http://localhost:8800/view-document/parties/${id}`)
       .then((response2) => {
@@ -42,7 +44,7 @@ function ReviewDoc() {
       .catch((err) => {
         console.log(err.message);
       });
-  
+
     axios
       .get(`http://localhost:8800/view-document/receipients/${id}`)
       .then((response3) => {
@@ -52,7 +54,7 @@ function ReviewDoc() {
         console.log(err.message);
       });
   }, [id]);
-  
+
   // const recipientss = `
   //   <div>
   //     <select>
@@ -150,7 +152,7 @@ function ReviewDoc() {
         </div>
       </div>
       <div className="review-button">
-        <Link to="/viewDoc/1">
+        <Link to={`/viewDoc/${docType}`}>
           <button className="cancel">Cancel</button>
         </Link>
         <button className="export-pdf">Export PDF</button>
