@@ -50,8 +50,18 @@ send_document_ep_router.post("/container/:id", (req, res) => {
   }
 
   const query =
-    "SELECT DISTINCT identity.email FROM document_container INNER JOIN identity ON document_container.identity_id = identity.identity_id WHERE document_container.document_template_id = ?";
-  db.query(query, [doc_id], (error, results) => {
+    `SELECT identity.email AS combined_column
+    FROM document_container
+    INNER JOIN identity ON document_container.identity_id = identity.identity_id
+    WHERE document_container.document_template_id = ?
+    
+    UNION
+    
+    SELECT document_container.identity_id AS combined_column
+    FROM document_container
+    WHERE document_container.document_template_id = ?;    
+    `;
+  db.query(query, [doc_id, doc_id], (error, results) => {
     if (error) {
       console.error("Error executing SQL query:", error);
       return res.status(500).send("Internal Server Error");
@@ -59,7 +69,7 @@ send_document_ep_router.post("/container/:id", (req, res) => {
 
     // Extract the email data into identity_email_list
     for (const row of results) {
-      identity_email_list.push(row.email);
+      identity_email_list.push(row.combined_column);
     }
 
     // Now, filter out the emails that already exist in the database
@@ -104,7 +114,9 @@ send_document_ep_router.post("/container/:id", (req, res) => {
           } else {
             // If the email is not found in the identity table, insert into guest_identity
             const guestInsertQuery =
-              "INSERT INTO guest_identity (email) VALUES (?)";
+              `INSERT INTO guest_identity (email)
+              VALUES (?)
+              ON DUPLICATE KEY UPDATE email = email;`;
             db.query(
               guestInsertQuery,
               [input_email],
@@ -145,7 +157,6 @@ send_document_ep_router.post("/container/:id", (req, res) => {
         }
       );
     });
-    //aaa
     // Return a response after processing all remaining emails
     res.status(200).json({ message: "Processing completed." });
   });
