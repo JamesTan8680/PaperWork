@@ -87,8 +87,6 @@ export default function CustomizeDoc() {
     {
       id: uuid(),
       selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
-      parties_email: "",
-      parties_id: "",
     },
   ]);
   // Function to handle saving the content
@@ -207,7 +205,7 @@ export default function CustomizeDoc() {
             res.data.document_template_id,
             savedItem
           );
-          updatePartiesToTheEndpoint(res.data.document_template_id, partyList);
+          updatePartiesToTheEndpoint(res.data.document_template_id,  partyList.map(item=>item.parties_id));
         });
     } catch (error) {
       // console.log("Error sending data *********", error);
