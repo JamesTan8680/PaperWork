@@ -1,7 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SignatureConfig.scss";
-function SignatureConfig({ savedItem, setSaveItem }) {
-  //create the dummy data for the signature
+import axios from "axios";
+
+function SignatureConfig({ savedItem, setSaveItem, doc_id }) {
+
+  const [apiData, setApiData] = useState([]);
+
+  useEffect(() => {
+    // Check if doc_id is provided before making the API call
+    if (doc_id) {
+      // Make an API call using Axios
+      axios
+        .get(`http://localhost:8800/view-document/configurations/${doc_id}`)
+        .then((response) => {
+          // Assuming the API response is an array, set the data
+          setApiData(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    }
+  }, [doc_id]);
+
   const data = [
     {
       id: 1,
@@ -105,10 +125,15 @@ function SignatureConfig({ savedItem, setSaveItem }) {
                       : false
                   }
                   defaultChecked={
-                    item.id === 1 ||
-                    item.id === 2 ||
-                    item.id === 8 ||
-                    item.id === 6
+                    item.id === 1 || 
+                    item.id === 2 || 
+                    item.id === 8 || 
+                    item.id === 6 || 
+                    (item.id === 3 && apiData.find(obj => obj.student_id === 1)) || 
+                    (item.id === 4 && apiData.find(obj => obj.address === 1)) || 
+                    (item.id === 5 && apiData.find(obj => obj.title === 1)) || 
+                    (item.id === 7 && apiData.find(obj => obj.age === 1)) || 
+                    (item.id === 9 && apiData.find(obj => obj.email === 1))
                       ? true
                       : savedItem?.find((items) => items === item.name)
                   }

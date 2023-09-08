@@ -238,4 +238,34 @@ view_document_ep_router.get("/document/:id", (req, res) => {
   });
 });
 
+view_document_ep_router.get("/configurations/:id", (req, res) => {
+  const template_id = req.params.id;
+
+  const query = `
+      SELECT *
+      FROM configuration
+      WHERE document_template_id = ?;
+    `;
+
+  // Execute the query
+  db.query(query, [template_id], (err, result) => {
+    if (err) {
+      // Handle database query error
+      return res.status(500).json({
+        error: "An error occurred while querying for receipient information.",
+      });
+    }
+
+    if (result.length === 0) {
+      // If no party with the specified ID is found, return a 404 error
+      return res.status(404).json({
+        error: "Template not found.",
+      });
+    }
+
+    // If the query is successful, return all matching party information
+    res.status(200).json(result);
+  });
+});
+
 export default view_document_ep_router;

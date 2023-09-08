@@ -44,8 +44,7 @@ function ReviewDoc() {
         const documentData = response1.data || {}; // Handle empty response
         console.log("Thang", response1.data);
         setTitle(documentData[0].title || "");
-        setVersion(documentData.version || "");
-        console.log(documentData.version);
+        setVersion(String(documentData[0].version) || "");
         setContent(documentData[0].content || "");
         setDocType(documentData[0].type || "");
       })

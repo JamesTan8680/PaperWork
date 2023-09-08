@@ -212,7 +212,7 @@ export default function EditDoc(item) {
       id: uuid(),
       selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
       parties_email: "",
-      parties_id: "",
+      parties_id: "", 
     },
   ]);
   const getParties = async () => {
@@ -320,6 +320,7 @@ export default function EditDoc(item) {
               <SignatureConfig
                 savedItem={savedItem}
                 setSaveItem={setSaveItem}
+                doc_id = {id}
               />
             )
           )}
