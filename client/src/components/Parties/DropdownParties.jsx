@@ -18,8 +18,10 @@ export default function DropdownParties({ parties, setParties }) {
   // };
   const [partiesData, setPartiesData] = useState([]);
   const [partyList, setPartyList] = useState([]);
-  const [selected, setSelected] = useState(undefined);
-  const [selectedList, setSelectedList] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [_selected, setSelected] = useState(undefined);
+  // eslint-disable-next-line no-unused-vars
+  const [_selectedList, setSelectedList] = useState([]);
 
   const fetchParties = async () => {
     // Fetch data from database
@@ -54,22 +56,22 @@ export default function DropdownParties({ parties, setParties }) {
     fetchParties();
   }, []);
 
+  const handleAddButtonClick = () => {
+    setShowAdditionalDropdown(!showAdditionalDropdown);
+    const obj = { id: uuid(), selectedOption: "Select Parties Name" };
+    setPartyList([...partyList, obj]);
+  };
+
   useEffect(() => {
     if (partyList.length === 0) handleAddButtonClick();
     setParties(partyList);
-  }, [partyList]);
+  }, [partyList, handleAddButtonClick, setParties]);
 
   const availableOptions = partiesData?.filter((party) => {
     return !partyList.some(
       (item) => item.selectedOption === party.parties_name
     );
   });
-
-  const handleAddButtonClick = () => {
-    setShowAdditionalDropdown(!showAdditionalDropdown);
-    const obj = { id: uuid(), selectedOption: "Select Parties Name" };
-    setPartyList([...partyList, obj]);
-  };
 
   const handleDropdownButtonClick = (id) => {
     setIsActive(!isActive);

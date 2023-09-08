@@ -1,8 +1,8 @@
 .docControlHeader {
   width: calc(100% - 364px);
   display: flex;
-  margin-left: 364px;
-  gap: 112px;
+  margin-left: 230px;
+  gap: 90px;
 }
 
 .docControlWrapper {
@@ -62,10 +62,10 @@
 }
 
 .docControlList {
+  display: grid;
+  grid-template-columns: 1fr;
   height: calc(100% - 162px);
-  //   width: 1400px;
   width: 100%;
-  // overflow: auto;
 
   .table {
     height: 100%;
@@ -73,15 +73,17 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+
     .documentTitle {
-      display: flex;
+      display: grid;
     }
 
     .table-row {
       background-color: #ffffff;
       padding: 20px;
       box-shadow: 0.3px 2px 3px 5px rgba(134, 133, 133, 0.188);
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
       align-items: center;
       justify-content: space-between;
 
@@ -138,13 +140,16 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
+
         .status {
-          align-self: center;
+          display: grid;
+          justify-content: center;
+          margin-right: 125px;
         }
+
         .pro-bar {
           width: 100px;
           height: 10px;
-
           border-radius: 5px;
           padding: 1px;
           background-color: #ccc;
@@ -152,7 +157,6 @@
           .progress {
             border-radius: 5px;
             background-color: #0afc88;
-            width: 100%;
             height: 100%;
           }
         }

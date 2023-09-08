@@ -24,7 +24,6 @@ function ReviewDoc() {
 
   const [title, setTitle] = useState("");
   //creating type useState
-  const [type, setType] = useState("");
   const [version, setVersion] = useState("");
   const [recipients, setRecipients] = useState("");
   const [parties, setParties] = useState([]);

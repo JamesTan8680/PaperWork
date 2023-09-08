@@ -6,7 +6,6 @@ import TextEditor from "../../components/TextEditor/TextEditor";
 import Parties from "../../components/Parties/Parties";
 import Terms from "../../components/Terms/Terms";
 import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
-import { renderToString } from "react-dom/server";
 import Back from "../../img/editDoc/back.svg";
 import { Link } from "react-router-dom";
 import uuid from "react-uuid";
