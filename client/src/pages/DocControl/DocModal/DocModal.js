@@ -20,10 +20,13 @@ function DocModal({ show, setShow, title, doc_id }) {
   const [selectedIds, setSelectedIds] = useState([]);
   //handle the state for the emial js if something went wrong
   const [result, setResult] = useState("yes");
+  //state that handle the disable to avoid more click to the send button
+  const [disable, setDisable] = useState(false);
   //handle Close Modal event to close the portal
   const closeModal = () => {
     setShow(false);
     setElements([]);
+    setDisable(false);
   };
 
   //handle the change event of the input for the email
@@ -180,7 +183,8 @@ function DocModal({ show, setShow, title, doc_id }) {
                     ? "bold"
                     : "normal",
                 }}
-                className="email">
+                className="email"
+              >
                 {element.name}
               </span>
             ))}
@@ -190,11 +194,15 @@ function DocModal({ show, setShow, title, doc_id }) {
           </button>
           <div className="send-button">
             <button
-              className="send-btn"
+              className={`${disable ? "send-btn disabled" : "send-btn"}`}
+              disabled={disable}
               onClick={() => {
+                setDisable(true);
                 onSend();
-                onSendToDatabase();
-              }}>
+                //onSendToDatabase();
+                console.log("hi");
+              }}
+            >
               Send
             </button>
             <SuccessfulePage
