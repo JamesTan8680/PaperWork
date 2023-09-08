@@ -127,7 +127,8 @@ export default function EditDoc(item) {
           title: content,
           content: terms,
           parties_number: partyList.length,
-          created_date: created_date,
+          date_modified: created_date,
+
         })
         .then((res) => {
           console.log("Updated data successfully ", res.data);
