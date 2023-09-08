@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -95,7 +95,8 @@ function ReviewDoc() {
         <div>
           <select
             onChange={handleRecipientChange}
-            value={selectedRecipient ? selectedRecipient.identity_id : ""}>
+            value={selectedRecipient ? selectedRecipient.identity_id : ""}
+          >
             {recipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
                 {recipient.firstname}
@@ -119,52 +120,57 @@ function ReviewDoc() {
           margin={{ left: "15mm", top: "20mm", right: "15mm", bottom: "20mm" }}
           scale={0.6}
         >
-        <div className="recipient">
-          <div className="recipient-dropdown">
-            <RecipientDropdown />
-          </div>
-          <div className="header">{HTMLReactParser(title)}</div>
+          <div className="recipient">
+            <div className="recipient-dropdown">
+              <RecipientDropdown />
+            </div>
+            <div className="header">{HTMLReactParser(title)}</div>
 
-          <div className="parties">
-            <h3>Party</h3>
+            <div className="parties">
+              <h3>Party</h3>
 
-          {parties?.map((item) => {
-            return (
-              <div className="party">
-                <b>Name:</b> {item.parties_name} <b>Company:</b>{" "}
-                {item.Parties_company} <b>Address:</b> {item.parties_address}
-              </div>
-            );
-          })}
-        </div>
-        <div className="reciew-content">{HTMLReactParser(content)}</div>
-        <div className="review-signature">
-          <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
-          <div className="parties_sign_container">
-            <div className="parties_side">
               {parties?.map((item) => {
                 return (
-                  <div className="party_sign">
-                    <div className="Dname">
-                      Discloser Name: {item.parties_name}
-                    </div>
-                    <div className="Sname">Signature: {item.parties_name}</div>
-                    <div className="Sdate">Date: 8/31/2023</div>
+                  <div className="party">
+                    <b>Name:</b> {item.parties_name} <b>Company:</b>{" "}
+                    {item.Parties_company} <b>Address:</b>{" "}
+                    {item.parties_address}
                   </div>
                 );
               })}
             </div>
-            <div className="recipient_side">
-              {selectedRecipient ? (
-                <>
-                  <div>Name: {selectedRecipient.firstname}</div>
-                  {/* <div>Address: {selectedRecipient.address}</div> */}
-                  <div>Email: {selectedRecipient.email}</div>
-                  {/* You can add other details if the recipient object has more fields */}
-                </>
-              ) : (
-                <p>No Recipient Selected</p>
-              )}
+            <div className="reciew-content">{HTMLReactParser(content)}</div>
+            <div className="review-signature">
+              <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
+              <div className="parties_sign_container">
+                <div className="parties_side">
+                  {parties?.map((item) => {
+                    return (
+                      <div className="party_sign">
+                        <div className="Dname">
+                          Discloser Name: {item.parties_name}
+                        </div>
+                        <div className="Sname">
+                          Signature: {item.parties_name}
+                        </div>
+                        <div className="Sdate">Date: 8/31/2023</div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="recipient_side">
+                  {selectedRecipient ? (
+                    <>
+                      <div>Name: {selectedRecipient.firstname}</div>
+                      {/* <div>Address: {selectedRecipient.address}</div> */}
+                      <div>Email: {selectedRecipient.email}</div>
+                      {/* You can add other details if the recipient object has more fields */}
+                    </>
+                  ) : (
+                    <p>No Recipient Selected</p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         </PDFExport>
