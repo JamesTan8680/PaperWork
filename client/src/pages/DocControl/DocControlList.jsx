@@ -18,12 +18,7 @@ const DocControlList = ({ data }) => {
 
   useEffect(() => {
     updateData(
-      data
-        .map((item) => ({
-          ...item,
-          issue_date: Date.now(),
-          progress: 0,
-        }))
+      [...data]
         .reverse()
     );
     setDataWithProgress(updatedData);
@@ -144,11 +139,10 @@ const DocControlList = ({ data }) => {
                 {new Date(item.created_date).toLocaleDateString("en-UK")}
               </span>
               <span className="item_modified">
-                {new Date(item.date_modified).toLocaleDateString("en-UK")}
+                 {item.date_modified ? new Date(item.date_modified).toLocaleDateString("en-UK") : " "}
               </span>
               <span className="issue_date">
-                {new Date(item.issue_date).toLocaleDateString("en-UK") +
-                  " (dummy)"}
+                {item.issueDate ? new Date(item.issueDate).toLocaleDateString("en-UK") : " "}
               </span>
               <div className="additional_info">
                 <div className="status">
