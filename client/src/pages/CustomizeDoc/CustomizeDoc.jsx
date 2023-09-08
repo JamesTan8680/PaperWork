@@ -211,7 +211,6 @@ export default function CustomizeDoc() {
             res.data.document_template_id,
             partyList.map((item) => item.parties_id)
           );
-          updatePartiesToTheEndpoint(res.data.document_template_id,  partyList.map(item=>item.parties_id));
         });
     } catch (error) {
       // console.log("Error sending data *********", error);
