@@ -1,16 +1,26 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { PDFExport } from "@progress/kendo-react-pdf";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function ReviewDoc() {
   let { id } = useParams();
+
+  //state for the blur the signature
+  const [blurry, setBlur] = useState(true);
+
+  //using useRef for pdfExport
+  const pdfExportComponent = useRef(null);
+
+  //handle the export pdf
+  const handleExportWithComponent = (event) => {
+    pdfExportComponent.current.save();
+  };
 
   const [title, setTitle] = useState("");
   //creating type useState
@@ -21,14 +31,6 @@ function ReviewDoc() {
   const [content, setContent] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [docType, setDocType] = useState("");
-  const pdfExportComponent = useRef(null);
-  //state for the blur the signature
-  const [blurry, setBlur] = useState(true);
-  //handle the export pdf
-  const handleExportWithComponent = (event) => {
-    // setBlur(false);
-    pdfExportComponent.current.save();
-  };
 
   useEffect(() => {
     // Initialize state variables with default values
@@ -44,6 +46,7 @@ function ReviewDoc() {
         console.log("Thang", response1.data);
         setTitle(documentData[0].title || "");
         setVersion(documentData.version || "");
+        console.log(documentData.version);
         setContent(documentData[0].content || "");
         setDocType(documentData[0].type || "");
       })
@@ -124,52 +127,52 @@ function ReviewDoc() {
             <div className="recipient-dropdown">
               <RecipientDropdown />
             </div>
-            <div className="header">{HTMLReactParser(title)}</div>
+            <div className="version">{HTMLReactParser(version)}</div>
+          </div>
+          <div className="header">{HTMLReactParser(title)}</div>
 
-            <div className="parties">
-              <h3>Party</h3>
+          <div className="parties">
+            <h3>Party</h3>
 
-              {parties?.map((item) => {
-                return (
-                  <div className="party">
-                    <b>Name:</b> {item.parties_name} <b>Company:</b>{" "}
-                    {item.Parties_company} <b>Address:</b>{" "}
-                    {item.parties_address}
-                  </div>
-                );
-              })}
-            </div>
-            <div className="reciew-content">{HTMLReactParser(content)}</div>
-            <div className="review-signature">
-              <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
-              <div className="parties_sign_container">
-                <div className="parties_side">
-                  {parties?.map((item) => {
-                    return (
-                      <div className="party_sign">
-                        <div className="Dname">
-                          Discloser Name: {item.parties_name}
-                        </div>
-                        <div className="Sname">
-                          Signature: {item.parties_name}
-                        </div>
-                        <div className="Sdate">Date: 8/31/2023</div>
+            {parties?.map((item, index) => {
+              return (
+                <div className="party" key={index}>
+                  <b>Name:</b> {item.parties_name} <b>Company:</b>{" "}
+                  {item.Parties_company} <b>Address:</b> {item.parties_address}
+                </div>
+              );
+            })}
+          </div>
+          <div className="reciew-content">{HTMLReactParser(content)}</div>
+          <div className="review-signature">
+            <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
+            <div className="parties_sign_container">
+              <div className="parties_side">
+                {parties?.map((item) => {
+                  return (
+                    <div className="party_sign">
+                      <div className="Dname">
+                        Discloser Name: {item.parties_name}
                       </div>
-                    );
-                  })}
-                </div>
-                <div className="recipient_side">
-                  {selectedRecipient ? (
-                    <>
-                      <div>Name: {selectedRecipient.firstname}</div>
-                      {/* <div>Address: {selectedRecipient.address}</div> */}
-                      <div>Email: {selectedRecipient.email}</div>
-                      {/* You can add other details if the recipient object has more fields */}
-                    </>
-                  ) : (
-                    <p>No Recipient Selected</p>
-                  )}
-                </div>
+                      <div className="Sname">
+                        Signature: {item.parties_name}
+                      </div>
+                      <div className="Sdate">Date: 8/31/2023</div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="recipient_side">
+                {selectedRecipient ? (
+                  <>
+                    <div>Name: {selectedRecipient.firstname}</div>
+                    {/* <div>Address: {selectedRecipient.address}</div> */}
+                    <div>Email: {selectedRecipient.email}</div>
+                    {/* You can add other details if the recipient object has more fields */}
+                  </>
+                ) : (
+                  <p>No Recipient Selected</p>
+                )}
               </div>
             </div>
           </div>
