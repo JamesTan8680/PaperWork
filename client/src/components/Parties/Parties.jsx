@@ -1,22 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./Parties.scss";
 import Dropdown from "./DropdownParties";
-import axios from "axios";
+// import axios from "axios";
 
-function Parties({partiesList, setPartiesList}) {
-
+function Parties({ partiesList, setPartiesList }) {
   return (
     <>
       <div className="parties-container">
         <div className="parties-title">Parties</div>
       </div>
-      {partiesList.map((party,index) => (
-        <div className="party-name" key={index}>{party.partiesId}</div>
+      {partiesList.map((party, index) => (
+        <div className="party-name" key={index}>
+          {party.partiesId}
+        </div>
       ))}
 
-      <Dropdown
-        parties={partiesList} setParties={setPartiesList}
-      />
+      <Dropdown parties={partiesList} setParties={setPartiesList} />
     </>
   );
 }
