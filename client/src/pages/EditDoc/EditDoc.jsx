@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import uuid from "react-uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import emailjs from "@emailjs/browser";
 
 export default function EditDoc(item) {
   //I am meant to fetch the data from the viewDoc template version into the editDoc.jsx
@@ -60,18 +61,18 @@ export default function EditDoc(item) {
   //console.log(data);
 
   // const docTitle = "Non-Disclosure Agreement";
-  const docTerms = renderToString(
-    //this is only temporarily, will change accordingly
-    <React.Fragment>
-      <div>
-        <b>Terms</b>
-      </div>
-      &nbsp; &nbsp;
-      <div>
-        <span>This document is confidential</span>
-      </div>
-    </React.Fragment>
-  );
+  // const docTerms = renderToString(
+  //   //this is only temporarily, will change accordingly
+  //   <React.Fragment>
+  //     <div>
+  //       <b>Terms</b>
+  //     </div>
+  //     &nbsp; &nbsp;
+  //     <div>
+  //       <span>This document is confidential</span>
+  //     </div>
+  //   </React.Fragment>
+  // );
 
   const editor = useRef(null);
   // const for managing the selected style
@@ -93,9 +94,34 @@ export default function EditDoc(item) {
     // Save the content can be save to backend
 
     console.log("Saving content:", content);
+    let arrayOfEmail = partyList?.map((item) => item.parties_email);
     //update the template version data to the backend
     updateTemplateEndpoint(data.document_template_id);
-
+    //console.log("this is the partyList", arrayOfemail);
+    //send the email to each individual recipient
+    arrayOfEmail.forEach((item) => {
+      var templateParams = {
+        docName: docTitle,
+        email: item,
+        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: ${item}`,
+      };
+      emailjs
+        .send(
+          "service_7d8l9ff",
+          "template_25x692y",
+          templateParams,
+          "VBzIorHlAAspUrEhL"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+            handleAlert();
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
+    });
     navigate(`/viewDoc/${data.type}`);
   };
 
