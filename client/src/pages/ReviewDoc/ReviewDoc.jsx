@@ -148,9 +148,9 @@ function ReviewDoc() {
             <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
             <div className="parties_sign_container">
               <div className="parties_side">
-                {parties?.map((item) => {
+                {parties?.map((item, index) => {
                   return (
-                    <div className="party_sign">
+                    <div className="party_sign" key={index}>
                       <div className="Dname">
                         Discloser Name: {item.parties_name}
                       </div>

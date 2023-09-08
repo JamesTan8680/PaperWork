@@ -153,7 +153,7 @@ export default function CustomizeDoc() {
   //handle close modal
   const handleClose = () => {
     setShowAlert(!showAlert);
-    navigate("/createDoc");
+    // navigate("/createDoc");
   };
   //handle alert
   const handleAlert = () => {
