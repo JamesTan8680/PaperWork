@@ -92,15 +92,26 @@ view_document_ep_router.get("/document-template2/:id", (req, res) => {
 
   // Query to retrieve document_template data with approval ratio
   const getPartyInfoWithRatio = `
-    SELECT document_template.*,
-      (SELECT COUNT(CASE WHEN parties_approval = 1 THEN 1 ELSE NULL END) / COUNT(document_template_id)
-       FROM paperwork_project.document_parties
-       WHERE document_template_id = document_template.document_template_id) AS approvalRatio,
-       MIN(document_container.issue_date) AS issueDate
-    FROM paperwork_project.document_template
-    LEFT JOIN paperwork_project.document_container ON document_container.document_template_id = document_template.document_template_id
-    WHERE type = ?
-    GROUP BY document_template.document_template_id
+  SELECT
+  document_template.*,
+  (SELECT COUNT(CASE WHEN parties_approval = 1 THEN 1 ELSE NULL END) / COUNT(document_template_id)
+   FROM paperwork_project.document_parties
+   WHERE document_template_id = document_template.document_template_id) AS approvalRatio,
+  (
+      SELECT issue_date
+      FROM paperwork_project.document_container
+      WHERE document_template_id = document_template.document_template_id
+      ORDER BY issue_date DESC
+      LIMIT 1
+  ) AS issueDate
+FROM
+  paperwork_project.document_template
+LEFT JOIN
+  paperwork_project.document_container ON document_container.document_template_id = document_template.document_template_id
+WHERE
+  type = ?
+GROUP BY
+  document_template.document_template_id;
   `;
 
   // Execute the query to retrieve document_template data with approval ratio
@@ -194,7 +205,6 @@ view_document_ep_router.get("/recipients/:id", (req, res) => {
     });
   });
 });
-
 
 view_document_ep_router.get("/document/:id", (req, res) => {
   // Get the party ID from the request parameters

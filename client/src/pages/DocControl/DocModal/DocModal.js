@@ -199,7 +199,7 @@ function DocModal({ show, setShow, title, doc_id }) {
               onClick={() => {
                 setDisable(true);
                 onSend();
-                //onSendToDatabase();
+                onSendToDatabase();
                 console.log("hi");
               }}
             >
