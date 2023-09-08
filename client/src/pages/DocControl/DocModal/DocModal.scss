@@ -126,6 +126,11 @@
     }
   }
 
+  .disabled
+  {
+    cursor: not-allowed;
+  }
+
   .error {
     color: red;
     font-size: 20px;

@@ -6,16 +6,14 @@ import TextEditor from "../../components/TextEditor/TextEditor";
 import Parties from "../../components/Parties/Parties";
 import Terms from "../../components/Terms/Terms";
 import SignatureConfig from "../../components/SignatureConfig/SignatureConfig";
-import { renderToString } from "react-dom/server";
 import Back from "../../img/editDoc/back.svg";
 import { Link } from "react-router-dom";
 import uuid from "react-uuid";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import emailjs from "@emailjs/browser";
 
 export default function EditDoc(item) {
-
-
   //I am meant to fetch the data from the viewDoc template version into the editDoc.jsx
   //function for getting the data by type
   const [data, setData] = useState([]);
@@ -25,16 +23,17 @@ export default function EditDoc(item) {
   console.log("id*** in Edit Doc ", data.document_template_id);
   console.log("id_sliced*** in Edit Doc ", data.type);
 
-
   const fetchDataByType = async () => {
     console.warn("Getting the stuff");
 
     try {
       axios
-        .get("http://localhost:8800/customise-document/"+id)
+        .get("http://localhost:8800/customise-document/" + id)
         .then((res) => {
           //match template type version with the id
-          const item = res.data.find((item) => item.document_template_id === id)
+          const item = res.data.find(
+            (item) => item.document_template_id === id
+          );
           //if the item is true then fetch the data into the corresponding section
           if (item) {
             setData(item);
@@ -53,27 +52,26 @@ export default function EditDoc(item) {
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchDataByType();
     getParties();
-
-  },[]);
+  }, []);
 
   //console.log(data);
 
   // const docTitle = "Non-Disclosure Agreement";
-  const docTerms = renderToString(
-    //this is only temporarily, will change accordingly
-    <React.Fragment>
-      <div>
-        <b>Terms</b>
-      </div>
-      &nbsp; &nbsp;
-      <div>
-        <span>This document is confidential</span>
-      </div>
-    </React.Fragment>
-  );
+  // const docTerms = renderToString(
+  //   //this is only temporarily, will change accordingly
+  //   <React.Fragment>
+  //     <div>
+  //       <b>Terms</b>
+  //     </div>
+  //     &nbsp; &nbsp;
+  //     <div>
+  //       <span>This document is confidential</span>
+  //     </div>
+  //   </React.Fragment>
+  // );
 
   const editor = useRef(null);
   // const for managing the selected style
@@ -95,9 +93,34 @@ export default function EditDoc(item) {
     // Save the content can be save to backend
 
     console.log("Saving content:", content);
+    let arrayOfEmail = partyList?.map((item) => item.parties_email);
     //update the template version data to the backend
     updateTemplateEndpoint(data.document_template_id);
-
+    //console.log("this is the partyList", arrayOfemail);
+    //send the email to each individual recipient
+    arrayOfEmail.forEach((item) => {
+      var templateParams = {
+        docName: docTitle,
+        email: item,
+        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: ${item}`,
+      };
+      emailjs
+        .send(
+          "service_7d8l9ff",
+          "template_25x692y",
+          templateParams,
+          "VBzIorHlAAspUrEhL"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+            handleAlert();
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
+    });
     navigate(`/viewDoc/${data.type}`);
   };
 
@@ -127,12 +150,15 @@ export default function EditDoc(item) {
           title: content,
           content: terms,
           parties_number: partyList.length,
-          created_date: created_date,
+          date_modified: created_date,
         })
         .then((res) => {
           console.log("Updated data successfully ", res.data);
           updateSignatureConfigEndpoint(id, savedItem);
-          updatePartiesToTheEndpoint(id, partyList.map(item=>item.parties_id));
+          updatePartiesToTheEndpoint(
+            id,
+            partyList.map((item) => item.parties_id)
+          );
         });
     } catch (error) {
       document.write("Error updating data *********", error);
@@ -180,17 +206,19 @@ export default function EditDoc(item) {
     }
   };
 
-  const [partiesList, setPartiesList] = useState([])
+  const [partiesList, setPartiesList] = useState([]);
   const [partyList, setPartyList] = useState([
     {
       id: uuid(),
       selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
+      parties_email: "",
+      parties_id: "",
     },
   ]);
   const getParties = async () => {
     try {
       axios
-        .get("http://localhost:8800/customise-document/"+ id + "/parties")
+        .get("http://localhost:8800/customise-document/" + id + "/parties")
         .then((res) => {
           //match template type version with the id
           setPartiesList(res.data);
@@ -200,12 +228,9 @@ export default function EditDoc(item) {
     } catch (err) {
       document.write("Error fetching parties ", err);
     }
-  }
+  };
 
-  useEffect(() => {
-
-  }, [partyList]);
-
+  useEffect(() => {}, [partyList]);
 
   return (
     <div className="customiseDoc">
@@ -277,9 +302,9 @@ export default function EditDoc(item) {
                 page="title"
               />
             </div>
-          ) : selected === 2 ? (
-            <Parties partiesList={partiesList} setPartiesList={setPartyList} />
-          ) : selected === 3 ? (
+          ) : // ) : selected === 2 ? (
+          // //   <Parties partiesList={partiesList} setPartiesList={setPartyList} />
+          selected === 3 ? (
             <Terms
               editor={editor}
               terms={terms}
@@ -298,6 +323,9 @@ export default function EditDoc(item) {
               />
             )
           )}
+          <div className={selected === 2 ? "" : "invisible"}>
+            <Parties partiesList={partiesList} setPartiesList={setPartyList} />
+          </div>
           <div className="btn">
             {/* <button className="cancel">Cancel</button> */}
             <button
@@ -307,8 +335,7 @@ export default function EditDoc(item) {
                   setSelected((prev) => prev - 1); // Decrement index, go back to previous section
                 } else {
                   if (window.confirm("Do you wish to go Back?"))
-                  navigate(`/viewDoc/${data.type}`);
-
+                    navigate(`/viewDoc/${data.type}`);
                 }
               }}
             >

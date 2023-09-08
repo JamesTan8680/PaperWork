@@ -58,7 +58,7 @@ function GroupViewModal({ viewOpen, setViewOpen, docId }) {
             return (
               <div className="modal-party" key={item.parties_id}>
                 {item.parties_name}{" "}
-                {item.parties_approval == 1 ? (
+                {item.parties_approval === 1 ? (
                   <img src={Check} alt="" />
                 ) : (
                   <></>

@@ -3,10 +3,8 @@ import DocList from "../../components/DocList/DocList";
 import "./ViewDoc.scss";
 import BreadCrumbs from "../../components/BreadCrumbs/BreadCrumbs";
 import Sort from "../../img/viewDoc/sort.svg";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { useState, useEffect } from "react";
-
 
 function ViewDoc() {
   const [data, setData] = useState([]);

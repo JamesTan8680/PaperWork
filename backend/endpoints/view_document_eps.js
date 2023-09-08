@@ -94,10 +94,13 @@ view_document_ep_router.get("/document-template2/:id", (req, res) => {
   const getPartyInfoWithRatio = `
     SELECT document_template.*,
       (SELECT COUNT(CASE WHEN parties_approval = 1 THEN 1 ELSE NULL END) / COUNT(document_template_id)
-       FROM document_parties
-       WHERE document_template_id = document_template.document_template_id) AS approvalRatio
-    FROM document_template
-    WHERE type = ?;
+       FROM paperwork_project.document_parties
+       WHERE document_template_id = document_template.document_template_id) AS approvalRatio,
+       MIN(document_container.issue_date) AS issueDate
+    FROM paperwork_project.document_template
+    LEFT JOIN paperwork_project.document_container ON document_container.document_template_id = document_template.document_template_id
+    WHERE type = ?
+    GROUP BY document_template.document_template_id
   `;
 
   // Execute the query to retrieve document_template data with approval ratio

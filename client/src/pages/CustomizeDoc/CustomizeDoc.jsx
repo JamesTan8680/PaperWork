@@ -22,12 +22,11 @@ export default function CustomizeDoc() {
   const [templateSelect, setTemplateSelect] = useState();
   //this is the state for the term of the doc
   const [terms, setDocTerms] = useState("");
-
   //GET data from database
   //this is for the navigation
   const navigate = useNavigate();
   //console.log(id);
-  if (data?.some((item) => item.template.type === id)) {
+  if (data.length === 0 || data?.some((item) => item.template.type === id)) {
   } else {
     navigate("/createDoc");
   }
@@ -154,7 +153,7 @@ export default function CustomizeDoc() {
   //handle close modal
   const handleClose = () => {
     setShowAlert(!showAlert);
-    navigate("/createDoc");
+    // navigate("/createDoc");
   };
   //handle alert
   const handleAlert = () => {
@@ -208,7 +207,10 @@ export default function CustomizeDoc() {
             res.data.document_template_id,
             savedItem
           );
-          sendPartiesToTheBackend(res.data.document_template_id, partyList);
+          updatePartiesToTheEndpoint(
+            res.data.document_template_id,
+            partyList.map((item) => item.parties_id)
+          );
         });
     } catch (error) {
       // console.log("Error sending data *********", error);
@@ -232,14 +234,14 @@ export default function CustomizeDoc() {
   //   }
   // };
 
-  const sendPartiesToTheBackend = (id, partyList) => {
-    console.log("Hi from the sendPartiesToTheBackend function");
-    console.log("id in ***", id);
-    updatePartiesToTheEndpoint(
-      id,
-      partyList.map((item) => item.parties_id)
-    );
-  };
+  // const sendPartiesToTheBackend = (id, partyList) => {
+  //   console.log("Hi from the sendPartiesToTheBackend function");
+  //   console.log("id in ***", id);
+  //   updatePartiesToTheEndpoint(
+  //     id,
+  //     partyList.map((item) => item.parties_id)
+  //   );
+  // };
 
   // sending signature config to the backend
   const sendSignatureConfigToTheBackend = (id, savedItem) => {
@@ -304,7 +306,8 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}>
+            }}
+          >
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -312,7 +315,8 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}>
+              }}
+            >
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -320,7 +324,8 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}>
+              }}
+            >
               <b>Terms</b>
 
               {type !== "blank" ? (
@@ -333,7 +338,8 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}>
+              }}
+            >
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -348,9 +354,9 @@ export default function CustomizeDoc() {
               page="title"
             />
           )}
-          {selected === 2 && (
+          {/* {selected === 2 && (
             <Parties partiesList={partiesList} setPartiesList={setPartyList} />
-          )}
+          )} */}
           {selected === 3 && (
             <Terms
               id={id}
@@ -367,6 +373,10 @@ export default function CustomizeDoc() {
           {selected === 4 && (
             <SignatureConfig savedItem={savedItem} setSaveItem={setSaveItem} />
           )}
+
+          <div className={selected === 2 ? "" : "invisible"}>
+            <Parties partiesList={partiesList} setPartiesList={setPartyList} />
+          </div>
           <div className="btn">
             {/* <button className="cancel">Cancel</button> */}
             <button
@@ -378,7 +388,8 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}>
+              }}
+            >
               Cancel
             </button>
 
@@ -394,7 +405,8 @@ export default function CustomizeDoc() {
                 } else {
                   handleSave();
                 }
-              }}>
+              }}
+            >
               Save
             </button>
           </div>

@@ -17,15 +17,7 @@ const DocControlList = ({ data }) => {
   const [updatedData, updateData] = useState(data);
 
   useEffect(() => {
-    updateData(
-      data
-        .map((item) => ({
-          ...item,
-          issue_date: Date.now(),
-          progress: 0,
-        }))
-        .reverse()
-    );
+    updateData([...data].reverse());
     setDataWithProgress(updatedData);
     fetchParentMetadata();
   }, [data]);
@@ -43,9 +35,9 @@ const DocControlList = ({ data }) => {
   const [dataVisible, setDataVisible] = useState(updatedData);
   const [expanded, setExpanded] = useState(false);
 
-  const [itemProgress, setItemProgress] = useState(
-    dataWithProgress.map(() => 0)
-  );
+  // const [itemProgress, setItemProgress] = useState(
+  //   dataWithProgress.map(() => 0)
+  // );
 
   // const handleSignDocument = (itemId) => {
   //   const updatedData = dataWithProgress.map((item) => {
@@ -79,7 +71,7 @@ const DocControlList = ({ data }) => {
     setDataVisible(
       expanded
         ? dataWithProgress
-        : dataWithProgress.length == 0
+        : dataWithProgress.length === 0
         ? []
         : [dataWithProgress[0]]
     );
@@ -96,8 +88,8 @@ const DocControlList = ({ data }) => {
   return (
     <>
       <div className="docControlHeader">
-        <h3>DATA CREATED</h3>
-        <h3>DATA MODIFIED</h3>
+        <h3>DATE CREATED</h3>
+        <h3>DATE MODIFIED</h3>
         <h3>ISSUE DATE</h3>
       </div>
 
@@ -111,7 +103,8 @@ const DocControlList = ({ data }) => {
             <a
               href="#"
               onClick={() => setExpanded(!expanded)}
-              className={"otherDocument" + (expanded ? " expanded" : "")}>
+              className={"otherDocument" + (expanded ? " expanded" : "")}
+            >
               {expanded ? "▲ Latest Version " : "▼ Other Versions..."}
             </a>
           ) : (
@@ -144,11 +137,14 @@ const DocControlList = ({ data }) => {
                 {new Date(item.created_date).toLocaleDateString("en-UK")}
               </span>
               <span className="item_modified">
-                {new Date(item.date_modified).toLocaleDateString("en-UK")}
+                {item.date_modified
+                  ? new Date(item.date_modified).toLocaleDateString("en-UK")
+                  : " "}
               </span>
               <span className="issue_date">
-                {new Date(item.issue_date).toLocaleDateString("en-UK") +
-                  " (dummy)"}
+                {item.issueDate
+                  ? new Date(item.issueDate).toLocaleDateString("en-UK")
+                  : " "}
               </span>
               <div className="additional_info">
                 <div className="status">
@@ -160,7 +156,8 @@ const DocControlList = ({ data }) => {
                     className="progress"
                     style={{
                       width: item.approvalRatio * 100,
-                    }}></div>
+                    }}
+                  ></div>
                 </div>
               </div>
               {/* <span

@@ -6,11 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 import TooltipDropdownParties from "./TooltipDropdownParties";
 import axios from "axios";
-import { useFetcher } from "react-router-dom";
-export default function DropdownParties({
-  parties, setParties
-}) {
-  
+export default function DropdownParties({ parties, setParties }) {
   const [isActive, setIsActive] = useState(false);
   const [showAdditionalDropdown, setShowAdditionalDropdown] = useState(false);
   const [id, setId] = useState(null); // Declare the id use state and initialize it NULL
@@ -22,11 +18,12 @@ export default function DropdownParties({
   // };
   const [partiesData, setPartiesData] = useState([]);
   const [partyList, setPartyList] = useState([]);
-  const [selected, setSelected] = useState(undefined);
-  const [selectedList, setSelectedList] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [_selected, setSelected] = useState(undefined);
+  // eslint-disable-next-line no-unused-vars
+  const [_selectedList, setSelectedList] = useState([]);
 
-
-  const fetchParties = async() => {
+  const fetchParties = async () => {
     // Fetch data from database
     axios
       .get("http://localhost:8800/parties")
@@ -44,38 +41,37 @@ export default function DropdownParties({
     //localStorage.removeItem("items");
   };
 
-
-  useEffect(()=>{
-    setPartyList(parties.map((item)=>{
-      let item2 = {...item};
-      item2.id = uuid();
-      item2.selectedOption = item.parties_name;
-      return item2;
-    }))
-  },[parties, partiesData]);
-
-  useEffect(()=>{
-    fetchParties();
-  },[]);
-
-  useEffect(()=>{
-    if (partyList.length == 0) handleAddButtonClick();
-    setParties(partyList);
-  },[partyList])
-
-
-
-  const availableOptions = partiesData?.filter((party) => {
-    return !partyList.some(
-      (item) => item.selectedOption === party.parties_name
+  useEffect(() => {
+    setPartyList(
+      parties.map((item) => {
+        let item2 = { ...item };
+        item2.id = uuid();
+        item2.selectedOption = item.parties_name;
+        return item2;
+      })
     );
-  });
+  }, [parties, partiesData]);
+
+  useEffect(() => {
+    fetchParties();
+  }, []);
 
   const handleAddButtonClick = () => {
     setShowAdditionalDropdown(!showAdditionalDropdown);
     const obj = { id: uuid(), selectedOption: "Select Parties Name" };
     setPartyList([...partyList, obj]);
   };
+
+  useEffect(() => {
+    if (partyList.length === 0) handleAddButtonClick();
+    setParties(partyList);
+  }, [partyList, handleAddButtonClick, setParties]);
+
+  const availableOptions = partiesData?.filter((party) => {
+    return !partyList.some(
+      (item) => item.selectedOption === party.parties_name
+    );
+  });
 
   const handleDropdownButtonClick = (id) => {
     setIsActive(!isActive);
@@ -115,7 +111,6 @@ export default function DropdownParties({
   };
   //console.log(partyList);
   const handleRemoveButtonClick = (remove_id) => {
-
     if (partyList?.length === 1) return; //only one dropdown left, don't allow removal
     const updatedData = partyList?.filter((item) => item.id !== remove_id);
     setPartyList(updatedData);
@@ -134,12 +129,12 @@ export default function DropdownParties({
     );
 
     if (partyToRemove)
-    setPartyList((prevParties) =>
-      prevParties.filter((party) => {
-        console.log(partyToRemove != party);
-        return party != partyToRemove
-      })
-    );
+      setPartyList((prevParties) =>
+        prevParties.filter((party) => {
+          console.log(partyToRemove != party);
+          return party != partyToRemove;
+        })
+      );
   };
 
   return (
@@ -162,7 +157,7 @@ export default function DropdownParties({
               <button className="add" onClick={handleAddButtonClick}>
                 ADD
               </button>
-<button
+              <button
                 className="remove"
                 onClick={() => handleRemoveButtonClick(item.id)}
               >

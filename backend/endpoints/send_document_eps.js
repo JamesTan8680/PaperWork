@@ -151,4 +151,19 @@ send_document_ep_router.post("/container/:id", (req, res) => {
   });
 });
 
+  send_document_ep_router.get("issued/:id", (req, res)=>{
+    let sql = "SELECT issue_date FROM document_container WHERE document_template_id = ? ORDER BY issue_date DESC";
+    db.query(
+      sql,
+      [req.params.id],
+      (error, result) => {
+        if (error) {
+          result.status(500).send(error)
+        } else {
+          result.json(result.data)
+        }
+      }
+      )
+  })
+
 export default send_document_ep_router;
