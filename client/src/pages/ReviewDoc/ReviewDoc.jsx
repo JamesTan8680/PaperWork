@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import "./ReviewDoc.scss";
 import HTMLReactParser from "html-react-parser";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { PDFExport } from "@progress/kendo-react-pdf";
 
 function ReviewDoc() {
   let { id } = useParams();
@@ -17,6 +21,14 @@ function ReviewDoc() {
   const [content, setContent] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [docType, setDocType] = useState("");
+  const pdfExportComponent = useRef(null);
+  //state for the blur the signature
+  const [blurry, setBlur] = useState(true);
+  //handle the export pdf
+  const handleExportWithComponent = (event) => {
+    // setBlur(false);
+    pdfExportComponent.current.save();
+  };
 
   useEffect(() => {
     // Initialize state variables with default values
@@ -101,16 +113,20 @@ function ReviewDoc() {
   return (
     <div className="reviewDoc">
       <div className="review-container">
+        <PDFExport
+          ref={pdfExportComponent}
+          paperSize="A4"
+          margin={{ left: "15mm", top: "20mm", right: "15mm", bottom: "20mm" }}
+          scale={0.6}
+        >
         <div className="recipient">
           <div className="recipient-dropdown">
             <RecipientDropdown />
           </div>
-          <div className="version">{HTMLReactParser(version)}</div>
-        </div>
-        <div className="header">{HTMLReactParser(title)}</div>
+          <div className="header">{HTMLReactParser(title)}</div>
 
-        <div className="parties">
-          <h3>Party</h3>
+          <div className="parties">
+            <h3>Party</h3>
 
           {parties?.map((item) => {
             return (
@@ -151,13 +167,28 @@ function ReviewDoc() {
               )}
             </div>
           </div>
-        </div>
+        </PDFExport>
       </div>
       <div className="review-button">
         <Link to={`/viewDoc/${docType}`}>
           <button className="cancel">Cancel</button>
         </Link>
-        <button className="export-pdf">Export PDF</button>
+
+        {blurry ? (
+          <VisibilityIcon
+            className="visibilityIcon"
+            onClick={() => setBlur(false)} //setBlur to false
+          />
+        ) : (
+          <VisibilityOffIcon
+            className="visibilityOffIcon"
+            onClick={() => setBlur(true)} //setBlur to true
+          />
+        )}
+
+        <button className="export-pdf" onClick={handleExportWithComponent}>
+          Export PDF
+        </button>
       </div>
     </div>
   );

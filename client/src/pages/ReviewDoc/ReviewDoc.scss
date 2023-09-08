@@ -44,6 +44,18 @@
       padding: 15px 32px;
       color: white;
     }
+
+    .visibilityOffIcon {
+      width: 50px;
+      height: 50px;
+      margin-left: 750px;
+    }
+
+    .visibilityIcon {
+      width: 50px;
+      height: 50px;
+      margin-left: 750px;
+    }
   }
 }
 .recipient {
@@ -76,5 +88,14 @@
     flex-direction: column;
     gap: 10px;
     font-weight: bold;
+  }
+  .blur_effect {
+    filter: blur(5px);
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
   }
 }
