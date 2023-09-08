@@ -87,6 +87,8 @@ export default function CustomizeDoc() {
     {
       id: uuid(),
       selectedOption: "Select Parties Name", //Manage the selected option state seperately for each dropdown item
+      parties_email: "",
+      parties_id: "",
     },
   ]);
   // Function to handle saving the content
