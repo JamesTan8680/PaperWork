@@ -3,7 +3,6 @@ import "./SignatureConfig.scss";
 import axios from "axios";
 
 function SignatureConfig({ savedItem, setSaveItem, doc_id }) {
-
   const [apiData, setApiData] = useState([]);
 
   useEffect(() => {
@@ -15,6 +14,10 @@ function SignatureConfig({ savedItem, setSaveItem, doc_id }) {
         .then((response) => {
           // Assuming the API response is an array, set the data
           setApiData(response.data);
+          //function to get the data
+          putSavedItem(response.data);
+
+          //console.log(response[0].data.student_id);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
@@ -22,6 +25,30 @@ function SignatureConfig({ savedItem, setSaveItem, doc_id }) {
     }
   }, [doc_id]);
 
+  //put Saved item that responsible for put the item into the save state
+  const putSavedItem = (data) => {
+    console.log(data[0].student_id);
+    let dataArray = [];
+    if (data[0].student_id === 1) {
+      dataArray.push("student_id");
+    }
+    if (data[0].address === 1) {
+      dataArray.push("address");
+    }
+    if (data[0].title === 1) {
+      dataArray.push("title");
+    }
+    if (data[0].age === 1) {
+      dataArray.push("age");
+    }
+    if (data[0].email === 1) {
+      dataArray.push("email");
+    }
+    console.log(dataArray);
+    setSaveItem(dataArray);
+  };
+
+  //dummy data
   const data = [
     {
       id: 1,
@@ -67,7 +94,7 @@ function SignatureConfig({ savedItem, setSaveItem, doc_id }) {
   //     setSaveItem(JSON.parse(localStorage.getItem("subCat")));
   //   }
   // }, []);
-
+  console.log(apiData);
   const handleChange = (e) => {
     const value = e.target.value;
     const isChecked = e.target.checked;
@@ -107,6 +134,7 @@ function SignatureConfig({ savedItem, setSaveItem, doc_id }) {
   };
   return (
     <div className="signature">
+      {/* {savedItem} */}
       <div className="header">Signature Configuration</div>
       <div className="container">
         <div className="box-list">
@@ -125,15 +153,17 @@ function SignatureConfig({ savedItem, setSaveItem, doc_id }) {
                       : false
                   }
                   defaultChecked={
-                    item.id === 1 || 
-                    item.id === 2 || 
-                    item.id === 8 || 
-                    item.id === 6 || 
-                    (item.id === 3 && apiData.find(obj => obj.student_id === 1)) || 
-                    (item.id === 4 && apiData.find(obj => obj.address === 1)) || 
-                    (item.id === 5 && apiData.find(obj => obj.title === 1)) || 
-                    (item.id === 7 && apiData.find(obj => obj.age === 1)) || 
-                    (item.id === 9 && apiData.find(obj => obj.email === 1))
+                    item.id === 1 ||
+                    item.id === 2 ||
+                    item.id === 8 ||
+                    item.id === 6 ||
+                    (item.id === 3 &&
+                      apiData.find((obj) => obj.student_id === 1)) ||
+                    (item.id === 4 &&
+                      apiData.find((obj) => obj.address === 1)) ||
+                    (item.id === 5 && apiData.find((obj) => obj.title === 1)) ||
+                    (item.id === 7 && apiData.find((obj) => obj.age === 1)) ||
+                    (item.id === 9 && apiData.find((obj) => obj.email === 1))
                       ? true
                       : savedItem?.find((items) => items === item.name)
                   }

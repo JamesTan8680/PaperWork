@@ -96,8 +96,7 @@ function ReviewDoc() {
         <div>
           <select
             onChange={handleRecipientChange}
-            value={selectedRecipient ? selectedRecipient.identity_id : ""}
-          >
+            value={selectedRecipient ? selectedRecipient.identity_id : ""}>
             {recipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
                 {recipient.firstname}
@@ -119,13 +118,14 @@ function ReviewDoc() {
           ref={pdfExportComponent}
           paperSize="A4"
           margin={{ left: "15mm", top: "20mm", right: "15mm", bottom: "20mm" }}
-          scale={0.6}
-        >
+          scale={0.6}>
           <div className="recipient">
             <div className="recipient-dropdown">
               <RecipientDropdown />
             </div>
-            <div className="version">{HTMLReactParser(version)}</div>
+            <div className="version">
+              <b>Version</b> {HTMLReactParser(version)}
+            </div>
           </div>
           <div className="header">{HTMLReactParser(title)}</div>
 
