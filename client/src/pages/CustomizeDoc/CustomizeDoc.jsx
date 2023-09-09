@@ -191,6 +191,13 @@ export default function CustomizeDoc() {
 
   const sendDataToTheTemplateEndpoint = () => {
     console.log("Hi from function ");
+
+    if (savedItem.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
+      alert("Please enter at least one party");
+      setSelected(2);
+      return;
+    }
+
     // console.log(id);
     try {
       axios
