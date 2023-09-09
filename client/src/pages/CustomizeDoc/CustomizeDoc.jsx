@@ -93,6 +93,14 @@ export default function CustomizeDoc() {
   ]);
   // Function to handle saving the content
   const handleSave = () => {
+
+
+    if (savedItem.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
+      alert("Please enter at least one party");
+      setSelected(2);
+      return;
+    }
+
     if (content === "<p><br></p>" || terms === "<p><br></p>" || terms === "") {
       //this is for the title that we replace
       alert("Put the content inside Title or Terms");
@@ -192,11 +200,6 @@ export default function CustomizeDoc() {
   const sendDataToTheTemplateEndpoint = () => {
     console.log("Hi from function ");
 
-    if (savedItem.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
-      alert("Please enter at least one party");
-      setSelected(2);
-      return;
-    }
 
     // console.log(id);
     try {
