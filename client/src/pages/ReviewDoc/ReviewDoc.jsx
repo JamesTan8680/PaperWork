@@ -92,7 +92,9 @@ function ReviewDoc() {
     };
 
     // Filtering recipients who have a firstname
-    const validRecipients = Array.isArray(recipients) ? recipients.filter(recipient => recipient.firstname) : [];
+    const validRecipients = Array.isArray(recipients)
+      ? recipients.filter((recipient) => recipient.firstname)
+      : [];
 
     if (validRecipients && validRecipients.length > 0) {
       return (
@@ -113,7 +115,6 @@ function ReviewDoc() {
     }
     return null;
   };
-
 
   console.log("Rendering RecipientDropdown with recipients: ", recipients);
 
@@ -174,6 +175,14 @@ function ReviewDoc() {
                     {/* <div>Address: {selectedRecipient.address}</div> */}
                     <div>Email: {selectedRecipient.email}</div>
                     {/* You can add other details if the recipient object has more fields */}
+                    <div
+                      style={{
+                        color: blurry ? "black" : "none",
+                        display: blurry ? "" : "none",
+                      }}
+                    >
+                      signature: dummy signature
+                    </div>
                   </>
                 ) : (
                   <p>No Recipient Selected</p>
