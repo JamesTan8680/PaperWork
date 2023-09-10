@@ -88,9 +88,9 @@ const DocControlList = ({ data }) => {
   return (
     <>
       <div className="docControlHeader">
-        <h3>DATE CREATED</h3>
-        <h3>DATE MODIFIED</h3>
-        <h3>ISSUE DATE</h3>
+        <h3 className="docCreated">DATE CREATED</h3>
+        <h3 className="docModified">DATE MODIFIED</h3>
+        <h3 className="docIssue">ISSUE DATE</h3>
       </div>
 
       <div className="docControlWrapper">

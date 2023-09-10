@@ -1,8 +1,18 @@
 .docControlHeader {
+  // width: calc(100% - 364px);
   width: calc(100% - 364px);
-  display: flex;
-  margin-left: 230px;
-  gap: 90px;
+  display: grid;
+  grid-template-columns: 20% 20% 20%;
+  align-items: center;
+  margin-left: 245px;
+
+  .docModified {
+    margin-left: 5px;
+  }
+
+  .docIssue {
+    margin-left: 25px;
+  }
 }
 
 .docControlWrapper {
@@ -144,7 +154,7 @@
         .status {
           display: grid;
           justify-content: center;
-          margin-right: 125px;
+          width: 100px;
         }
 
         .pro-bar {
