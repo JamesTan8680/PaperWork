@@ -42,7 +42,6 @@ function ReviewDoc() {
       .get(`http://localhost:8800/view-document/document/${id}`)
       .then((response1) => {
         const documentData = response1.data || {}; // Handle empty response
-        console.log("Thang", response1.data);
         setTitle(documentData[0].title || "");
         setVersion(String(documentData[0].version) || "");
         setContent(documentData[0].content || "");
@@ -62,9 +61,10 @@ function ReviewDoc() {
       });
 
     axios
-      .get(`http://localhost:8800/view-document/receipients/${id}`)
+      .get(`http://localhost:8800/view-document/recipients/${id}`)
       .then((response3) => {
         setRecipients(response3.data || []); // Handle empty response
+        console.log("thang test", response3.data);
       })
       .catch((err) => {
         console.log(err.message);
@@ -96,7 +96,8 @@ function ReviewDoc() {
         <div>
           <select
             onChange={handleRecipientChange}
-            value={selectedRecipient ? selectedRecipient.identity_id : ""}>
+            value={selectedRecipient ? selectedRecipient.identity_id : ""}
+          >
             {recipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
                 {recipient.firstname}
@@ -118,7 +119,8 @@ function ReviewDoc() {
           ref={pdfExportComponent}
           paperSize="A4"
           margin={{ left: "15mm", top: "20mm", right: "15mm", bottom: "20mm" }}
-          scale={0.6}>
+          scale={0.6}
+        >
           <div className="recipient">
             <div className="recipient-dropdown">
               <RecipientDropdown />

@@ -29,6 +29,7 @@ function GroupViewModal({ viewOpen, setViewOpen, docId }) {
         const recipientsResponse = await axios.get(
           `http://localhost:8800/view-document/recipients/${docId}`
         );
+        console.log("thang test recipient", recipientsResponse.data);
         if (recipientsResponse.data) {
           setRecipientData(recipientsResponse.data);
         } else {
