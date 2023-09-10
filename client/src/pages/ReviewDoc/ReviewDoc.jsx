@@ -101,6 +101,7 @@ function ReviewDoc() {
             onChange={handleRecipientChange}
             value={selectedRecipient ? selectedRecipient.identity_id : ""}
           >
+            <option value="">Select Recipients Name</option>
             {validRecipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
                 {recipient.firstname}
