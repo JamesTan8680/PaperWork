@@ -25,7 +25,7 @@ function ReviewDoc() {
   const [title, setTitle] = useState("");
   //creating type useState
   const [version, setVersion] = useState("");
-  const [recipients, setRecipients] = useState("");
+  const [recipients, setRecipients] = useState([]);
   const [parties, setParties] = useState([]);
   const [content, setContent] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState(null);
@@ -91,14 +91,17 @@ function ReviewDoc() {
       setSelectedRecipient(selected);
     };
 
-    if (recipients && recipients.length > 0) {
+    // Filtering recipients who have a firstname
+    const validRecipients = Array.isArray(recipients) ? recipients.filter(recipient => recipient.firstname) : [];
+
+    if (validRecipients && validRecipients.length > 0) {
       return (
         <div>
           <select
             onChange={handleRecipientChange}
             value={selectedRecipient ? selectedRecipient.identity_id : ""}
           >
-            {recipients?.map((recipient) => (
+            {validRecipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
                 {recipient.firstname}
               </option>
@@ -109,6 +112,7 @@ function ReviewDoc() {
     }
     return null;
   };
+
 
   console.log("Rendering RecipientDropdown with recipients: ", recipients);
 
