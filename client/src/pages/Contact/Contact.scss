@@ -1,0 +1,143 @@
+.contact {
+  height: 100%;
+  width: 100%;
+  box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+  border-radius: 5px;
+  padding: 10px 0px 0px 20px;
+  display: flex;
+  flex-direction: column;
+  .contact-header {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    //justify-content: center;
+    align-items: center;
+    b {
+      font-size: 30px;
+    } //end b tag
+
+    // for quote style
+    .quote {
+      color: gray;
+      font-size: 15px;
+    } //end quote
+  }
+
+  //for the contact info
+  .contact-info {
+    margin: 0px 10px 10px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .location {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+
+      //for the address info
+      .address {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      } //end address
+      img {
+        width: 50px;
+        height: 50px;
+      } //end img
+    } //end location
+
+    //for the phone
+    .phone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+      img {
+        width: 50px;
+        height: 50px;
+      } //end img
+    }
+    .mail {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 15px;
+      img {
+        width: 50px;
+        height: 50px;
+      } //img
+    } //end mail
+    margin-bottom: 30px;
+  }
+}
+
+.contact-form {
+  width: calc(100% - 130px);
+  border-radius: 5px;
+  background-color: #e0e0e0;
+  padding: 10px 55px 10px 55px;
+  box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    font-size: 20px;
+    .detail {
+      display: flex;
+      gap: 100px;
+      .personal-detail {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        input {
+          padding: 15px;
+          border: none;
+          border-radius: 5px;
+          box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+          margin-bottom: 60px;
+        }
+      } //end of personal-detail
+      .message {
+        margin-left: 10px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        textarea {
+          width: 700px; /* Width of the textarea */
+          height: 300px; /* Height of the textarea */
+          font-size: 16px; /* Font size */
+          padding: 10px; /* Padding inside the textarea */
+          border: 2px solid #ccc; /* Border style */
+          background-color: #f8f8f8; /* Background color */
+          border-radius: 5px; /* Rounded corners */
+          border: none;
+          resize: none;
+          box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+        } //end textarea
+      } //end message
+    } //end detail
+    //for button
+    button {
+      cursor: pointer;
+      margin-top: 75px;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      width: 300px;
+      font-weight: 500;
+      align-self: center;
+      font-size: 30px;
+      color: white;
+      background-color: #4cc9cf;
+    }
+  }
+}

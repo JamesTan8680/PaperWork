@@ -7,18 +7,27 @@ import Email from "../../img/navbar/email.svg";
 import Search from "../../img/navbar/search.svg";
 import View from "../../img/navbar/view.svg";
 import Menu from "../../img/navbar/menu.svg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Tooltip from "./Tooltip";
 
 function Navbar() {
+  //tooltip for the icons on the navigation bar
   const tooltips = [
-    { icon: Faq, text: "Frequently Asked Question" },
-    { icon: Inbox, text: "Inbox Message" },
-    { icon: Chat, text: "Chat Message" },
-    { icon: Bell, text: "Notifications" },
-    { icon: Email, text: "Emails" },
+    { icon: Faq, text: "Frequently Asked Question", link: "" },
+    { icon: Inbox, text: "Inbox Message", link: "" },
+    { icon: Chat, text: "Chat Message", link: "" },
+    { icon: Bell, text: "Notifications", link: "" },
+    { icon: Email, text: "Contact", link: "/contact" },
   ];
 
+  //onclick listener for the onlick on the icon
+  //useNavigation
+  const navigate = useNavigate();
+  const onClickIcons = (link) => {
+    if (link !== "") {
+      navigate(link);
+    }
+  };
   return (
     <div className="navbar">
       <div className="left-nav">
@@ -48,7 +57,11 @@ function Navbar() {
 
         {tooltips.map((tooltip, index) => (
           <Tooltip key={index} text={tooltip.text}>
-            <img src={tooltip.icon} alt="" />
+            <img
+              src={tooltip.icon}
+              alt=""
+              onClick={() => onClickIcons(tooltip?.link)}
+            />
           </Tooltip>
         ))}
       </div>
