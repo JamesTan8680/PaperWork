@@ -41,7 +41,7 @@ export default function EditDoc(item) {
             const rawDocTitle = item.title;
             const cleanedTitle = rawDocTitle.replace(/<\/?[^>]*>/g, "");
             setDocTitle(cleanedTitle);
-            setDocContent(cleanedTitle);
+            setDocContent(rawDocTitle);
             //fetch the terms into from the correct type
             setDocTerms(item?.content);
             console.warn(item);
@@ -92,13 +92,14 @@ export default function EditDoc(item) {
   const handleSave = () => {
     // Save the content can be save to backend
 
-
-    if (partyList?.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
+    if (
+      partyList?.filter((x) => x.parties_id != "" && x.parties_id != undefined)
+        .length == 0
+    ) {
       alert("Please enter at least one party");
       setSelected(2);
       return;
     }
-
 
     console.log("Saving content:", content);
     let arrayOfEmail = partyList?.map((item) => item.parties_email);
@@ -265,8 +266,7 @@ export default function EditDoc(item) {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}
-          >
+            }}>
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -274,8 +274,7 @@ export default function EditDoc(item) {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}
-            >
+              }}>
               <b>Parties</b>
               <span>Note: Put the Parties Name Here That Involve</span>
             </div>
@@ -283,8 +282,7 @@ export default function EditDoc(item) {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}
-            >
+              }}>
               <b>Terms</b>
               <span>Note: Put the Document Terms Here That Involve</span>
             </div>
@@ -292,8 +290,7 @@ export default function EditDoc(item) {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}
-            >
+              }}>
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -346,8 +343,7 @@ export default function EditDoc(item) {
                   if (window.confirm("Do you wish to go Back?"))
                     navigate(`/viewDoc/${data.type}`);
                 }
-              }}
-            >
+              }}>
               Cancel
             </button>
 
@@ -363,8 +359,7 @@ export default function EditDoc(item) {
                     Save
                   </Link>;
                 }
-              }}
-            >
+              }}>
               Save
             </button>
           </div>

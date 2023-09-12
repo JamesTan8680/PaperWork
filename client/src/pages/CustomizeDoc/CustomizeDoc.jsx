@@ -93,9 +93,11 @@ export default function CustomizeDoc() {
   ]);
   // Function to handle saving the content
   const handleSave = () => {
-
-
-    if (partyList?.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
+    if (
+      partyList?.filter(
+        (x) => x.parties_id !== "" && x.parties_id !== undefined
+      ).length === 0
+    ) {
       alert("Please enter at least one party");
       setSelected(2);
       return;
@@ -109,12 +111,13 @@ export default function CustomizeDoc() {
       const arrayofEmail = partyList?.map((item) => item.parties_email);
       //alert(arrayofEmail);
       //create the template to pass props into the emailJs API
-      arrayofEmail.forEach((item) => {
+      arrayofEmail?.forEach((item) => {
         var templateParams = {
           docName: docTitle,
           email: item,
           message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: ${item}`,
         };
+        //alert("hi");
         emailjs
           .send(
             "service_7d8l9ff",
@@ -315,8 +318,7 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}
-          >
+            }}>
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -324,8 +326,7 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}
-            >
+              }}>
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -333,8 +334,7 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}
-            >
+              }}>
               <b>Terms</b>
 
               {type !== "blank" ? (
@@ -347,8 +347,7 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}
-            >
+              }}>
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -397,8 +396,7 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}
-            >
+              }}>
               Cancel
             </button>
 
@@ -414,8 +412,7 @@ export default function CustomizeDoc() {
                 } else {
                   handleSave();
                 }
-              }}
-            >
+              }}>
               Save
             </button>
           </div>
