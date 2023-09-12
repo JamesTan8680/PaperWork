@@ -92,17 +92,13 @@ export default function EditDoc(item) {
   const handleSave = () => {
     // Save the content can be save to backend
 
-    // if (savedItem.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
-    //   alert("Please enter at least one party");
-    //   setSelected(2);
-    //   return;
-    // }
 
-    if (savedItem.length === 0) {
+    if (partyList?.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
       alert("Please enter at least one party");
       setSelected(2);
       return;
     }
+
 
     console.log("Saving content:", content);
     let arrayOfEmail = partyList?.map((item) => item.parties_email);

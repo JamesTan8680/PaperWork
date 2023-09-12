@@ -93,17 +93,13 @@ export default function CustomizeDoc() {
   ]);
   // Function to handle saving the content
   const handleSave = () => {
-    if (savedItem.length === 0) {
+
+
+    if (partyList?.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
       alert("Please enter at least one party");
       setSelected(2);
       return;
     }
-
-    // if (savedItem.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
-    //   alert("Please enter at least one party");
-    //   setSelected(2);
-    //   return;
-    // }
 
     if (content === "<p><br></p>" || terms === "<p><br></p>" || terms === "") {
       //this is for the title that we replace
