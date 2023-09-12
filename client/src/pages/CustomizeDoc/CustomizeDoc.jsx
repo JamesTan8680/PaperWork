@@ -94,8 +94,9 @@ export default function CustomizeDoc() {
   // Function to handle saving the content
   const handleSave = () => {
 
+    let partyList2 = partyList.filter((x)=>x.parties_id !== "" && x.parties_id !== undefined);
 
-    if (partyList?.filter((x)=>x.parties_id != "" && x.parties_id != undefined).length == 0){
+    if (partyList2?.length === 0){
       alert("Please enter at least one party");
       setSelected(2);
       return;
@@ -106,7 +107,7 @@ export default function CustomizeDoc() {
       alert("Put the content inside Title or Terms");
     } else {
       sendDataToTheTemplateEndpoint();
-      const arrayofEmail = partyList?.map((item) => item.parties_email);
+      const arrayofEmail = partyList2?.map((item) => item.parties_email);
       //alert(arrayofEmail);
       //create the template to pass props into the emailJs API
       arrayofEmail.forEach((item) => {
