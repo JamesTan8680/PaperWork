@@ -26,6 +26,7 @@ export default function TextEditor({
     event.dataTransfer.setData("text/plain", inputList[idMatch].input);
   }
 
+  console.log(title);
   //create the state for the drag and drop
 
   const [id, setId] = useState("");
@@ -37,7 +38,17 @@ export default function TextEditor({
     () => ({
       readonly: false,
 
-      buttons: ["bold", "italic", "underline", "|", "ul", "ol", "|", "align"],
+      buttons: [
+        "bold",
+        "italic",
+        "underline",
+        "|",
+        "ul",
+        "ol",
+        "|",
+        "align",
+        "fontsize",
+      ],
       removeButtons: ["source", "about"],
       toolbarAdaptive: false,
     }),
