@@ -108,7 +108,7 @@ export default function CustomizeDoc() {
       alert("Put the content inside Title or Terms");
     } else {
       sendDataToTheTemplateEndpoint();
-      const arrayofEmail = partyList2?.map((item) => item.parties_email);
+      const arrayofEmail = partyList?.map((item) => item.parties_email);
       //alert(arrayofEmail);
       //create the template to pass props into the emailJs API
       arrayofEmail?.forEach((item) => {
