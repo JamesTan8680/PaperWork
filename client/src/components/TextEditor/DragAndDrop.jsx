@@ -17,11 +17,14 @@ function DragAndDrop({ show, setShow, setInputList, inputList }) {
   const saveModal = () => {
     if (name.length !== 0 && hint.length !== 0) {
       // To check there is any element in array matches name
-      const checkDuplicate = inputList.some((item) => item.name === name);
+      const checkDuplicate = inputList.some(
+        (item) => item.name.trim() === name.trim()
+      );
 
       if (checkDuplicate) {
         alert("Name already exists. Please enter a new Name!");
       } else {
+        console.log(name);
         const combine = `<input className='data' name='${name}' title='${hint}' placeholder="${hint}" readonly="thisisforreadonly" required style="outline: 0; border-width: 0 0 2px;">`;
         setInputList((prev) => [
           ...prev,
