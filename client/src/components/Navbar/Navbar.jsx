@@ -13,7 +13,7 @@ import Tooltip from "./Tooltip";
 function Navbar() {
   //tooltip for the icons on the navigation bar
   const tooltips = [
-    { icon: Faq, text: "Frequently Asked Question", link: "" },
+    { icon: Faq, text: "Frequently Asked Question", link: "/faq" },
     { icon: Inbox, text: "Inbox Message", link: "" },
     { icon: Chat, text: "Chat Message", link: "" },
     { icon: Bell, text: "Notifications", link: "" },
