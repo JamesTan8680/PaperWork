@@ -10,6 +10,7 @@ import CustomizeDoc from "./pages/CustomizeDoc/CustomizeDoc";
 import EditDoc from "./pages/EditDoc/EditDoc";
 import ReviewDoc from "./pages/ReviewDoc/ReviewDoc";
 import Contact from "./pages/Contact/Contact";
+import Faq from "./pages/Faq/Faq";
 const Layout = () => {
   return (
     <div className="app">
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
       {
         path: "/contact",
         element: <Contact />,
+      },
+      {
+        path: "/faq",
+        element: <Faq />,
       },
     ],
   },
