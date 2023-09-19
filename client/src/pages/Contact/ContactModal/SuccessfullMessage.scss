@@ -1,0 +1,36 @@
+.message-content {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0.3px 2px 3px 5px rgba(128, 128, 128, 0.188);
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .modal-success {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      height: 250px;
+      width: 198px;
+    }
+    b {
+      font-size: 25px;
+    }
+    .home-btn {
+      cursor: pointer;
+      width: 182px;
+      height: 50px;
+      padding: 10px 15px;
+      border: none;
+      background-color: #4cc9cf;
+      border-radius: 5px;
+      color: white;
+      font-weight: 500;
+      margin-top: 15px;
+    }
+  }
+}

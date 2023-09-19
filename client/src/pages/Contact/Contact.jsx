@@ -3,6 +3,8 @@ import "./Contact.scss";
 import Phone from "../../img/contact/Phone.svg";
 import Mail from "../../img/contact/contact.svg";
 import Location from "../../img/contact/location.svg";
+import emailjs from "@emailjs/browser";
+import SuccessfullMessage from "./ContactModal/SuccessfullMessage";
 function Contact() {
   //state for the form data
   const [formData, setFormData] = useState({
@@ -11,7 +13,8 @@ function Contact() {
     phone: "",
     message: "",
   });
-
+  //open use for toggle or switch the component
+  const [open, setOpen] = useState(false);
   //onclick to handle event change
   const onChangeElement = (e) => {
     const { name, value } = e.target;
@@ -24,8 +27,28 @@ function Contact() {
   //event for handle the onSubmit
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(formData.phone);
+    //trigger the email js API
+    emailjs
+      .send(
+        "service_hrg4t9j",
+        "template_2xoy13u",
+        formData,
+        "YGNBxfUEoCP8YDKQn"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+          setOpen((prev) => !prev);
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+    //setOpen((prev) => !prev);
   };
+  if (open) {
+    return <SuccessfullMessage />;
+  }
   return (
     <div className="contact">
       <div className="contact-header">
