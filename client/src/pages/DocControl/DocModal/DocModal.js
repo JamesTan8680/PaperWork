@@ -89,7 +89,7 @@ function DocModal({ show, setShow, title, doc_id }) {
       emailsArray.forEach((item) => {
         var templateParams = {
           docName: title,
-          message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: recipient/${doc_id}/${item}`,
+          message: `Please kindly check and sign the document that was created by the Paperwork Team via URL: localhost:3000/recipient/${item}/${doc_id}`,
           email: item,
         };
         emailjs
@@ -183,8 +183,7 @@ function DocModal({ show, setShow, title, doc_id }) {
                     ? "bold"
                     : "normal",
                 }}
-                className="email"
-              >
+                className="email">
                 {element.name}
               </span>
             ))}
@@ -201,8 +200,7 @@ function DocModal({ show, setShow, title, doc_id }) {
                 onSend();
                 onSendToDatabase();
                 console.log("hi");
-              }}
-            >
+              }}>
               Send
             </button>
             <SuccessfulePage

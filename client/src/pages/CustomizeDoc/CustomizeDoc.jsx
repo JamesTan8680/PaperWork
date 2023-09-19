@@ -15,7 +15,8 @@ export default function CustomizeDoc() {
   //the id that get from the params
   let { id } = useParams();
   let { type } = useParams();
-
+  //const for the template_id
+  let templateID = "";
   //setting the doc title for the document
   const [docTitle, setDocTitle] = useState(""); // default value
   const [data, setData] = useState([]);
@@ -107,58 +108,8 @@ export default function CustomizeDoc() {
       //this is for the title that we replace
       alert("Put the content inside Title or Terms");
     } else {
-      sendDataToTheTemplateEndpoint();
       const arrayofEmail = partyList?.map((item) => item.parties_email);
-      //alert(arrayofEmail);
-      //create the template to pass props into the emailJs API
-      arrayofEmail?.forEach((item) => {
-        var templateParams = {
-          docName: docTitle,
-          email: item,
-          message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: ${item}`,
-        };
-        //alert("hi");
-        emailjs
-          .send(
-            "service_7d8l9ff",
-            "template_25x692y",
-            templateParams,
-            "VBzIorHlAAspUrEhL"
-          )
-          .then(
-            (result) => {
-              console.log(result.text);
-              handleAlert();
-            },
-            (error) => {
-              console.log(error.text);
-            }
-          );
-        //alert(templateParams.email);
-      });
-      // var templateParams = {
-      //   docName: docTitle,
-      //   message:
-      //     "Please kindly check and approve or deny the document that was created by the Paperwork Team.",
-      //   email: arrayofEmail,
-      // };
-      //email js api request method
-      // emailjs
-      //   .send(
-      //     "service_7d8l9ff",
-      //     "template_25x692y",
-      //     templateParams,
-      //     "VBzIorHlAAspUrEhL"
-      //   )
-      //   .then(
-      //     (result) => {
-      //       console.log(result.text);
-      //       handleAlert();
-      //     },
-      //     (error) => {
-      //       console.log(error.text);
-      //     }
-      //   );
+      sendDataToTheTemplateEndpoint(arrayofEmail);
     }
   };
   //handle close modal
@@ -200,7 +151,7 @@ export default function CustomizeDoc() {
   // console.log("date = ", date.toLocaleDateString());
   // console.log("SavedItem = ", savedItem);
 
-  const sendDataToTheTemplateEndpoint = () => {
+  const sendDataToTheTemplateEndpoint = (arrayOfEmail) => {
     console.log("Hi from function ");
 
     // console.log(id);
@@ -215,6 +166,9 @@ export default function CustomizeDoc() {
         })
         .then((res) => {
           // console.log("Data sent successfully 12345", res.data);
+          templateID = res.data.document_template_id;
+          //console.log(templateID);
+          sendEmail(arrayOfEmail, templateID);
           sendSignatureConfigToTheBackend(
             res.data.document_template_id,
             savedItem
@@ -229,32 +183,36 @@ export default function CustomizeDoc() {
     }
   };
 
-  // const sendPartyToTheBackend = async (id, partyId) => {
-  //   console.log("Hi from the sendPartyToTheBackend function");
-  //   console.log("id:", id);
-  //   console.log("partyId:", partyId);
+  const sendEmail = (arrayOfEmail, templateID) => {
+    //console.log(arrayOfEmail);
+    //console.log(templateID);
 
-  //   try {
-  //     const response = await axios.post(
-  //       `http://localhost:8800/customise-document/${id}/parties`,
-  //       { parties_id: partyId, parties_approval: false }
-  //     );
-
-  //     console.log("Party sent successfully:", response.data);
-  //   } catch (error) {
-  //     console.log("Error sending party:", error);
-  //   }
-  // };
-
-  // const sendPartiesToTheBackend = (id, partyList) => {
-  //   console.log("Hi from the sendPartiesToTheBackend function");
-  //   console.log("id in ***", id);
-  //   updatePartiesToTheEndpoint(
-  //     id,
-  //     partyList.map((item) => item.parties_id)
-  //   );
-  // };
-
+    arrayOfEmail?.forEach((item) => {
+      var templateParams = {
+        docName: docTitle,
+        email: item,
+        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: localhost:3000/recipient/${item}/${templateID}`,
+      };
+      //alert("hi");
+      emailjs
+        .send(
+          "service_7d8l9ff",
+          "template_25x692y",
+          templateParams,
+          "VBzIorHlAAspUrEhL"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+            handleAlert();
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
+      //alert(templateParams.email);
+    });
+  };
   // sending signature config to the backend
   const sendSignatureConfigToTheBackend = (id, savedItem) => {
     // console.log("Hi from the SendToSignatureConfig function");

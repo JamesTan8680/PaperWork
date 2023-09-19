@@ -111,7 +111,7 @@ export default function EditDoc(item) {
       var templateParams = {
         docName: docTitle,
         email: item,
-        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: ${item}`,
+        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: localhost:3000/party/${item}/${id}`,
       };
       emailjs
         .send(
