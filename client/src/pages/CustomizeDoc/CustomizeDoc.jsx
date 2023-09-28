@@ -196,10 +196,10 @@ export default function CustomizeDoc() {
       //alert("hi");
       emailjs
         .send(
-          "service_7d8l9ff",
+          "service_hrg4t9j",
           "template_25x692y",
           templateParams,
-          "VBzIorHlAAspUrEhL"
+          "cSmC1rfAbNHvFsW-H"
         )
         .then(
           (result) => {
@@ -276,7 +276,8 @@ export default function CustomizeDoc() {
             className={`doc-title ${selected === 1 ? "selected" : ""}`}
             onClick={() => {
               setSelected(1);
-            }}>
+            }}
+          >
             {docTitle}
           </div>
           <div className="content-customiseDoc">
@@ -284,7 +285,8 @@ export default function CustomizeDoc() {
               className={`doc-parties ${selected === 2 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(2);
-              }}>
+              }}
+            >
               <b>Parties</b>
               {selectedParty}
             </div>
@@ -292,7 +294,8 @@ export default function CustomizeDoc() {
               className={`doc-terms ${selected === 3 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(3);
-              }}>
+              }}
+            >
               <b>Terms</b>
 
               {type !== "blank" ? (
@@ -305,7 +308,8 @@ export default function CustomizeDoc() {
               className={`doc-signature ${selected === 4 ? "selected" : ""}`}
               onClick={() => {
                 setSelected(4);
-              }}>
+              }}
+            >
               <b>Signature Configuration</b>
             </div>
           </div>
@@ -354,7 +358,8 @@ export default function CustomizeDoc() {
                   // handleAlert();
                   handleCancel();
                 }
-              }}>
+              }}
+            >
               Cancel
             </button>
 
@@ -370,7 +375,8 @@ export default function CustomizeDoc() {
                 } else {
                   handleSave();
                 }
-              }}>
+              }}
+            >
               Save
             </button>
           </div>
