@@ -169,9 +169,9 @@ view_document_ep_router.get("/recipients/:id", (req, res) => {
   `;
 
   const getGuestInfoQuery = `
-    SELECT document_container.identity_id, guest_identity.firstname, guest_identity.email
+    SELECT document_container.identity_id, guest_identity.firstname, document_container.identity_id as email
     FROM document_container
-    INNER JOIN guest_identity ON document_container.identity_id = guest_identity.email
+    INNER JOIN guest_identity ON document_container.document_container_id = guest_identity.document_container_id
     WHERE document_container.document_template_id = ?;
   `;
 
