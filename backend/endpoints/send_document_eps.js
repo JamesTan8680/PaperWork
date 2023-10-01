@@ -49,8 +49,7 @@ send_document_ep_router.post("/container/:id", (req, res) => {
     return res.status(400).send("email_list is not provided as an array.");
   }
 
-  const query =
-    `SELECT identity.email AS combined_column
+  const query = `SELECT identity.email AS combined_column
     FROM document_container
     INNER JOIN identity ON document_container.identity_id = identity.identity_id
     WHERE document_container.document_template_id = ?
@@ -113,39 +112,42 @@ send_document_ep_router.post("/container/:id", (req, res) => {
             );
           } else {
             // If the email is not found in the identity table, insert into guest_identity
-            const guestInsertQuery =
-              `INSERT INTO guest_identity (email)
-              VALUES (?)
-              ON DUPLICATE KEY UPDATE email = email;`;
+            const issue_date = new Date().toISOString(); // Today's date as an ISO string
+
+            // Insert into the document_container table
+            const insertQuery =
+              "INSERT INTO document_container (identity_id, document_template_id, issue_date) VALUES (?, ?, ?)";
             db.query(
-              guestInsertQuery,
-              [input_email],
-              (guestInsertError, guestInsertResults) => {
-                if (guestInsertError) {
+              insertQuery,
+              [input_email, doc_id, issue_date],
+              (insertError, insertResults) => {
+                if (insertError) {
                   console.error(
-                    "Error executing guest INSERT SQL query:",
-                    guestInsertError
+                    "Error executing INSERT SQL query:",
+                    insertError
                   );
                   // Handle the error as needed
                 } else {
-                  const identity_id = input_email; // Use the email as identity_id
-                  const issue_date = new Date().toISOString(); // Today's date as an ISO string
+                  const document_container_id = insertResults.insertId;
+                  console.log("Inserted into document_container");
 
-                  // Insert into the document_container table
-                  const insertQuery =
-                    "INSERT INTO document_container (identity_id, document_template_id, issue_date) VALUES (?, ?, ?)";
+                  // Now, insert into guest_identity using the generated document_container_id
+                  const guestInsertQuery = `
+                    INSERT INTO guest_identity (email, document_container_id)
+                    VALUES (?, ?);
+                  `;
                   db.query(
-                    insertQuery,
-                    [identity_id, doc_id, issue_date],
-                    (insertError, insertResults) => {
-                      if (insertError) {
+                    guestInsertQuery,
+                    [input_email, document_container_id],
+                    (guestInsertError, guestInsertResults) => {
+                      if (guestInsertError) {
                         console.error(
-                          "Error executing INSERT SQL query:",
-                          insertError
+                          "Error executing guest INSERT SQL query:",
+                          guestInsertError
                         );
                         // Handle the error as needed
                       } else {
-                        console.log("Inserted into document_container");
+                        console.log("Inserted into guest_identity");
                         // Continue processing or send a success response if needed
                       }
                     }
@@ -162,19 +164,16 @@ send_document_ep_router.post("/container/:id", (req, res) => {
   });
 });
 
-  send_document_ep_router.get("issued/:id", (req, res)=>{
-    let sql = "SELECT issue_date FROM document_container WHERE document_template_id = ? ORDER BY issue_date DESC";
-    db.query(
-      sql,
-      [req.params.id],
-      (error, result) => {
-        if (error) {
-          result.status(500).send(error)
-        } else {
-          result.json(result.data)
-        }
-      }
-      )
-  })
+send_document_ep_router.get("issued/:id", (req, res) => {
+  let sql =
+    "SELECT issue_date FROM document_container WHERE document_template_id = ? ORDER BY issue_date DESC";
+  db.query(sql, [req.params.id], (error, result) => {
+    if (error) {
+      result.status(500).send(error);
+    } else {
+      result.json(result.data);
+    }
+  });
+});
 
 export default send_document_ep_router;
