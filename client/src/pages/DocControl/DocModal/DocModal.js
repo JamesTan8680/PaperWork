@@ -95,7 +95,7 @@ function DocModal({ show, setShow, title, doc_id }) {
       emailsArray.forEach((item) => {
         var templateParams = {
           docName: text,
-          message: `Please kindly check and sign the document that was created by the Paperwork Team via URL: localhost:3000/recipient/${item}/${doc_id}`,
+          message: `Please kindly check and sign the document that was created by the Paperwork Team via URL: localhost:3000/${item}/${doc_id}`,
           email: item,
         };
         emailjs

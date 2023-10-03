@@ -191,7 +191,7 @@ export default function CustomizeDoc() {
       var templateParams = {
         docName: docTitle,
         email: item,
-        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: localhost:3000/recipient/${item}/${templateID}`,
+        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: localhost:3000/${item}/${templateID}`,
       };
       //alert("hi");
       emailjs
