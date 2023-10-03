@@ -33,7 +33,7 @@ function Contact() {
         "service_hrg4t9j",
         "template_2xoy13u",
         formData,
-        "YGNBxfUEoCP8YDKQn"
+        "cSmC1rfAbNHvFsW-H"
       )
       .then(
         (result) => {
