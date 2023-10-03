@@ -74,7 +74,7 @@ function DocModal({ show, setShow, title, doc_id }) {
   };
   //handle close
   const handleClose = () => {
-    closeModal();
+    //closeModal();
     setOpen((s) => !s);
     setElements([]);
   };
@@ -86,9 +86,15 @@ function DocModal({ show, setShow, title, doc_id }) {
       var emailsArray = elements.map((item) => item.name);
       console.log(emailsArray);
 
+      //covert the title from the text editor format into string
+      const parser = new DOMParser();
+      // Parse the HTML snippet
+      const doc = parser.parseFromString(title, "text/html");
+      // Extract the text content
+      const text = doc.body.textContent;
       emailsArray.forEach((item) => {
         var templateParams = {
-          docName: title,
+          docName: text,
           message: `Please kindly check and sign the document that was created by the Paperwork Team via URL: localhost:3000/recipient/${item}/${doc_id}`,
           email: item,
         };
