@@ -99,10 +99,18 @@ function DocModal({ show, setShow, title, doc_id }) {
           message: `Please kindly check and sign the document that was created by the Paperwork Team via URL: localhost:3000/${CryptoJS.AES.encrypt(
             item,
             process.env.REACT_APP_SECRET_KEY
-          ).toString()}/${CryptoJS.AES.encrypt(
+          )
+            .toString()
+            .replace(/\+/g, "p1L2u3S")
+            .replace(/\//g, "s1L2a3S4h")
+            .replace(/=/g, "e1Q2u3A4l")}/${CryptoJS.AES.encrypt(
             doc_id,
             process.env.REACT_APP_SECRET_KEY
-          ).toString()}`,
+          )
+            .toString()
+            .replace(/\+/g, "p1L2u3S")
+            .replace(/\//g, "s1L2a3S4h")
+            .replace(/=/g, "e1Q2u3A4l")}`,
           email: item,
         };
         emailjs
