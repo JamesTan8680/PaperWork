@@ -10,6 +10,8 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import uuid from "react-uuid";
 import emailjs from "@emailjs/browser";
+//encrypt method
+import CryptoJS from "crypto-js";
 
 export default function CustomizeDoc() {
   //the id that get from the params
@@ -191,7 +193,13 @@ export default function CustomizeDoc() {
       var templateParams = {
         docName: docTitle,
         email: item,
-        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: localhost:3000/${item}/${templateID}`,
+        message: `Please kindly check and approve or deny the document that was created by the Paperwork Team via URL: localhost:3000/${CryptoJS.AES.encrypt(
+          item,
+          process.env.REACT_APP_SECRET_KEY
+        ).toString()}/${CryptoJS.AES.encrypt(
+          templateID,
+          process.env.REACT_APP_SECRET_KEY
+        ).toString()}`,
       };
       //alert("hi");
       emailjs
@@ -267,6 +275,8 @@ export default function CustomizeDoc() {
         <div className="headerDoc">
           <img src={Doc} alt="DocIcon" />
           <span>Template view</span>
+
+          {/* <h1>{process.env.REACT_APP_SECRET_KEY}</h1> */}
         </div>
       </div>
 

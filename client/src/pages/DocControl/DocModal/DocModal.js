@@ -6,6 +6,7 @@ import Cross from "../../../img/docControl/cross.svg";
 import uuid from "react-uuid";
 import SuccessfulePage from "./SuccessfulPage";
 import emailjs from "@emailjs/browser";
+import CryptoJS from "crypto-js";
 
 function DocModal({ show, setShow, title, doc_id }) {
   //manage the state for the send button
@@ -95,7 +96,13 @@ function DocModal({ show, setShow, title, doc_id }) {
       emailsArray.forEach((item) => {
         var templateParams = {
           docName: text,
-          message: `Please kindly check and sign the document that was created by the Paperwork Team via URL: localhost:3000/${item}/${doc_id}`,
+          message: `Please kindly check and sign the document that was created by the Paperwork Team via URL: localhost:3000/${CryptoJS.AES.encrypt(
+            item,
+            process.env.REACT_APP_SECRET_KEY
+          ).toString()}/${CryptoJS.AES.encrypt(
+            doc_id,
+            process.env.REACT_APP_SECRET_KEY
+          ).toString()}`,
           email: item,
         };
         emailjs
@@ -162,6 +169,7 @@ function DocModal({ show, setShow, title, doc_id }) {
         <div className="wrapper">
           <div className="header-popup">
             <div className="title">Send</div>
+            {/* <h1>{process.env.REACT_APP_SECRET_KEY}</h1> */}
             <img src={Cross} alt="" onClick={closeModal} />
           </div>
           <div className="input">
