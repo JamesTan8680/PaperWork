@@ -210,6 +210,7 @@ export default function CustomizeDoc() {
           .replace(/=/g, "e1Q2u3A4l")}`,
       };
       //alert("hi");
+      handleAlert();
       emailjs
         .send(
           "service_7d8l9ff",
@@ -220,7 +221,6 @@ export default function CustomizeDoc() {
         .then(
           (result) => {
             console.log(result.text);
-            handleAlert();
           },
           (error) => {
             console.log(error.text);
