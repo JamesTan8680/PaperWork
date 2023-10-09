@@ -300,10 +300,8 @@ view_document_ep_router.get("/document/:id/:email", (req, res) => {
     FROM signature_sensitive
     WHERE document_container_id = ?;
   `;
-
   let mainDbQueryToExecute;
   let mainDbResults;
-  let sensitiveDbResults;
 
   // Execute the first main database query
   db.query(mainDbQuery1, [template_id, email], (mainDbErr1, mainDbResults1) => {
@@ -314,16 +312,13 @@ view_document_ep_router.get("/document/:id/:email", (req, res) => {
       return;
     }
 
-    // If the first query returned results, use it
     if (mainDbResults1.length > 0) {
       mainDbQueryToExecute = mainDbQuery1;
       mainDbResults = mainDbResults1;
     } else {
-      // If the first query didn't return results, use the second query
       mainDbQueryToExecute = mainDbQuery2;
     }
 
-    // Execute the main database query (either 1 or 2)
     db.query(mainDbQueryToExecute, [template_id, email], (mainDbErr, mainDbResults) => {
       if (mainDbErr) {
         // Handle the error
@@ -341,10 +336,13 @@ view_document_ep_router.get("/document/:id/:email", (req, res) => {
           return;
         }
 
+        // Set signature to null if not available
+        const signature = sensitiveDbResults.length > 0 ? sensitiveDbResults[0].signature.toString('base64') : null;
+
         // Combine the results from the main database query and sensitive database query
         const combinedResults = {
           documentInfo: mainDbResults[0],
-          signature: sensitiveDbResults[0] ? sensitiveDbResults[0].signature : null,
+          signature: signature,
         };
 
         // Send the combined results back as a response
@@ -353,6 +351,7 @@ view_document_ep_router.get("/document/:id/:email", (req, res) => {
     });
   });
 });
+
 
 
 

@@ -30,6 +30,14 @@ function ReviewDoc() {
   const [content, setContent] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [docType, setDocType] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [studentid, setStudentid] = useState("");
+  const [usertitle, setUsertitle] = useState("");
+  const [age, setAge] = useState("");
+  const [signature, setSignature] = useState("");
+  const [address, setAddress] = useState("");
+  const [signDate, setSignDate] = useState("");
 
   useEffect(() => {
     // Initialize state variables with default values
@@ -70,6 +78,31 @@ function ReviewDoc() {
         console.log(err.message);
       });
   }, [id]);
+
+  useEffect(() => {
+    if (selectedRecipient) {
+      axios
+        .get(
+          `http://localhost:8800/view-document/document/${id}/${selectedRecipient.email}`
+        )
+        .then((response) => {
+          const data = response.data || {};
+
+          // Update the state variables with the data from the API response
+          setFirstname(data.documentInfo.firstname || "");
+          setLastname(data.documentInfo.lastname || "");
+          setStudentid(data.documentInfo.student_id || "");
+          setUsertitle(data.documentInfo.title || "");
+          setAge(data.documentInfo.age || "");
+          setSignature(data.signature || "");
+          setAddress(data.address || "");
+          setSignDate((data.documentInfo.signed_date && new Date(data.documentInfo.signed_date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })) || "");
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  }, [selectedRecipient]);
 
   // const recipientss = `
   //   <div>
@@ -171,17 +204,27 @@ function ReviewDoc() {
               <div className="recipient_side">
                 {selectedRecipient ? (
                   <>
-                    <div>Name: {selectedRecipient.firstname}</div>
-                    {/* <div>Address: {selectedRecipient.address}</div> */}
+                    {usertitle && <div>Title: {usertitle}</div>}
+                    {firstname && <div>First name: {firstname}</div>}
+                    {lastname && <div>Last name: {lastname}</div>}
+                    {studentid && <div>Student id: {studentid}</div>}
                     <div>Email: {selectedRecipient.email}</div>
-                    {/* You can add other details if the recipient object has more fields */}
+                    {address && <div>Address: {address}</div>}
+                    {signDate && <div>Signed date: {signDate}</div>}
+                    
+                    {age && <div>Age: {age}</div>}
                     <div
                       style={{
                         color: blurry ? "black" : "none",
                         display: blurry ? "" : "none",
                       }}
                     >
-                      signature: dummy signature
+                      {signature && (
+                        <img
+                          src={`data:image/png;base64,${signature}`}
+                          alt="Signature"
+                        />
+                      )}
                     </div>
                   </>
                 ) : (
