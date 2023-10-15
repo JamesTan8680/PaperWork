@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Faq/Faq.scss";
 import Faq_image from "../../img/faq/Faq.png";
 import Arrow_down from "../../img/faq/arrow-down.png";
 import Arrow_Expand from "../../img/faq/arrow-expand.png";
+import axios from "axios";
+import e from "cors";
 
 function Faq() {
   //useState for the faqs
@@ -41,10 +43,25 @@ function Faq() {
     },
   ]);
 
+  //state for fetching the faq data
+  const [faq1, setFaq1] = useState([]);
+  useEffect(() => {
+    const fetchFaqData = async () => {
+      try {
+        const res = await axios.get("http://localhost:8800/faq");
+        setFaq1(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFaqData();
+  }, []);
+  console.log("faq data ", faq1);
+
   //expand the faqs to display the answer
   const toggleFAQ = (index) => {
     setFaqs(
-      faqs?.map((faq, i) => {
+      faq1?.map((faq, i) => {
         if (i === index) {
           faq.expand = !faq.expand;
         } else {
@@ -71,11 +88,11 @@ function Faq() {
         <div className="left-container">
           <img src={Faq_image} alt="" />
           <div className="right-container">
-            {faqs?.map((faq, index) => (
-              <div className="faq-item" key={index}>
-                <div className="faq-question" onClick={() => toggleFAQ(index)}>
+            {faq1?.map((faq, faq_id) => (
+              <div className="faq-item" key={faq_id}>
+                <div className="faq-question" onClick={() => toggleFAQ(faq_id)}>
                   <h4>
-                    {faq.question}
+                    {faq.faq_question}
                     {faq.expand ? (
                       <img src={Arrow_Expand} alt="Arrow" />
                     ) : (
@@ -83,7 +100,7 @@ function Faq() {
                     )}
                   </h4>
                 </div>
-                {faq.expand && <p className="faq-answer">{faq.answer}</p>}
+                {faq.expand && <p className="faq-answer">{faq.faq_answer}</p>}
               </div>
             ))}
           </div>

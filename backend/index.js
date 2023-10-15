@@ -9,6 +9,7 @@ import misc_router from "./endpoints/misc_eps.js";
 import customise_document_ep_router from "./endpoints/customise_document_eps.js";
 import send_document_ep_router from "./endpoints/send_document_eps.js";
 import ep_macros from "./endpoints/macro.js";
+import faq_ep_router from "./endpoints/faq_eps.js";
 
 const app = express();
 const macros = new ep_macros();
@@ -21,6 +22,7 @@ app.use('/customise-document',customise_document_ep_router);
 app.use('/send-document', send_document_ep_router);
 app.use('/',misc_router);
 app.use('/homepage',homepage_ep_router);
+app.use('/faq',faq_ep_router);
 
 
 //DEBUG GET METHOD, USE TO GET ALL DATA ON SAME BROWSER TAB
