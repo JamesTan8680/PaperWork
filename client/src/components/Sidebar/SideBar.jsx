@@ -1,6 +1,6 @@
 import React from "react";
 import "./SideBar.scss";
-import Logo from "../../img/sidebar/logo.svg";
+import Logo from "../../img/sidebar/logo1.svg";
 import Dashboard from "../../img/sidebar/adjust.svg";
 import Profile from "../../img/sidebar/Group.svg";
 import Calendar from "../../img/sidebar/cal.svg";
@@ -26,6 +26,9 @@ function SideBar() {
       <div className="top">
         <div className="logo">
           <img src={Logo} alt="logo" />
+          <span>
+            <b>CLOCK</b>WORK
+          </span>
         </div>
         {/* for the avatar */}
         <div className="avatar">
