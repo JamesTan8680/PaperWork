@@ -38,7 +38,7 @@ function ReviewDoc() {
   const [signature, setSignature] = useState("");
   const [address, setAddress] = useState("");
   const [signDate, setSignDate] = useState("");
-
+  const [varList, setVarList] = useState([]);
   useEffect(() => {
     // Initialize state variables with default values
     setVersion("");
@@ -54,6 +54,7 @@ function ReviewDoc() {
         setVersion(String(documentData[0].version) || "");
         setContent(documentData[0].content || "");
         setDocType(documentData[0].type || "");
+      
       })
       .catch((err) => {
         console.log(err.message);
@@ -79,15 +80,39 @@ function ReviewDoc() {
       });
   }, [id]);
 
+  const fillInputsWithVarList = (htmlContent, varList) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+    const inputElements = doc.querySelectorAll("input");
+
+    
+    inputElements.forEach((input, index) => {
+      if (varList.length > index) { 
+        input.setAttribute('value', varList[index]); 
+      }
+    });
+
+    return doc.body.innerHTML;
+  };
+
   useEffect(() => {
     if (selectedRecipient) {
+      
       axios
         .get(
           `http://localhost:8800/view-document/document/${id}/${selectedRecipient.email}`
         )
         .then((response) => {
           const data = response.data || {};
-
+          const varListString = data.documentInfo.var_list;
+          let varList;
+          try {
+            varList = JSON.parse(varListString);
+          } catch (error) {
+            console.error("Error parsing var_list:", error);
+            varList = [];
+          } const updatedContent = fillInputsWithVarList(content, varList);
+          setContent(updatedContent);
           // Update the state variables with the data from the API response
           setFirstname(data.documentInfo.firstname || "");
           setLastname(data.documentInfo.lastname || "");
@@ -97,12 +122,15 @@ function ReviewDoc() {
           setSignature(data.signature || "");
           setAddress(data.address || "");
           setSignDate((data.documentInfo.signed_date && new Date(data.documentInfo.signed_date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })) || "");
+ 
+
+          
         })
         .catch((err) => {
           console.log(err.message);
         });
     }
-  }, [selectedRecipient]);
+  }, [selectedRecipient, id, content]);
 
   // const recipientss = `
   //   <div>
@@ -126,7 +154,7 @@ function ReviewDoc() {
 
     // Filtering recipients who have a firstname
     const validRecipients = Array.isArray(recipients)
-      ? recipients.filter((recipient) => recipient.firstname)
+      ? recipients.filter((recipient) => recipient.email)
       : [];
 
     if (validRecipients && validRecipients.length > 0) {
@@ -139,7 +167,7 @@ function ReviewDoc() {
             <option value="">Select Recipients Name</option>
             {validRecipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
-                {recipient.firstname}
+                {recipient.email}
               </option>
             ))}
           </select>
