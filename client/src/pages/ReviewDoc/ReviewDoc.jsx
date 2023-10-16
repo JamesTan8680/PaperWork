@@ -38,7 +38,8 @@ function ReviewDoc() {
   const [signature, setSignature] = useState("");
   const [address, setAddress] = useState("");
   const [signDate, setSignDate] = useState("");
-  const [varList, setVarList] = useState([]);
+  const [originalContent, setOriginalContent] = useState("");
+
   useEffect(() => {
     // Initialize state variables with default values
     setVersion("");
@@ -54,7 +55,11 @@ function ReviewDoc() {
         setVersion(String(documentData[0].version) || "");
         setContent(documentData[0].content || "");
         setDocType(documentData[0].type || "");
-      
+
+
+        const initialContent = documentData[0].content || "";
+        setContent(initialContent);
+        setOriginalContent(initialContent);
       })
       .catch((err) => {
         console.log(err.message);
@@ -79,13 +84,12 @@ function ReviewDoc() {
         console.log(err.message);
       });
   }, [id]);
-
   const fillInputsWithVarList = (htmlContent, varList) => {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlContent, 'text/html');
+
     const inputElements = doc.querySelectorAll("input");
 
-    
     inputElements.forEach((input, index) => {
       if (varList.length > index) { 
         input.setAttribute('value', varList[index]); 
@@ -95,9 +99,13 @@ function ReviewDoc() {
     return doc.body.innerHTML;
   };
 
+
+  const [refreshKey, setRefreshKey] = useState(Math.random());
+
   useEffect(() => {
     if (selectedRecipient) {
-      
+     setContent(originalContent);
+     setRefreshKey(Math.random());
       axios
         .get(
           `http://localhost:8800/view-document/document/${id}/${selectedRecipient.email}`
@@ -111,8 +119,10 @@ function ReviewDoc() {
           } catch (error) {
             console.error("Error parsing var_list:", error);
             varList = [];
-          } const updatedContent = fillInputsWithVarList(content, varList);
+          } const updatedContent = fillInputsWithVarList(originalContent, varList);
           setContent(updatedContent);
+          
+
           // Update the state variables with the data from the API response
           setFirstname(data.documentInfo.firstname || "");
           setLastname(data.documentInfo.lastname || "");
@@ -130,7 +140,7 @@ function ReviewDoc() {
           console.log(err.message);
         });
     }
-  }, [selectedRecipient, id, content]);
+  }, [selectedRecipient, id,originalContent]);
 
   // const recipientss = `
   //   <div>
@@ -210,7 +220,7 @@ function ReviewDoc() {
               );
             })}
           </div>
-          <div className="reciew-content">{HTMLReactParser(content)}</div>
+          <div className="reciew-content"key={refreshKey}>{HTMLReactParser(content)}</div>
           <div className="review-signature">
             <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
             <div className="parties_sign_container">
