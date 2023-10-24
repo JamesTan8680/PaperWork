@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import db from "./db.js";
 import ep_macros from "./macro.js";
+import mysql from "mysql";
 
 const view_document_ep_router = express.Router();
 view_document_ep_router.use(cors());
@@ -11,6 +12,15 @@ const macro = new ep_macros();
 const generateSearchString = macro.generate_search_string;
 const select = macro.select;
 const fetch = macro.query;
+
+const sensitiveDbConfig = {
+  host: "database-1.cj0rqzth8q4x.us-east-1.rds.amazonaws.com",
+  user: "admin",
+  password: "Paperwork-123",
+  database: "paperwork_sensitive",
+};
+
+const sensitiveDb = mysql.createConnection(sensitiveDbConfig);
 
 //get all types
 view_document_ep_router.get("/document-template/type/:id", (req, res) => {
@@ -267,5 +277,82 @@ view_document_ep_router.get("/configurations/:id", (req, res) => {
     res.status(200).json(result);
   });
 });
+
+view_document_ep_router.get("/document/:id/:email", (req, res) => {
+  const template_id = req.params.id;
+  const email = req.params.email;
+
+  const mainDbQuery1 = `
+    SELECT a.*, b.firstname, b.lastname, b.email, b.student_id, b.title, b.age, b.address
+    FROM document_container a
+    INNER JOIN guest_identity b ON a.document_container_id = b.document_container_id
+    WHERE a.document_template_id = ? AND a.identity_id = ?;
+  `;
+
+  const mainDbQuery2 = `
+    SELECT a.*, b.firstname, b.lastname, b.email, b.student_id, b.title, b.age
+    FROM document_container a INNER JOIN identity b ON a.identity_id = b.identity_id
+    WHERE a.document_template_id = ? AND b.email = ?;
+  `;
+
+  const sensitiveDbQuery = `
+    SELECT signature
+    FROM signature_sensitive
+    WHERE document_container_id = ?;
+  `;
+  let mainDbQueryToExecute;
+  let mainDbResults;
+
+  // Execute the first main database query
+  db.query(mainDbQuery1, [template_id, email], (mainDbErr1, mainDbResults1) => {
+    if (mainDbErr1) {
+      // Handle the error for the first query
+      console.error(mainDbErr1);
+      res.status(500).send("Error retrieving document information");
+      return;
+    }
+
+    if (mainDbResults1.length > 0) {
+      mainDbQueryToExecute = mainDbQuery1;
+      mainDbResults = mainDbResults1;
+    } else {
+      mainDbQueryToExecute = mainDbQuery2;
+    }
+
+    db.query(mainDbQueryToExecute, [template_id, email], (mainDbErr, mainDbResults) => {
+      if (mainDbErr) {
+        // Handle the error
+        console.error(mainDbErr);
+        res.status(500).send("Error retrieving document information");
+        return;
+      }
+
+      // Execute the sensitive database query for the result
+      sensitiveDb.query(sensitiveDbQuery, [mainDbResults[0].document_container_id], (sensitiveDbErr, sensitiveDbResults) => {
+        if (sensitiveDbErr) {
+          // Handle the error
+          console.error(sensitiveDbErr);
+          res.status(500).send("Error retrieving signature");
+          return;
+        }
+
+        // Set signature to null if not available
+        const signature = sensitiveDbResults.length > 0 ? sensitiveDbResults[0].signature.toString('base64') : null;
+
+        // Combine the results from the main database query and sensitive database query
+        const combinedResults = {
+          documentInfo: mainDbResults[0],
+          signature: signature,
+        };
+
+        // Send the combined results back as a response
+        res.json(combinedResults);
+      });
+    });
+  });
+});
+
+
+
 
 export default view_document_ep_router;

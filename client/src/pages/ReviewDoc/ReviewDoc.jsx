@@ -30,6 +30,15 @@ function ReviewDoc() {
   const [content, setContent] = useState("");
   const [selectedRecipient, setSelectedRecipient] = useState(null);
   const [docType, setDocType] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [studentid, setStudentid] = useState("");
+  const [usertitle, setUsertitle] = useState("");
+  const [age, setAge] = useState("");
+  const [signature, setSignature] = useState("");
+  const [address, setAddress] = useState("");
+  const [signDate, setSignDate] = useState("");
+  const [originalContent, setOriginalContent] = useState("");
 
   useEffect(() => {
     // Initialize state variables with default values
@@ -46,6 +55,11 @@ function ReviewDoc() {
         setVersion(String(documentData[0].version) || "");
         setContent(documentData[0].content || "");
         setDocType(documentData[0].type || "");
+
+
+        const initialContent = documentData[0].content || "";
+        setContent(initialContent);
+        setOriginalContent(initialContent);
       })
       .catch((err) => {
         console.log(err.message);
@@ -70,6 +84,63 @@ function ReviewDoc() {
         console.log(err.message);
       });
   }, [id]);
+  const fillInputsWithVarList = (htmlContent, varList) => {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+
+    const inputElements = doc.querySelectorAll("input");
+
+    inputElements.forEach((input, index) => {
+      if (varList.length > index) { 
+        input.setAttribute('value', varList[index]); 
+      }
+    });
+
+    return doc.body.innerHTML;
+  };
+
+
+  const [refreshKey, setRefreshKey] = useState(Math.random());
+
+  useEffect(() => {
+    if (selectedRecipient) {
+     setContent(originalContent);
+     setRefreshKey(Math.random());
+      axios
+        .get(
+          `http://localhost:8800/view-document/document/${id}/${selectedRecipient.email}`
+        )
+        .then((response) => {
+          const data = response.data || {};
+          const varListString = data.documentInfo.var_list;
+          let varList;
+          try {
+            varList = JSON.parse(varListString);
+          } catch (error) {
+            console.error("Error parsing var_list:", error);
+            varList = [];
+          } const updatedContent = fillInputsWithVarList(originalContent, varList);
+          setContent(updatedContent);
+          
+
+          // Update the state variables with the data from the API response
+          setFirstname(data.documentInfo.firstname || "");
+          setLastname(data.documentInfo.lastname || "");
+          setStudentid(data.documentInfo.student_id || "");
+          setUsertitle(data.documentInfo.title || "");
+          setAge(data.documentInfo.age || "");
+          setSignature(data.signature || "");
+          setAddress(data.address || "");
+          setSignDate((data.documentInfo.signed_date && new Date(data.documentInfo.signed_date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' })) || "");
+ 
+
+          
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    }
+  }, [selectedRecipient, id,originalContent]);
 
   // const recipientss = `
   //   <div>
@@ -93,7 +164,7 @@ function ReviewDoc() {
 
     // Filtering recipients who have a firstname
     const validRecipients = Array.isArray(recipients)
-      ? recipients.filter((recipient) => recipient.firstname)
+      ? recipients.filter((recipient) => recipient.email)
       : [];
 
     if (validRecipients && validRecipients.length > 0) {
@@ -106,7 +177,7 @@ function ReviewDoc() {
             <option value="">Select Recipients Name</option>
             {validRecipients?.map((recipient) => (
               <option key={recipient.identity_id} value={recipient.identity_id}>
-                {recipient.firstname}
+                {recipient.email}
               </option>
             ))}
           </select>
@@ -149,7 +220,7 @@ function ReviewDoc() {
               );
             })}
           </div>
-          <div className="reciew-content">{HTMLReactParser(content)}</div>
+          <div className="reciew-content"key={refreshKey}>{HTMLReactParser(content)}</div>
           <div className="review-signature">
             <h3>ENTER INTO AS AN AGREEMENT BY THE PARTIES</h3>
             <div className="parties_sign_container">
@@ -171,17 +242,27 @@ function ReviewDoc() {
               <div className="recipient_side">
                 {selectedRecipient ? (
                   <>
-                    <div>Name: {selectedRecipient.firstname}</div>
-                    {/* <div>Address: {selectedRecipient.address}</div> */}
+                    {usertitle && <div>Title: {usertitle}</div>}
+                    {firstname && <div>First name: {firstname}</div>}
+                    {lastname && <div>Last name: {lastname}</div>}
+                    {studentid && <div>Student id: {studentid}</div>}
                     <div>Email: {selectedRecipient.email}</div>
-                    {/* You can add other details if the recipient object has more fields */}
+                    {address && <div>Address: {address}</div>}
+                    {signDate && <div>Signed date: {signDate}</div>}
+                    
+                    {age && <div>Age: {age}</div>}
                     <div
                       style={{
                         color: blurry ? "black" : "none",
                         display: blurry ? "" : "none",
                       }}
                     >
-                      signature: dummy signature
+                      {signature && (
+                        <img
+                          src={`data:image/png;base64,${signature}`}
+                          alt="Signature"
+                        />
+                      )}
                     </div>
                   </>
                 ) : (
